@@ -1,0 +1,20 @@
+{
+  "short_name": "7 Wonders",
+  "name": "7 Wonders Companion App",
+  "icons": [
+    {
+      "src": "icona-192.png",
+      "type": "image/png",
+      "sizes": "192x192"
+    },
+    {
+      "src": "icona-512.png",
+      "type": "image/png",
+      "sizes": "512x512"
+    }
+  ],
+  "start_url": ".",
+  "display": "standalone",
+  "theme_color": "#3a5a78",
+  "background_color": "#1e1e1e"
+}
