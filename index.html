@@ -32,7 +32,8 @@
         #player-header .header-options { display: flex; align-items: center; gap: 15px; }
         #player-header .checkbox-item { margin-bottom: 10px; font-size: 0.8em; }
         .form-group { display: flex; gap: 10px; margin-bottom: 25px; }
-        .form-group input { flex-grow: 1; padding: 12px; border: 1px solid #444; border-radius: 8px; background-color: #333; color: var(--colore-testo); font-size: 16px; }
+        #aggiungi-giocatore-form { flex-direction: column; }
+        #nomeGiocatoreInput, #luogoPartitaInput { width: 100%; padding: 12px; border: 1px solid #444; border-radius: 8px; background-color: #333; color: var(--colore-testo); font-size: 16px; box-sizing: border-box; }
         #listaGiocatori { list-style: none; padding: 0; }
         .giocatore-setup-item { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 10px; background-color: #383838; padding: 10px 15px; border-radius: 6px; margin-bottom: 8px; font-size: 18px; }
         .nome-giocatore-input { background: none; border: none; color: var(--colore-testo); font-weight: bold; font-size: 18px; font-family: 'Roboto', sans-serif; flex-grow: 1; padding: 5px; border-radius: 4px; }
@@ -55,22 +56,27 @@
         /* Punteggio */
         #punteggio-sezione h2 { text-align: center; color: white; border: none; padding: 10px 15px; border-radius: 8px; transition: background-color 0.4s ease; }
         #punteggio-inputs-container { display: flex; flex-direction: column; gap: 15px; margin-bottom: 20px; }
-        .punteggio-giocatore-riga { display: grid; grid-template-columns: 1fr 120px; align-items: center; gap: 15px; }
+        .punteggio-giocatore-riga { display: grid; grid-template-columns: 1fr auto; align-items: center; gap: 15px; }
         .punteggio-giocatore-riga label { font-size: 18px; }
-        .input-punteggio { padding: 12px; border: 1px solid #444; border-radius: 8px; background-color: #333; color: var(--colore-testo); font-size: 18px; width: 100%; box-sizing: border-box; text-align: center; }
-        .science-input-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 10px; }
+        .input-stepper { display: flex; align-items: center; justify-content: flex-end; gap: 8px; }
+        .stepper-btn { font-size: 20px; width: 40px; height: 40px; text-align: center; padding: 0; line-height: 40px; flex-shrink: 0; }
+        .input-punteggio { padding: 12px; border: 1px solid #444; border-radius: 8px; background-color: #333; color: var(--colore-testo); font-size: 18px; width: 60px; box-sizing: border-box; text-align: center; }
+        .science-table { display: grid; grid-template-columns: 2fr 1fr 1fr 1fr 1fr; gap: 10px; align-items: center; }
+        .science-table .science-icon { max-height: 30px; margin: auto; display: block; }
+        .science-table .player-name-cell { font-size: 18px; text-align: left; }
+        .science-table .input-punteggio { width: 100%; }
         #avviso-categoria { font-size: 0.9em; text-align: center; color: var(--colore-testo-fioco); background: #222; padding: 8px; border-radius: 5px; margin-bottom: 15px; }
-
-        /* Risultati & Storico & Statistiche */
+        
+        /* Risultati */
         .header-info { text-align: right; font-size: 0.8em; color: var(--colore-testo-fioco); margin-bottom: -10px; margin-top: -10px; }
-        #lista-classifica, #lista-storico { list-style: none; padding: 0; margin-bottom: 30px; }
-        .risultato-giocatore, .risultato-squadra, .voce-storico, .stat-card { padding: 15px; margin-bottom: 10px; background-color: #383838; border-radius: 8px; }
+        #lista-classifica { list-style: none; padding: 0; margin-bottom: 30px; }
+        .risultato-giocatore, .risultato-squadra { padding: 15px; margin-bottom: 10px; background-color: #383838; border-radius: 8px; }
         .risultato-header { display: flex; justify-content: space-between; align-items: center; font-size: 20px; }
-        .nome { font-weight: bold; }
-        .wonder-display { font-style: italic; font-weight: normal; font-size: 0.7em; color: var(--colore-testo-fioco); margin-left: 8px; }
+        .nome { font-weight: bold; display: flex; flex-direction: column; align-items: flex-start; }
+        .wonder-display { font-style: italic; font-weight: normal; font-size: 0.7em; color: var(--colore-testo-fioco); margin-top: 2px; }
         .punteggio-finale { font-weight: bold; background-color: var(--colore-primario); padding: 5px 12px; border-radius: 6px; color: white; }
         .medaglia { margin-right: 15px; font-size: 24px; }
-        .risultato-squadra.vincitore .nome, .risultato-giocatore.vincitore .nome, .stat-card .nome { color: var(--colore-oro); }
+        .risultato-squadra.vincitore .nome, .risultato-giocatore.vincitore .nome { color: var(--colore-oro); }
         .tie-breaker { font-size: 0.7em; font-weight: normal; color: var(--colore-testo-fioco); margin-left: 5px; }
         .risultato-breakdown { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 15px; padding-top: 15px; border-top: 1px solid #444; }
         .breakdown-item { background-color: #2c2c2c; padding: 4px 8px; border-radius: 5px; font-size: 14px; cursor: help; }
@@ -78,14 +84,6 @@
         .dettaglio-giocatore-individuale { background-color: #2c2c2c; padding: 10px; border-radius: 6px; }
         .dettaglio-giocatore-individuale .risultato-header { font-size: 16px; }
         .dettaglio-giocatore-individuale .risultato-breakdown { font-size: 12px; margin-top: 10px; padding-top: 10px; gap: 8px; }
-        .voce-storico .storico-header { display: flex; justify-content: space-between; align-items:center; }
-        .voce-storico .storico-header-info { cursor: pointer; flex-grow: 1; }
-        .voce-storico .storico-header .data { font-size: 0.9em; color: var(--colore-testo-fioco); }
-        .delete-history-btn { background: none; border: none; color: var(--colore-pericolo); font-size: 20px; cursor: pointer; padding: 0 5px; line-height: 1; margin-left:10px;}
-        .stat-card ul { list-style: none; padding-left: 0; margin-top: 10px; }
-        .stat-card li { display: flex; justify-content: space-between; padding: 5px 0; border-bottom: 1px solid #4a4a4a; }
-        .stat-card li:last-child { border-bottom: none; }
-        .stat-card li strong { color: var(--colore-secondario); }
 
         /* Bottoni */
         button { padding: 12px 20px; border: none; border-radius: 8px; background-color: var(--colore-primario); color: white; font-size: 16px; font-weight: bold; cursor: pointer; transition: background-color 0.2s, transform 0.1s; }
@@ -98,47 +96,22 @@
         #nav-punteggio { justify-content: space-between; }
         #iniziaPartitaBtn, #nuovaPartitaBtn { background-color: var(--colore-secondario); color: #111; }
         #nextCatBtn { background-color: var(--colore-successo); }
-        #cancellaStoricoBtn { background-color: var(--colore-pericolo); }
         #randomWonderBtn { padding: 8px 12px; font-size: 16px; flex-shrink: 0; }
         .hidden { display: none !important; }
 
-        /* Media Queries for Responsiveness */
         @media (max-width: 480px) {
-            main {
-                padding: 20px 15px;
-            }
-            .gruppo-bottoni {
-                flex-wrap: wrap;
-            }
-            .punteggio-giocatore-riga {
-                grid-template-columns: 1fr;
-                gap: 5px;
-            }
-             .punteggio-giocatore-riga label {
-                text-align: left;
-            }
-            .punteggio-giocatore-riga input {
-                 width: 100%;
-            }
-            .science-input-grid {
-                grid-template-columns: 1fr 1fr;
-            }
-            .checkbox-container {
-                gap: 10px;
-            }
-            .checkbox-item {
-                flex-direction: column;
-                align-items: flex-start;
-                gap: 8px;
-            }
-            .header-options {
-                gap: 10px;
-                flex-wrap: wrap;
-            }
-            #player-header .checkbox-item {
-                flex-direction: row;
-                gap: 10px;
-            }
+            main { padding: 20px 15px; }
+            .gruppo-bottoni { flex-wrap: wrap; }
+            .punteggio-giocatore-riga { grid-template-columns: 1fr; gap: 5px; }
+            .punteggio-giocatore-riga label { text-align: left; }
+            .input-stepper { justify-content: flex-start; }
+            .science-table { grid-template-columns: 1fr; }
+            .science-table > div:not(.player-name-cell) { display: none; }
+            .checkbox-container { gap: 10px; }
+            .checkbox-item { flex-direction: column; align-items: flex-start; gap: 8px; }
+            #player-header { flex-direction: column; align-items: flex-start; }
+            #player-header .header-options { width: 100%; justify-content: space-between; }
+            #player-header .checkbox-item { flex-direction: row; gap: 10px; }
         }
     </style>
 </head>
@@ -149,14 +122,12 @@
         <section id="landing-sezione">
             <div class="gruppo-bottoni">
                 <button id="landingNuovaPartitaBtn" class="bottone-grande">Inizia Nuova Partita</button>
-                <button id="landingStatisticheBtn" class="bottone-grande">Statistiche</button>
-                <button id="landingCronologiaBtn" class="bottone-grande">Cronologia partite</button>
             </div>
         </section>
 
         <section id="setup-sezione" class="hidden">
             <h2>Imposta Partita</h2>
-            <div class="form-group">
+            <div class="form-group" style="flex-direction: column;">
                 <input type="text" id="nomeGiocatoreInput" placeholder="Nome giocatore...">
                 <button id="aggiungiGiocatoreBtn">Aggiungi</button>
             </div>
@@ -214,210 +185,251 @@
             <div id="punteggio-inputs-container"></div>
             <div class="gruppo-bottoni" id="nav-punteggio">
                 <button id="backToSetupBtn">Torna al Setup</button>
-                <button id="prevCatBtn">Categoria Precedente</button>
-                <button id="nextCatBtn">Prossima Categoria</button>
+                <button id="prevCatBtn">← Indietro</button>
+                <button id="nextCatBtn">Avanti →</button>
             </div>
         </section>
 
         <section id="risultati-sezione" class="hidden"></section>
-        <section id="storico-sezione" class="hidden"></section>
-        <section id="statistiche-sezione" class="hidden"></section>
     </main>
 
     <script>
-        const MERAVIGLIE = { base: ['Halikarnassos', 'Rhódos', 'Olympía', 'Alexandria', 'Babylon', 'Éphesos', 'Gizah', 'Manneken Pis', 'Grande Muraglia Cinese'], leaders: ['Roma', 'Abu Simbel'], cities: ['Byzantium', 'Petra'], armada: ['Siracusa'], edifice: ['Ur', 'Carthage'] };
-        const CATEGORIE = [
-            { key: 'meraviglia', label: '🏛️ Meraviglia', type: 'number', color: '#7f8c8d' },
-            { key: 'tesoro', label: '💰 Tesoro', type: 'number', color: '#f1c40f' },
-            { key: 'debiti', label: '💸 Debiti', type: 'number', expansion: 'cities', color: '#c0392b' },
-            { key: 'militari', label: '⚔️ Conflitti Militari', type: 'number', color: '#c0392b' },
-            { key: 'civili', label: '🔵 Edifici Civili', type: 'number', color: '#2980b9' },
-            { key: 'commerciali', label: '🟡 Edifici Commerciali', type: 'number', color: '#f1c40f' },
-            { key: 'scienza', label: '🟢 Edifici Scientifici', type: 'science', color: '#27ae60' },
-            { key: 'gilde', label: '🟣 Gilde', type: 'number', color: '#8e44ad' },
-            { key: 'cities', label: '⚫ Cities', type: 'number', expansion: 'cities', color: '#34495e' },
-            { key: 'leaders', label: '👑 Leader', type: 'number', expansion: 'leaders', color: '#bdc3c7' },
-            { key: 'conflittiNavali', label: '⚓ Conflitti Navali', type: 'number', expansion: 'armada', color: '#3498db' },
-            { key: 'percorsoMarittimo', label: '🗺️ Percorso Navale Blu', type: 'number', expansion: 'armada', color: '#3498db' },
-            { key: 'isole', label: '🏝️ Isole', type: 'number', expansion: 'armada', color: '#16a085' },
-            { key: 'edifice', label: '🏗️ Edifici', type: 'number', expansion: 'edifice', color: '#d35400' },
-        ];
-        
-        const sezioni = { landing: document.getElementById('landing-sezione'), setup: document.getElementById('setup-sezione'), punteggio: document.getElementById('punteggio-sezione'), risultati: document.getElementById('risultati-sezione'), storico: document.getElementById('storico-sezione'), statistiche: document.getElementById('statistiche-sezione') };
-        const inputs = { nomeGiocatore: document.getElementById('nomeGiocatoreInput'), luogoPartita: document.getElementById('luogoPartitaInput'), esp: { cities: document.getElementById('esp-cities'), leaders: document.getElementById('esp-leaders'), armada: document.getElementById('esp-armada'), edifice: document.getElementById('esp-edifice') }, teamPlay: document.getElementById('team-play-checkbox'), dateToggle: document.getElementById('date-toggle'), manualDateInput: document.getElementById('manual-date-input') };
-        const bottoni = {
-            aggiungiGiocatore: document.getElementById('aggiungiGiocatoreBtn'), iniziaPartita: document.getElementById('iniziaPartitaBtn'),
-            vediStorico: document.getElementById('landingCronologiaBtn'), vediStatistiche: document.getElementById('landingStatisticheBtn'),
-            nuovaPartitaLanding: document.getElementById('landingNuovaPartitaBtn'),
-            prevCat: document.getElementById('prevCatBtn'), nextCat: document.getElementById('nextCatBtn'),
-            randomWonder: document.getElementById('randomWonderBtn'), backToSetup: document.getElementById('backToSetupBtn'),
-            resetSettings: document.getElementById('resetSettingsBtn'),
-            backToHomeFromSetup: document.getElementById('backToHomeFromSetupBtn'),
-        };
-        const ui = { listaGiocatori: document.getElementById('listaGiocatori'), titoloCategoria: document.getElementById('titolo-categoria-punteggio'), inputsContainer: document.getElementById('punteggio-inputs-container'), teamPlayContainer: document.getElementById('team-play-container') };
-        let datiPartita;
+        document.addEventListener('DOMContentLoaded', () => {
+            const MERAVIGLIE = { base: ['Halikarnassos', 'Rhódos', 'Olympía', 'Alexandria', 'Babylon', 'Éphesos', 'Gizah', 'Manneken Pis', 'Grande Muraglia Cinese'], leaders: ['Roma', 'Abu Simbel'], cities: ['Byzantium', 'Petra'], armada: ['Siracusa'], edifice: ['Ur', 'Carthage'] };
+            const CATEGORIE = [
+                { key: 'meraviglia', label: '🏛️ Meraviglia', type: 'number', color: '#7f8c8d' },
+                { key: 'tesoro', label: '💰 Tesoro', type: 'number', color: '#f1c40f' },
+                { key: 'debiti', label: '💸 Debiti', type: 'number', expansion: 'cities', color: '#c0392b' },
+                { key: 'militari', label: '⚔️ Conflitti Militari', type: 'number', color: '#c0392b' },
+                { key: 'civili', label: '🔵 Edifici Civili', type: 'number', color: '#2980b9' },
+                { key: 'commerciali', label: '🟡 Edifici Commerciali', type: 'number', color: '#f1c40f' },
+                { key: 'scienza', label: '🟢 Edifici Scientifici', type: 'science', color: '#27ae60' },
+                { key: 'gilde', label: '🟣 Gilde', type: 'number', color: '#8e44ad' },
+                { key: 'cities', label: '⚫ Cities', type: 'number', expansion: 'cities', color: '#34495e' },
+                { key: 'leaders', label: '👑 Leader', type: 'number', expansion: 'leaders', color: '#bdc3c7' },
+                { key: 'conflittiNavali', label: '⚓ Conflitti Navali', type: 'number', expansion: 'armada', color: '#3498db' },
+                { key: 'percorsoMarittimo', label: '🗺️ Percorso Navale Blu', type: 'number', expansion: 'armada', color: '#3498db' },
+                { key: 'isole', label: '🏝️ Isole', type: 'number', expansion: 'armada', color: '#16a085' },
+                { key: 'edifice', label: '🏗️ Edifici', type: 'number', expansion: 'edifice', color: '#d35400' },
+            ];
+            const CATEGORIE_NEGATIVE_PERMESSE = ['militari', 'debiti', 'conflittiNavali'];
+            
+            const sezioni = { landing: document.getElementById('landing-sezione'), setup: document.getElementById('setup-sezione'), punteggio: document.getElementById('punteggio-sezione'), risultati: document.getElementById('risultati-sezione')};
+            const inputs = { nomeGiocatore: document.getElementById('nomeGiocatoreInput'), luogoPartita: document.getElementById('luogoPartitaInput'), esp: { cities: document.getElementById('esp-cities'), leaders: document.getElementById('esp-leaders'), armada: document.getElementById('esp-armada'), edifice: document.getElementById('esp-edifice') }, teamPlay: document.getElementById('team-play-checkbox'), dateToggle: document.getElementById('date-toggle'), manualDateInput: document.getElementById('manual-date-input') };
+            const bottoni = {
+                aggiungiGiocatore: document.getElementById('aggiungiGiocatoreBtn'), iniziaPartita: document.getElementById('iniziaPartitaBtn'),
+                nuovaPartitaLanding: document.getElementById('landingNuovaPartitaBtn'),
+                prevCat: document.getElementById('prevCatBtn'), nextCat: document.getElementById('nextCatBtn'),
+                randomWonder: document.getElementById('randomWonderBtn'), backToSetup: document.getElementById('backToSetupBtn'),
+                resetSettings: document.getElementById('resetSettingsBtn'),
+                backToHomeFromSetup: document.getElementById('backToHomeFromSetupBtn'),
+            };
+            const ui = { listaGiocatori: document.getElementById('listaGiocatori'), titoloCategoria: document.getElementById('titolo-categoria-punteggio'), inputsContainer: document.getElementById('punteggio-inputs-container'), teamPlayContainer: document.getElementById('team-play-container') };
+            let datiPartita;
 
-        function mostraSezione(nomeSezione) { for (const key in sezioni) { sezioni[key].classList.toggle('hidden', key !== nomeSezione); } }
-        function resetStato() { datiPartita = { giocatori: [], categoriaCorrenteIndex: 0, categoriePartita: [], espansioni: {}, idPartita: Date.now() }; }
-        function getWondersDisponibili() { let w = [...MERAVIGLIE.base]; if (inputs.esp.leaders.checked) w.push(...MERAVIGLIE.leaders); if (inputs.esp.cities.checked) w.push(...MERAVIGLIE.cities); if (inputs.esp.armada.checked) w.push(...MERAVIGLIE.armada); if (inputs.esp.edifice.checked) w.push(...MERAVIGLIE.edifice); return w.sort(); }
+            function mostraSezione(nomeSezione) { for (const key in sezioni) { sezioni[key].classList.toggle('hidden', key !== nomeSezione); } }
+            function resetStato() { datiPartita = { giocatori: [], categoriaCorrenteIndex: 0, categoriePartita: [], espansioni: {}, idPartita: Date.now() }; }
+            function getWondersDisponibili() { let w = [...MERAVIGLIE.base]; if (inputs.esp.leaders.checked) w.push(...MERAVIGLIE.leaders); if (inputs.esp.cities.checked) w.push(...MERAVIGLIE.cities); if (inputs.esp.armada.checked) w.push(...MERAVIGLIE.armada); if (inputs.esp.edifice.checked) w.push(...MERAVIGLIE.edifice); return w.sort(); }
 
-        function aggiornaListaGiocatoriUI() {
-            ui.listaGiocatori.innerHTML = '';
-            const wondersDisponibili = getWondersDisponibili();
-            const teamPlayActive = inputs.teamPlay.checked;
-            datiPartita.giocatori.forEach((g, index) => {
-                const li = document.createElement('li'); li.className = 'giocatore-setup-item';
-                
-                const nomeInput = document.createElement('input');
-                nomeInput.type = 'text'; nomeInput.className = 'nome-giocatore-input';
-                nomeInput.value = g.nome; nomeInput.dataset.index = index;
-                nomeInput.addEventListener('input', (e) => { datiPartita.giocatori[index].nome = e.target.value; });
-                li.appendChild(nomeInput);
+            function aggiornaListaGiocatoriUI() {
+                ui.listaGiocatori.innerHTML = '';
+                const wondersDisponibili = getWondersDisponibili();
+                const teamPlayActive = inputs.teamPlay.checked;
+                datiPartita.giocatori.forEach((g, index) => {
+                    const li = document.createElement('li'); li.className = 'giocatore-setup-item';
+                    
+                    const nomeInput = document.createElement('input');
+                    nomeInput.type = 'text'; nomeInput.className = 'nome-giocatore-input';
+                    nomeInput.value = g.nome; nomeInput.dataset.index = index;
+                    nomeInput.addEventListener('input', (e) => { datiPartita.giocatori[index].nome = e.target.value; });
+                    li.appendChild(nomeInput);
 
-                if(teamPlayActive) {
-                    const teamSelect = document.createElement('select'); teamSelect.className = 'team-select';
-                    const teamOptions = datiPartita.giocatori.length === 4 ? ['A', 'B'] : ['A', 'B', 'C'];
-                    teamSelect.innerHTML = teamOptions.map(t => `<option value="${t}" ${g.team === t ? 'selected' : ''}>Squadra ${t}</option>`).join('');
-                    teamSelect.addEventListener('change', (e) => { g.team = e.target.value; });
-                    li.appendChild(teamSelect);
-                }
-                const selectEl = document.createElement('select'); selectEl.className = 'wonder-select'; selectEl.innerHTML = `<option value="">Scegli Meraviglia</option>`;
-                wondersDisponibili.forEach(w => { const o = document.createElement('option'); o.value = w; o.textContent = w; if (g.meraviglia === w) o.selected = true; selectEl.appendChild(o); });
-                selectEl.addEventListener('change', (e) => { g.meraviglia = e.target.value; });
-                li.appendChild(selectEl); 
-                
-                const deleteBtn = document.createElement('button');
-                deleteBtn.className = 'delete-player-btn'; deleteBtn.innerHTML = '&#10006;';
-                deleteBtn.title = 'Elimina giocatore';
-                deleteBtn.addEventListener('click', () => {
-                    datiPartita.giocatori.splice(index, 1);
+                    if(teamPlayActive) {
+                        const teamSelect = document.createElement('select'); teamSelect.className = 'team-select';
+                        const teamOptions = datiPartita.giocatori.length === 4 ? ['A', 'B'] : ['A', 'B', 'C'];
+                        teamSelect.innerHTML = teamOptions.map(t => `<option value="${t}" ${g.team === t ? 'selected' : ''}>Squadra ${t}</option>`).join('');
+                        teamSelect.addEventListener('change', (e) => { g.team = e.target.value; });
+                        li.appendChild(teamSelect);
+                    }
+                    const selectEl = document.createElement('select'); selectEl.className = 'wonder-select'; selectEl.innerHTML = `<option value="">Scegli Meraviglia</option>`;
+                    wondersDisponibili.forEach(w => { const o = document.createElement('option'); o.value = w; o.textContent = w; if (g.meraviglia === w) o.selected = true; selectEl.appendChild(o); });
+                    selectEl.addEventListener('change', (e) => { g.meraviglia = e.target.value; });
+                    li.appendChild(selectEl); 
+                    
+                    const deleteBtn = document.createElement('button');
+                    deleteBtn.className = 'delete-player-btn'; deleteBtn.innerHTML = '&#10006;';
+                    deleteBtn.title = 'Elimina giocatore';
+                    deleteBtn.addEventListener('click', () => {
+                        datiPartita.giocatori.splice(index, 1);
+                        aggiornaListaGiocatoriUI();
+                    });
+                    li.appendChild(deleteBtn);
+
+                    ui.listaGiocatori.appendChild(li);
+                });
+                const num = datiPartita.giocatori.length;
+                bottoni.iniziaPartita.disabled = num < 3;
+                const canPlayTeams = num === 4 || num === 6;
+                ui.teamPlayContainer.classList.toggle('hidden', !canPlayTeams);
+                if (!canPlayTeams) inputs.teamPlay.checked = false;
+            }
+
+            function aggiungiGiocatore() {
+                const nome = inputs.nomeGiocatore.value.trim();
+                if (nome && datiPartita.giocatori.length < 7) {
+                    datiPartita.giocatori.push({ nome, meraviglia: '', team: 'A', punteggi: {}, totale: 0 });
+                    inputs.nomeGiocatore.value = '';
                     aggiornaListaGiocatoriUI();
-                });
-                li.appendChild(deleteBtn);
-
-                ui.listaGiocatori.appendChild(li);
-            });
-            const num = datiPartita.giocatori.length;
-            bottoni.iniziaPartita.disabled = num < 3;
-            const canPlayTeams = num === 4 || num === 6;
-            ui.teamPlayContainer.classList.toggle('hidden', !canPlayTeams);
-            if (!canPlayTeams) inputs.teamPlay.checked = false;
-        }
-
-        function aggiungiGiocatore() {
-            const nome = inputs.nomeGiocatore.value.trim();
-            if (nome && datiPartita.giocatori.length < 7) {
-                datiPartita.giocatori.push({ nome, meraviglia: '', team: 'A', punteggi: {}, totale: 0 });
-                inputs.nomeGiocatore.value = '';
-                aggiornaListaGiocatoriUI();
-                inputs.nomeGiocatore.focus();
-            }
-        }
-
-        function assegnaMeraviglieCasuali() {
-            const numGiocatori = datiPartita.giocatori.length; if (numGiocatori === 0) return;
-            let wonders = getWondersDisponibili();
-            if (wonders.length < numGiocatori) { alert("Non ci sono abbastanza meraviglie uniche per tutti i giocatori."); return; }
-            for (let i = wonders.length - 1; i > 0; i--) { const j = Math.floor(Math.random() * (i + 1)); [wonders[i], wonders[j]] = [wonders[j], wonders[i]]; }
-            datiPartita.giocatori.forEach((g, i) => { g.meraviglia = wonders[i]; });
-            aggiornaListaGiocatoriUI();
-        }
-
-        function avviaPartita() {
-            for (const key in inputs.esp) datiPartita.espansioni[key] = inputs.esp[key].checked;
-            datiPartita.espansioni.giocoASquadre = inputs.teamPlay.checked;
-            datiPartita.luogo = inputs.luogoPartita.value.trim();
-            datiPartita.manualDate = inputs.dateToggle.checked ? inputs.manualDateInput.value : null;
-            datiPartita.categoriePartita = CATEGORIE.filter(cat => !cat.expansion || datiPartita.espansioni[cat.expansion]);
-            if (!datiPartita.hasCalculatedResults) {
-                datiPartita.categoriaCorrenteIndex = 0;
-            } else if (datiPartita.categoriaCorrenteIndex >= datiPartita.categoriePartita.length) {
-                datiPartita.categoriaCorrenteIndex = datiPartita.categoriePartita.length -1;
-            }
-            mostraSezione('punteggio');
-            mostraSchermataCategoria();
-        }
-
-        function mostraSchermataCategoria() {
-            const index = datiPartita.categoriaCorrenteIndex; const categoria = datiPartita.categoriePartita[index];
-            ui.titoloCategoria.innerHTML = categoria.label;
-            ui.titoloCategoria.style.backgroundColor = categoria.color || 'transparent';
-            ui.inputsContainer.innerHTML = '';
-            if (categoria.key === 'gilde' && datiPartita.espansioni.armada) {
-                const avviso = document.createElement('div'); avviso.id = 'avviso-categoria';
-                avviso.textContent = 'Attenzione: con l\'espansione Armada ogni Gilda può valere un massimo di 10 punti vittoria.';
-                ui.inputsContainer.appendChild(avviso);
-            }
-            datiPartita.giocatori.forEach((giocatore, playerIndex) => {
-                if (categoria.type === 'number') {
-                    const riga = document.createElement('div'); riga.className = 'punteggio-giocatore-riga';
-                    riga.innerHTML = `<label for="p-cat-${playerIndex}">${giocatore.nome}</label><input type="number" id="p-cat-${playerIndex}" class="input-punteggio" data-player-index="${playerIndex}" value="${giocatore.punteggi[categoria.key] || 0}">`;
-                    ui.inputsContainer.appendChild(riga);
-                } else if (categoria.type === 'science') {
-                    const riga = document.createElement('div'); const puntiSalvati = giocatore.punteggi[categoria.key] || { tavoletta: 0, ingranaggio: 0, compasso: 0, serie: 0 };
-                    riga.innerHTML = `<div class="punteggio-giocatore-riga" style="margin-bottom: 10px;"><label>${giocatore.nome}</label><span id="anteprima-scienza-${playerIndex}" style="color: var(--colore-successo); font-weight: bold;">(${calcolaPuntiScienzaOttimizzati(puntiSalvati)}pt)</span></div><div class="science-input-grid"><input type="number" class="input-punteggio" data-player-index="${playerIndex}" data-science-type="tavoletta" value="${puntiSalvati.tavoletta}" placeholder="Tav."><input type="number" class="input-punteggio" data-player-index="${playerIndex}" data-science-type="ingranaggio" value="${puntiSalvati.ingranaggio}" placeholder="Ing."><input type="number" class="input-punteggio" data-player-index="${playerIndex}" data-science-type="compasso" value="${puntiSalvati.compasso}" placeholder="Comp."><input type="number" class="input-punteggio" data-player-index="${playerIndex}" data-science-type="serie" value="${puntiSalvati.serie}" placeholder="Serie"></div>`;
-                    ui.inputsContainer.appendChild(riga);
+                    inputs.nomeGiocatore.focus();
                 }
-            });
-            document.querySelectorAll('.science-input-grid input').forEach(input => {
-                input.addEventListener('input', () => {
-                    const pIndex = input.dataset.playerIndex; const simboli = { tavoletta: 0, ingranaggio: 0, compasso: 0, serie: 0 };
-                    document.querySelectorAll(`input[data-player-index="${pIndex}"][data-science-type]`).forEach(i => { simboli[i.dataset.scienceType] = parseInt(i.value) || 0; });
-                    document.getElementById(`anteprima-scienza-${pIndex}`).textContent = `(${calcolaPuntiScienzaOttimizzati(simboli)}pt)`;
-                });
-            });
-            bottoni.prevCat.disabled = index === 0;
-            const isLastCategory = index === datiPartita.categoriePartita.length - 1;
-            bottoni.nextCat.textContent = isLastCategory ? (datiPartita.hasCalculatedResults ? 'Ricalcola Risultati' : 'Vedi Risultati') : 'Prossima Categoria';
-        }
+            }
 
-        function navigaCategorie(dir) {
-            salvaPunteggiCategoriaCorrente();
-            datiPartita.categoriaCorrenteIndex += dir;
-            if (datiPartita.categoriaCorrenteIndex >= datiPartita.categoriePartita.length) {
-                datiPartita.categoriaCorrenteIndex = datiPartita.categoriePartita.length - 1; // Cap to last index
-                mostraRisultati();
-            } else {
+            function assegnaMeraviglieCasuali() {
+                const numGiocatori = datiPartita.giocatori.length; if (numGiocatori === 0) return;
+                let wonders = getWondersDisponibili();
+                if (wonders.length < numGiocatori) { alert("Non ci sono abbastanza meraviglie uniche per tutti i giocatori."); return; }
+                for (let i = wonders.length - 1; i > 0; i--) { const j = Math.floor(Math.random() * (i + 1)); [wonders[i], wonders[j]] = [wonders[j], wonders[i]]; }
+                datiPartita.giocatori.forEach((g, i) => { g.meraviglia = wonders[i]; });
+                aggiornaListaGiocatoriUI();
+            }
+
+            function avviaPartita() {
+                for (const key in inputs.esp) datiPartita.espansioni[key] = inputs.esp[key].checked;
+                datiPartita.espansioni.giocoASquadre = inputs.teamPlay.checked;
+                datiPartita.luogo = inputs.luogoPartita.value.trim();
+                datiPartita.manualDate = inputs.dateToggle.checked ? inputs.manualDateInput.value : null;
+                datiPartita.categoriePartita = CATEGORIE.filter(cat => !cat.expansion || datiPartita.espansioni[cat.expansion]);
+                if (!datiPartita.hasCalculatedResults) {
+                    datiPartita.categoriaCorrenteIndex = 0;
+                } else if (datiPartita.categoriaCorrenteIndex >= datiPartita.categoriePartita.length) {
+                    datiPartita.categoriaCorrenteIndex = datiPartita.categoriePartita.length -1;
+                }
+                mostraSezione('punteggio');
                 mostraSchermataCategoria();
             }
-        }
-        
-        function salvaPunteggiCategoriaCorrente() {
-            const cat = datiPartita.categoriePartita[datiPartita.categoriaCorrenteIndex];
-            if (cat && cat.type === 'number') {
-                ui.inputsContainer.querySelectorAll('.punteggio-giocatore-riga input').forEach(input => { datiPartita.giocatori[parseInt(input.dataset.playerIndex)].punteggi[cat.key] = parseInt(input.value) || 0; });
-            } else if (cat && cat.type === 'science') {
-                 datiPartita.giocatori.forEach((g, pIndex) => {
-                    const simboli = { tavoletta: 0, ingranaggio: 0, compasso: 0, serie: 0 };
-                    document.querySelectorAll(`input[data-player-index="${pIndex}"][data-science-type]`).forEach(i => { simboli[i.dataset.scienceType] = parseInt(i.value) || 0; });
-                    g.punteggi[cat.key] = simboli;
-                 });
-            }
-        }
-        
-        function calcolaPuntiScienza(simboli) { const t = simboli.tavoletta || 0; const i = simboli.ingranaggio || 0; const c = simboli.compasso || 0; return (t*t + i*i + c*c) + (Math.min(t, i, c) * 7); }
-        function calcolaPuntiScienzaOttimizzati(simboli) {
-            let { tavoletta, ingranaggio, compasso, serie } = simboli;
-            if (!serie || serie === 0) return calcolaPuntiScienza(simboli);
-            let t = tavoletta || 0, i = ingranaggio || 0, c = compasso || 0;
-            for (let j = 0; j < serie; j++) {
-                const score_t = calcolaPuntiScienza({tavoletta: t + 1, ingranaggio: i, compasso: c});
-                const score_i = calcolaPuntiScienza({tavoletta: t, ingranaggio: i + 1, compasso: c});
-                const score_c = calcolaPuntiScienza({tavoletta: t, ingranaggio: i, compasso: c + 1});
-                if (score_t >= score_i && score_t >= score_c) { t++; } 
-                else if (score_i > score_t && score_i >= score_c) { i++; } 
-                else { c++; }
-            }
-            return calcolaPuntiScienza({tavoletta: t, ingranaggio: i, compasso: c});
-        }
 
-        function mostraRisultati(partitaSalvata = null) {
-            if (partitaSalvata) {
-                datiPartita = JSON.parse(JSON.stringify(partitaSalvata)); // Deep copy to avoid modifying history
-            } else {
+            function mostraSchermataCategoria() {
+                const index = datiPartita.categoriaCorrenteIndex; const categoria = datiPartita.categoriePartita[index];
+                if (!categoria) return; 
+                ui.titoloCategoria.innerHTML = categoria.label;
+                ui.titoloCategoria.style.backgroundColor = categoria.color || 'transparent';
+                ui.inputsContainer.innerHTML = '';
+                if (categoria.key === 'gilde' && datiPartita.espansioni.armada) {
+                    const avviso = document.createElement('div'); avviso.id = 'avviso-categoria';
+                    avviso.textContent = 'Attenzione: con l\'espansione Armada ogni Gilda può valere un massimo di 10 punti vittoria.';
+                    ui.inputsContainer.appendChild(avviso);
+                }
+                if (categoria.type === 'science') {
+                    const scienceGrid = document.createElement('div');
+                    scienceGrid.className = 'science-table';
+                    // Header row
+                    scienceGrid.innerHTML = `
+                        <div></div> 
+                        <div><img src="https://i.postimg.cc/y6gd7hgg/compasso.png" class="science-icon" alt="Compasso"></div>
+                        <div><img src="https://i.postimg.cc/7b8j4rCV/tavoletta.png" class="science-icon" alt="Tavoletta"></div>
+                        <div><img src="https://i.postimg.cc/C12WvqS9/ingranaggio.png" class="science-icon" alt="Ingranaggio"></div>
+                        <div><img src="https://i.postimg.cc/43WC90Mf/serie.png" class="science-icon" alt="Serie"></div>
+                    `;
+                    datiPartita.giocatori.forEach((giocatore, playerIndex) => {
+                        const puntiSalvati = giocatore.punteggi[categoria.key] || { compasso: 0, tavoletta: 0, ingranaggio: 0, serie: 0 };
+                        scienceGrid.innerHTML += `
+                            <div class="player-name-cell">${giocatore.nome}<span id="anteprima-scienza-${playerIndex}" style="color: var(--colore-successo); font-weight: bold; display: block; font-size: 0.8em;">(${calcolaPuntiScienzaOttimizzati(puntiSalvati)}pt)</span></div>
+                            <input type="number" class="input-punteggio" data-player-index="${playerIndex}" data-science-type="compasso" value="${puntiSalvati.compasso || 0}" min="0">
+                            <input type="number" class="input-punteggio" data-player-index="${playerIndex}" data-science-type="tavoletta" value="${puntiSalvati.tavoletta || 0}" min="0">
+                            <input type="number" class="input-punteggio" data-player-index="${playerIndex}" data-science-type="ingranaggio" value="${puntiSalvati.ingranaggio || 0}" min="0">
+                            <input type="number" class="input-punteggio" data-player-index="${playerIndex}" data-science-type="serie" value="${puntiSalvati.serie || 0}" min="0">
+                        `;
+                    });
+                    ui.inputsContainer.appendChild(scienceGrid);
+
+                } else {
+                     datiPartita.giocatori.forEach((giocatore, playerIndex) => {
+                        const riga = document.createElement('div');
+                        riga.className = 'punteggio-giocatore-riga';
+                        const minAttribute = CATEGORIE_NEGATIVE_PERMESSE.includes(categoria.key) ? '' : 'min="0"';
+                        riga.innerHTML = `<label for="p-cat-${playerIndex}">${giocatore.nome}</label>
+                                        <div class="input-stepper">
+                                            <button class="stepper-btn" data-player-index="${playerIndex}" data-step="-1">-</button>
+                                            <input type="number" id="p-cat-${playerIndex}" class="input-punteggio" data-player-index="${playerIndex}" value="${giocatore.punteggi[categoria.key] || 0}" ${minAttribute}>
+                                            <button class="stepper-btn" data-player-index="${playerIndex}" data-step="1">+</button>
+                                        </div>`;
+                         ui.inputsContainer.appendChild(riga);
+                    });
+                }
+                
+                ui.inputsContainer.querySelectorAll('.stepper-btn').forEach(btn => {
+                    btn.addEventListener('click', (e) => {
+                        const input = e.target.parentElement.querySelector('input');
+                        const step = parseInt(e.target.dataset.step);
+                        const min = parseInt(input.min);
+                        const newValue = parseInt(input.value) + step;
+                        if (!isNaN(min) && newValue < min) {
+                           return;
+                        }
+                        input.value = newValue;
+                    });
+                });
+
+                document.querySelectorAll('.science-table input').forEach(input => {
+                    input.addEventListener('input', () => {
+                        const pIndex = input.dataset.playerIndex; const simboli = { compasso: 0, tavoletta: 0, ingranaggio: 0, serie: 0 };
+                        document.querySelectorAll(`input[data-player-index="${pIndex}"][data-science-type]`).forEach(i => { simboli[i.dataset.scienceType] = parseInt(i.value) || 0; });
+                        document.getElementById(`anteprima-scienza-${pIndex}`).textContent = `(${calcolaPuntiScienzaOttimizzati(simboli)}pt)`;
+                    });
+                });
+                bottoni.prevCat.disabled = index === 0;
+                const isLastCategory = index === datiPartita.categoriePartita.length - 1;
+                bottoni.nextCat.textContent = isLastCategory ? (datiPartita.hasCalculatedResults ? 'Ricalcola Risultati' : 'Vedi Risultati') : 'Avanti →';
+            }
+
+            function navigaCategorie(dir) {
+                salvaPunteggiCategoriaCorrente();
+                datiPartita.categoriaCorrenteIndex += dir;
+                if (datiPartita.categoriaCorrenteIndex >= datiPartita.categoriePartita.length) {
+                    datiPartita.categoriaCorrenteIndex = datiPartita.categoriePartita.length - 1; // Cap to last index
+                    mostraRisultati();
+                } else {
+                    mostraSchermataCategoria();
+                }
+            }
+            
+            function salvaPunteggiCategoriaCorrente() {
+                const cat = datiPartita.categoriePartita[datiPartita.categoriaCorrenteIndex];
+                if (cat && cat.type === 'number') {
+                    ui.inputsContainer.querySelectorAll('.punteggio-giocatore-riga input').forEach(input => { datiPartita.giocatori[parseInt(input.dataset.playerIndex)].punteggi[cat.key] = parseInt(input.value) || 0; });
+                } else if (cat && cat.type === 'science') {
+                    datiPartita.giocatori.forEach((g, pIndex) => {
+                        const simboli = { compasso: 0, tavoletta: 0, ingranaggio: 0, serie: 0 };
+                        document.querySelectorAll(`input[data-player-index="${pIndex}"][data-science-type]`).forEach(i => { simboli[i.dataset.scienceType] = parseInt(i.value) || 0; });
+                        g.punteggi[cat.key] = simboli;
+                    });
+                }
+            }
+            
+            function calcolaPuntiScienza(simboli) { const t = simboli.tavoletta || 0; const i = simboli.ingranaggio || 0; const c = simboli.compasso || 0; return (t*t + i*i + c*c) + (Math.min(t, i, c) * 7); }
+            function calcolaPuntiScienzaOttimizzati(simboli) {
+                let { compasso, tavoletta, ingranaggio, serie } = simboli;
+                if (!serie || serie === 0) return calcolaPuntiScienza(simboli);
+                let c = compasso || 0, t = tavoletta || 0, i = ingranaggio || 0;
+                for (let j = 0; j < serie; j++) {
+                    const score_c = calcolaPuntiScienza({compasso: c + 1, tavoletta: t, ingranaggio: i});
+                    const score_t = calcolaPuntiScienza({compasso: c, tavoletta: t + 1, ingranaggio: i});
+                    const score_i = calcolaPuntiScienza({compasso: c, tavoletta: t, ingranaggio: i + 1});
+                    if (score_c >= score_t && score_c >= score_i) { c++; } 
+                    else if (score_t > score_c && score_t >= score_i) { t++; } 
+                    else { i++; }
+                }
+                return calcolaPuntiScienza({compasso: c, tavoletta: t, ingranaggio: i});
+            }
+
+            function mostraRisultati(partitaSalvata = null) {
+                if (partitaSalvata) {
+                    datiPartita = JSON.parse(JSON.stringify(partitaSalvata)); // Deep copy to avoid modifying history
+                }
                 datiPartita.hasCalculatedResults = true;
+                
                 const dataPartita = datiPartita.manualDate ? new Date(datiPartita.manualDate) : new Date();
-                datiPartita.data = dataPartita.toLocaleString('it-IT', { day: '2-digit', month: '2-digit', year: '2-digit', hour: '2-digit', minute: '2-digit' });
+                datiPartita.data = datiPartita.data || dataPartita.toLocaleString('it-IT', { day: '2-digit', month: '2-digit', year: '2-digit', hour: '2-digit', minute: '2-digit' });
                 
                 datiPartita.giocatori.forEach(g => {
                     const p = g.punteggi;
@@ -427,366 +439,221 @@
                     g.punteggi.puntiTesoro = pTesoro;
                     g.punteggi.puntiScienza = pScienza;
 
-                    let total = 0;
+                    g.totale = 0;
                     datiPartita.categoriePartita.forEach(cat => {
                         const key = cat.key;
                         if (key === 'tesoro') {
-                            total += pTesoro;
-                        } else if (key === 'scienza') {
-                            total += pScienza;
-                        } else if (key !== 'scienzaSimboli') {
-                            const val = p[key] || 0;
-                            total += val;
+                            g.totale += pTesoro;
+                        } else if (key === 'scienza' || key === 'scienzaSimboli') {
+                            // handled separately
+                        } else {
+                            g.totale += (p[key] || 0);
                         }
                     });
-                    g.totale = total;
+                    g.totale += pScienza;
                 });
                 
-                salvaPartitaNelloStorico();
+                if(!partitaSalvata) {
+                    salvaPartitaNelloStorico();
+                }
+                
+                const infoEl = document.createElement('div');
+                infoEl.className = 'header-info';
+                infoEl.innerHTML = `<span>${datiPartita.data}${datiPartita.luogo ? `, ${datiPartita.luogo}` : ''}</span>`;
+
+                sezioni.risultati.innerHTML = '';
+                sezioni.risultati.appendChild(infoEl);
+                const titolo = document.createElement('h2');
+                titolo.textContent = 'Classifica Finale';
+                sezioni.risultati.appendChild(titolo);
+
+                if (datiPartita.espansioni.giocoASquadre) { mostraRisultatiSquadre(); } else { mostraRisultatiIndividuali(); }
+                
+                const btnGroupTop = document.createElement('div');
+                btnGroupTop.className = 'gruppo-bottoni';
+                const backToScoreBtn = document.createElement('button');
+                backToScoreBtn.textContent = 'Indietro';
+                backToScoreBtn.addEventListener('click', () => mostraSezione('punteggio'));
+                const backToHomeBtn = document.createElement('button');
+                backToHomeBtn.textContent = 'Torna alla Home';
+                backToHomeBtn.addEventListener('click', () => mostraSezione('landing'));
+                btnGroupTop.appendChild(backToScoreBtn);
+                btnGroupTop.appendChild(backToHomeBtn);
+                sezioni.risultati.appendChild(btnGroupTop);
+
+                const btnGroupBottom = document.createElement('div');
+                btnGroupBottom.className = 'gruppo-bottoni';
+                const shareBtn = document.createElement('button');
+                shareBtn.textContent = 'Condividi Risultati';
+                shareBtn.className = 'bottone-grande';
+                shareBtn.addEventListener('click', condividiComeImmagine);
+                const nuovaPartitaBtn = document.createElement('button');
+                nuovaPartitaBtn.className = 'bottone-grande';
+                nuovaPartitaBtn.textContent = 'Nuova Partita';
+                nuovaPartitaBtn.addEventListener('click', nuovaPartita);
+                btnGroupBottom.appendChild(shareBtn);
+                btnGroupBottom.appendChild(nuovaPartitaBtn);
+                sezioni.risultati.appendChild(btnGroupBottom);
+                
+                mostraSezione('risultati');
             }
-            
-            const infoEl = document.createElement('div');
-            infoEl.className = 'header-info';
-            infoEl.innerHTML = `<span>${datiPartita.data}${datiPartita.luogo ? `, ${datiPartita.luogo}` : ''}</span>`;
 
-            sezioni.risultati.innerHTML = '';
-            sezioni.risultati.appendChild(infoEl);
-            const titolo = document.createElement('h2');
-            titolo.textContent = 'Classifica Finale';
-            sezioni.risultati.appendChild(titolo);
+            function mostraRisultatiIndividuali() {
+                const giocatoriOrdinati = [...datiPartita.giocatori].sort((a, b) => b.totale !== a.totale ? b.totale - a.totale : (b.punteggi.tesoro || 0) - (a.punteggi.tesoro || 0));
+                const classificaUI = document.createElement('div'); classificaUI.id = 'lista-classifica';
+                const isWinner = giocatoriOrdinati.length < 2 || giocatoriOrdinati[0].totale > giocatoriOrdinati[1].totale || (giocatoriOrdinati[0].totale === giocatoriOrdinati[1].totale && giocatoriOrdinati[0].punteggi.tesoro > giocatoriOrdinati[1].punteggi.tesoro);
 
-            if (datiPartita.espansioni.giocoASquadre) { mostraRisultatiSquadre(); } else { mostraRisultatiIndividuali(); }
-            
-            const btnGroupTop = document.createElement('div');
-            btnGroupTop.className = 'gruppo-bottoni';
-            const backToScoreBtn = document.createElement('button');
-            backToScoreBtn.textContent = 'Indietro';
-            backToScoreBtn.addEventListener('click', () => mostraSezione('punteggio'));
-            const backToHomeBtn = document.createElement('button');
-            backToHomeBtn.textContent = 'Torna alla Home';
-            backToHomeBtn.addEventListener('click', () => mostraSezione('landing'));
-            btnGroupTop.appendChild(backToScoreBtn);
-            btnGroupTop.appendChild(backToHomeBtn);
-            sezioni.risultati.appendChild(btnGroupTop);
-
-            const btnGroupBottom = document.createElement('div');
-            btnGroupBottom.className = 'gruppo-bottoni';
-            const shareBtn = document.createElement('button');
-            shareBtn.textContent = 'Condividi Risultati';
-            shareBtn.className = 'bottone-grande';
-            shareBtn.addEventListener('click', condividiComeImmagine);
-            const nuovaPartitaBtn = document.createElement('button');
-            nuovaPartitaBtn.className = 'bottone-grande';
-            nuovaPartitaBtn.textContent = 'Nuova Partita';
-            nuovaPartitaBtn.addEventListener('click', nuovaPartita);
-            btnGroupBottom.appendChild(shareBtn);
-            btnGroupBottom.appendChild(nuovaPartitaBtn);
-            sezioni.risultati.appendChild(btnGroupBottom);
-            
-            mostraSezione('risultati');
-        }
-
-        function mostraRisultatiIndividuali() {
-            const giocatoriOrdinati = [...datiPartita.giocatori].sort((a, b) => b.totale !== a.totale ? b.totale - a.totale : (b.punteggi.tesoro || 0) - (a.punteggi.tesoro || 0));
-            const classificaUI = document.createElement('div'); classificaUI.id = 'lista-classifica';
-            const isWinner = giocatoriOrdinati.length < 2 || giocatoriOrdinati[0].totale > giocatoriOrdinati[1].totale || (giocatoriOrdinati[0].totale === giocatoriOrdinati[1].totale && giocatoriOrdinati[0].punteggi.tesoro > giocatoriOrdinati[1].punteggi.tesoro);
-
-            giocatoriOrdinati.forEach((g, index) => {
-                const li = document.createElement('div'); li.className = 'risultato-giocatore';
-                if (index === 0 && isWinner) li.classList.add('vincitore');
-                const prevPlayer = giocatoriOrdinati[index - 1]; 
-                const nextPlayer = giocatoriOrdinati[index + 1];
-                const isTied = (prevPlayer && prevPlayer.totale === g.totale) || (nextPlayer && nextPlayer.totale === g.totale);
-                let scoreDisplay = `<span class="punteggio-finale">${g.totale}</span>`;
-                if (isTied) scoreDisplay = `<span class="punteggio-finale">${g.totale}<span class="tie-breaker">(${(g.punteggi.tesoro || 0)}💰)</span></span>`;
-                li.innerHTML = `<div class="risultato-header"><div><span class="medaglia">${(index === 0 && isWinner) ? '🥇' : `${index + 1}.`}</span><span class="nome">${g.nome}<span class="wonder-display">(${g.meraviglia || 'Nessuna'})</span></span></div>${scoreDisplay}</div>`;
-                li.appendChild(createBreakdownDiv(g)); classificaUI.appendChild(li);
-            });
-            sezioni.risultati.appendChild(classificaUI);
-        }
-
-        function mostraRisultatiSquadre() {
-            const squadreMap = datiPartita.giocatori.reduce((acc, g) => {
-                if (!acc[g.team]) acc[g.team] = { nome: `Squadra ${g.team}`, giocatori: [], punteggi: {}, totale: 0 };
-                acc[g.team].giocatori.push(g);
-                return acc;
-            }, {});
-            const squadre = Object.values(squadreMap);
-            squadre.forEach(s => {
-                s.totale = s.giocatori.reduce((acc, g) => acc + g.totale, 0);
-                datiPartita.categoriePartita.forEach(cat => {
-                    const key = cat.key;
-                    if (key === 'scienza') { s.punteggi.puntiScienza = s.giocatori.reduce((acc, g) => acc + (g.punteggi.puntiScienza || 0), 0); } 
-                    else if (key === 'tesoro') { s.punteggi.puntiTesoro = s.giocatori.reduce((acc, g) => acc + (g.punteggi.puntiTesoro || 0), 0); s.punteggi[key] = s.giocatori.reduce((acc, g) => acc + (g.punteggi[key] || 0), 0); } 
-                    else { s.punteggi[key] = s.giocatori.reduce((acc, g) => acc + (g.punteggi[key] || 0), 0); }
+                giocatoriOrdinati.forEach((g, index) => {
+                    const li = document.createElement('div'); li.className = 'risultato-giocatore';
+                    if (index === 0 && isWinner) li.classList.add('vincitore');
+                    const prevPlayer = giocatoriOrdinati[index - 1]; 
+                    const nextPlayer = giocatoriOrdinati[index + 1];
+                    const isTied = (prevPlayer && prevPlayer.totale === g.totale) || (nextPlayer && nextPlayer.totale === g.totale);
+                    let scoreDisplay = `<span class="punteggio-finale">${g.totale}</span>`;
+                    if (isTied) scoreDisplay = `<span class="punteggio-finale">${g.totale}<span class="tie-breaker">(${(g.punteggi.tesoro || 0)}💰)</span></span>`;
+                    li.innerHTML = `<div class="risultato-header"><div><span class="medaglia">${(index === 0 && isWinner) ? '🥇' : `${index + 1}.`}</span><div class="nome"><span>${g.nome}</span><span class="wonder-display">${g.meraviglia || 'Nessuna'}</span></div></div>${scoreDisplay}</div>`;
+                    li.appendChild(createBreakdownDiv(g)); classificaUI.appendChild(li);
                 });
-            });
-            squadre.sort((a, b) => b.totale !== a.totale ? b.totale - a.totale : (b.punteggi.tesoro || 0) - (a.punteggi.tesoro || 0));
-            const classificaUI = document.createElement('div'); classificaUI.id = 'lista-classifica';
-            
-            const isWinner = squadre.length < 2 || squadre[0].totale > squadre[1].totale || (squadre[0].totale === squadre[1].totale && squadre[0].punteggi.tesoro > squadre[1].punteggi.tesoro);
+                sezioni.risultati.appendChild(classificaUI);
+            }
 
-            squadre.forEach((s, index) => {
-                const teamEl = document.createElement('div'); teamEl.className = 'risultato-squadra';
-                if(index === 0 && isWinner) teamEl.classList.add('vincitore');
-
-                const teamBreakdown = createBreakdownDiv(s);
-                const teamPlayersDetails = document.createElement('div'); teamPlayersDetails.className = 'dettaglio-squadra';
-                s.giocatori.sort((a, b) => b.totale - a.totale).forEach(g => {
-                    const playerDetailEl = document.createElement('div'); playerDetailEl.className = 'dettaglio-giocatore-individuale';
-                    const playerBreakdown = createBreakdownDiv(g);
-                    playerDetailEl.innerHTML = `<div class="risultato-header"><span class="nome">${g.nome}<span class="wonder-display">(${g.meraviglia || 'Nessuna'})</span></span><span class="punteggio-finale">${g.totale}</span></div>`;
-                    playerDetailEl.appendChild(playerBreakdown);
-                    teamPlayersDetails.appendChild(playerDetailEl);
+            function mostraRisultatiSquadre() {
+                const squadreMap = datiPartita.giocatori.reduce((acc, g) => {
+                    if (!acc[g.team]) acc[g.team] = { nome: `Squadra ${g.team}`, giocatori: [], punteggi: {}, totale: 0 };
+                    acc[g.team].giocatori.push(g);
+                    return acc;
+                }, {});
+                const squadre = Object.values(squadreMap);
+                squadre.forEach(s => {
+                    s.totale = s.giocatori.reduce((acc, g) => acc + g.totale, 0);
+                    datiPartita.categoriePartita.forEach(cat => {
+                        const key = cat.key;
+                        if (key === 'scienza') { s.punteggi.puntiScienza = s.giocatori.reduce((acc, g) => acc + (g.punteggi.puntiScienza || 0), 0); } 
+                        else if (key === 'tesoro') { s.punteggi.puntiTesoro = s.giocatori.reduce((acc, g) => acc + (g.punteggi.puntiTesoro || 0), 0); s.punteggi[key] = s.giocatori.reduce((acc, g) => acc + (g.punteggi[key] || 0), 0); } 
+                        else { s.punteggi[key] = s.giocatori.reduce((acc, g) => acc + (g.punteggi[key] || 0), 0); }
+                    });
                 });
-                teamEl.innerHTML = `<div class="risultato-header"><div><span class="medaglia">${(index === 0 && isWinner) ? '🥇' : `${index + 1}.`}</span><span class="nome">${s.nome}</span></div><span class="punteggio-finale">${s.totale}</span></div>`;
-                teamEl.appendChild(teamBreakdown); teamEl.appendChild(teamPlayersDetails);
-                classificaUI.appendChild(teamEl);
-            });
-            sezioni.risultati.appendChild(classificaUI);
-        }
-
-        function createBreakdownDiv(entity) {
-            const div = document.createElement('div'); div.className = 'risultato-breakdown';
-            datiPartita.categoriePartita.forEach(cat => {
-                let pCat = cat.key === 'scienza' ? entity.punteggi.puntiScienza : (cat.key === 'tesoro' ? entity.punteggi.puntiTesoro : (entity.punteggi[cat.key] || 0));
-                const icon = cat.label.split(' ')[0];
-                const name = cat.label.split(' ').slice(1).join(' ');
-                div.innerHTML += `<span class="breakdown-item" title="${name}">${icon} ${pCat}</span>`;
-            });
-            return div;
-        }
-
-        function condividiComeImmagine() {
-            const shareableContent = document.createElement('div');
-            shareableContent.style.width = '1280px';
-            shareableContent.style.padding = '50px';
-            shareableContent.style.backgroundColor = getComputedStyle(document.documentElement).getPropertyValue('--colore-sfondo');
-            shareableContent.style.fontFamily = "'Roboto', sans-serif";
-            shareableContent.style.color = getComputedStyle(document.documentElement).getPropertyValue('--colore-testo');
-            
-            const logo = document.getElementById('logo').cloneNode(true);
-            logo.style.maxWidth = '50%';
-            logo.style.margin = '0 auto 40px auto';
-            
-            const results = document.getElementById('risultati-sezione').cloneNode(true);
-            results.querySelectorAll('.gruppo-bottoni, button, .header-info ~ h2 + button').forEach(el => el.remove());
-            results.querySelector('.header-info').style.fontSize = '1.2em';
-            results.querySelector('.header-info').style.marginBottom = '20px';
-
-            shareableContent.appendChild(logo);
-            shareableContent.appendChild(results);
-            
-            document.body.appendChild(shareableContent);
-
-            html2canvas(shareableContent, {
-                width: 1280,
-                height: Math.max(720, shareableContent.scrollHeight),
-                scale: 1,
-                backgroundColor: null,
-                useCORS: true
-            }).then(canvas => {
-                const link = document.createElement('a');
-                link.download = `risultati-7wonders-${Date.now()}.png`;
-                link.href = canvas.toDataURL('image/png');
-                link.click();
-                document.body.removeChild(shareableContent);
-            });
-        }
-        
-        function nuovaPartita() {
-            datiPartita.giocatori.forEach(g => {
-                g.punteggi = {};
-                g.totale = 0;
-            });
-            datiPartita.categoriaCorrenteIndex = 0;
-            datiPartita.hasCalculatedResults = false;
-            mostraSezione('setup');
-        }
-
-        function inizializzaApp() {
-            resetStato();
-            aggiornaListaGiocatoriUI();
-            mostraSezione('landing');
-            inputs.nomeGiocatore.focus();
-        }
-
-        function resetSettings() {
-            Object.values(inputs.esp).forEach(checkbox => checkbox.checked = false);
-            inputs.teamPlay.checked = false;
-            inputs.luogoPartita.value = '';
-            datiPartita.giocatori = [];
-            aggiornaListaGiocatoriUI();
-        }
-        
-        bottoni.aggiungiGiocatore.addEventListener('click', aggiungiGiocatore);
-        inputs.nomeGiocatore.addEventListener('keypress', e => { if (e.key === 'Enter') { e.preventDefault(); aggiungiGiocatore(); }});
-        bottoni.iniziaPartita.addEventListener('click', () => { if (!bottoni.iniziaPartita.disabled) avviaPartita(); });
-        bottoni.vediStorico.addEventListener('click', mostraStorico);
-        bottoni.vediStatistiche.addEventListener('click', mostraStatistiche);
-        bottoni.nuovaPartitaLanding.addEventListener('click', () => mostraSezione('setup'));
-        bottoni.randomWonder.addEventListener('click', assegnaMeraviglieCasuali);
-        bottoni.nextCat.addEventListener('click', () => navigaCategorie(1));
-        bottoni.prevCat.addEventListener('click', () => { salvaPunteggiCategoriaCorrente(); datiPartita.categoriaCorrenteIndex -= 1; mostraSchermataCategoria(); });
-        bottoni.backToSetup.addEventListener('click', () => { salvaPunteggiCategoriaCorrente(); mostraSezione('setup'); });
-        bottoni.resetSettings.addEventListener('click', resetSettings);
-        bottoni.backToHomeFromSetup.addEventListener('click', () => mostraSezione('landing'));
-        [...Object.values(inputs.esp), inputs.teamPlay, inputs.dateToggle].forEach(el => el.addEventListener('change', () => {
-             document.getElementById('manual-date-container').classList.toggle('hidden', !inputs.dateToggle.checked);
-             aggiornaListaGiocatoriUI();
-        }));
-        
-        function salvaPartitaNelloStorico(dataPartita) {
-            try {
-                let storico = JSON.parse(localStorage.getItem('7wondersStorico')) || [];
-                // Remove if game already exists (for updates)
-                storico = storico.filter(p => p.id !== datiPartita.idPartita);
-                storico.unshift(datiPartita);
-                localStorage.setItem('7wondersStorico', JSON.stringify(storico));
-            } catch (e) { console.error("Impossibile salvare lo storico:", e); }
-        }
-
-        function mostraStorico() {
-            mostraSezione('storico'); sezioni.storico.innerHTML = '<h2>Cronologia partite</h2>';
-            try {
-                const storico = JSON.parse(localStorage.getItem('7wondersStorico')) || [];
-                const partiteIndividuali = storico.filter(p => !p.espansioni.giocoASquadre);
-                const partiteSquadre = storico.filter(p => p.espansioni.giocoASquadre);
+                squadre.sort((a, b) => b.totale !== a.totale ? b.totale - a.totale : (b.punteggi.tesoro || 0) - (a.punteggi.tesoro || 0));
+                const classificaUI = document.createElement('div'); classificaUI.id = 'lista-classifica';
                 
-                if (partiteSquadre.length > 0) {
-                    sezioni.storico.innerHTML += '<h3>Partite a Squadre</h3>';
-                    const listaSquadre = document.createElement('div'); listaSquadre.id = 'lista-storico-squadre';
-                    partiteSquadre.forEach(p => { const v = document.createElement('div'); v.className = 'voce-storico'; v.innerHTML = `<div class="storico-header"><div class="storico-header-info" data-id="${p.id}"><span>Vincitore: ${p.vincitore}</span><span class="data">${p.data}</span></div><button class="delete-history-btn" data-id="${p.id}">&#10006;</button></div>`; listaSquadre.appendChild(v); });
-                    sezioni.storico.appendChild(listaSquadre);
-                }
+                const isWinner = squadre.length < 2 || squadre[0].totale > squadre[1].totale || (squadre[0].totale === squadre[1].totale && squadre[0].punteggi.tesoro > squadre[1].punteggi.tesoro);
 
-                if (partiteIndividuali.length > 0) {
-                    sezioni.storico.innerHTML += '<h3>Partite Individuali</h3>';
-                    const listaIndividuali = document.createElement('div'); listaIndividuali.id = 'lista-storico-individuali';
-                    partiteIndividuali.forEach(p => {
-                        const vincitore = p.giocatori.sort((a,b) => b.totale - a.totale)[0];
-                        const v = document.createElement('div'); v.className = 'voce-storico'; v.innerHTML = `<div class="storico-header"><div class="storico-header-info" data-id="${p.id}"><span>Vincitore: ${vincitore.nome} (${vincitore.totale}pt)</span><span class="data">${p.data}</span></div><button class="delete-history-btn" data-id="${p.id}">&#10006;</button></div>`;
-                        listaIndividuali.appendChild(v);
+                squadre.forEach((s, index) => {
+                    const teamEl = document.createElement('div'); teamEl.className = 'risultato-squadra';
+                    if(index === 0 && isWinner) teamEl.classList.add('vincitore');
+
+                    const teamBreakdown = createBreakdownDiv(s);
+                    const teamPlayersDetails = document.createElement('div'); teamPlayersDetails.className = 'dettaglio-squadra';
+                    s.giocatori.sort((a, b) => b.totale - a.totale).forEach(g => {
+                        const playerDetailEl = document.createElement('div'); playerDetailEl.className = 'dettaglio-giocatore-individuale';
+                        const playerBreakdown = createBreakdownDiv(g);
+                        playerDetailEl.innerHTML = `<div class="risultato-header"><div class="nome"><span>${g.nome}</span><span class="wonder-display">${g.meraviglia || 'Nessuna'}</span></div><span class="punteggio-finale">${g.totale}</span></div>`;
+                        playerDetailEl.appendChild(playerBreakdown);
+                        teamPlayersDetails.appendChild(playerDetailEl);
                     });
-                    sezioni.storico.appendChild(listaIndividuali);
-                }
 
-                if (storico.length === 0) { sezioni.storico.innerHTML += '<p>Nessuna partita salvata.</p>';
-                } else {
-                    const cancellaBtn = document.createElement('button'); cancellaBtn.id = 'cancellaStoricoBtn'; cancellaBtn.className = 'bottone-grande'; cancellaBtn.textContent = 'Cancella Cronologia';
-                    cancellaBtn.onclick = () => { if (confirm('Sei sicuro di voler cancellare tutta la cronologia?')) { localStorage.removeItem('7wondersStorico'); mostraStorico(); }};
-                    sezioni.storico.appendChild(cancellaBtn);
-                }
-            } catch (e) { sezioni.storico.innerHTML += '<p>Errore nel caricamento dello storico.</p>'; }
-            
-            sezioni.storico.querySelectorAll('.delete-history-btn').forEach(btn => {
-                btn.addEventListener('click', (e) => {
-                    e.stopPropagation();
-                    if(confirm('Sei sicuro di voler eliminare questa partita?')) {
-                        let storico = JSON.parse(localStorage.getItem('7wondersStorico'));
-                        storico = storico.filter(p => p.id != e.target.dataset.id);
-                        localStorage.setItem('7wondersStorico', JSON.stringify(storico));
-                        mostraStorico();
-                    }
-                });
-            });
-
-            sezioni.storico.querySelectorAll('.storico-header-info').forEach(info => {
-                 info.closest('.voce-storico').addEventListener('click', (e) => {
-                    const id = e.currentTarget.querySelector('.delete-history-btn').dataset.id;
-                    const storico = JSON.parse(localStorage.getItem('7wondersStorico'));
-                    const partita = storico.find(p => p.id == id);
-                    if (partita) {
-                        mostraRisultati(partita);
-                    }
-                 });
-            });
-
-            const indietroBtn = document.createElement('button'); indietroBtn.className = 'bottone-grande'; indietroBtn.textContent = 'Indietro';
-            indietroBtn.onclick = () => mostraSezione('landing');
-            sezioni.storico.appendChild(indietroBtn);
-        }
-
-        function mostraStatistiche() {
-            mostraSezione('statistiche');
-            const statsContainer = sezioni.statistiche;
-            statsContainer.innerHTML = '<h2>Statistiche Giocatori</h2>';
-
-            try {
-                const storico = JSON.parse(localStorage.getItem('7wondersStorico')) || [];
-                if(storico.length === 0) {
-                    statsContainer.innerHTML += '<p>Nessuna partita in cronologia per calcolare le statistiche.</p>';
-                } else {
-                    const playerStats = {};
-                    let allWonders = [];
-                    storico.forEach(partita => {
-                        partita.giocatori.forEach(giocatore => {
-                            const nome = giocatore.nome.trim();
-                            if(!playerStats[nome]) {
-                                playerStats[nome] = { gamesPlayed: 0, wins: 0, scores: [], wonderCount: {} };
-                            }
-                            const stats = playerStats[nome];
-                            stats.gamesPlayed++;
-                            stats.scores.push(giocatore.totale);
-                            if (giocatore.meraviglia) {
-                                stats.wonderCount[giocatore.meraviglia] = (stats.wonderCount[giocatore.meraviglia] || 0) + 1;
-                                allWonders.push(giocatore.meraviglia);
-                            }
-                            if (partita.vincitore === nome || (partita.giocoASquadre && partita.vincitore.includes(giocatore.team))) {
-                                stats.wins++;
-                            }
-                        });
-                    });
+                    const prevTeam = squadre[index - 1]; const nextTeam = squadre[index + 1];
+                    const isTied = (prevTeam && prevTeam.totale === s.totale) || (nextTeam && nextTeam.totale === s.totale);
+                    let scoreDisplay = `<span class="punteggio-finale">${s.totale}</span>`;
+                    if(isTied) scoreDisplay = `<span class="punteggio-finale">${s.totale}<span class="tie-breaker">(${(s.punteggi.tesoro || 0)}💰)</span></span>`;
                     
-                    const sortedPlayers = Object.keys(playerStats).sort((a,b) => (playerStats[b].wins / playerStats[b].gamesPlayed) - (playerStats[a].wins / playerStats[a].gamesPlayed));
-                    const mostWinningPlayer = sortedPlayers[0];
-                    const wonderFrequency = allWonders.reduce((acc, w) => { acc[w] = (acc[w] || 0) + 1; return acc; }, {});
-                    const mostUsedWonder = Object.keys(wonderFrequency).sort((a,b) => wonderFrequency[b] - wonderFrequency[a])[0] || 'N/D';
-
-                    const globalCard = document.createElement('div');
-                    globalCard.className = 'stat-card';
-                    globalCard.innerHTML = `<h3 class="nome">Statistiche Globali</h3>
-                                        <ul>
-                                            <li><span>Giocatore più Vincente</span> <strong>${mostWinningPlayer} (${(playerStats[mostWinningPlayer].wins / playerStats[mostWinningPlayer].gamesPlayed * 100).toFixed(1)}%)</strong></li>
-                                            <li><span>Meraviglia più Utilizzata</span> <strong>${mostUsedWonder}</strong></li>
-                                        </ul>`;
-                    statsContainer.appendChild(globalCard);
-
-
-                    sortedPlayers.forEach(nome => {
-                        const stats = playerStats[nome];
-                        const avgScore = stats.scores.reduce((a,b) => a + b, 0) / stats.gamesPlayed;
-                        const maxScore = Math.max(...stats.scores);
-                        const winRate = (stats.wins / stats.gamesPlayed) * 100;
-                        const mostPlayedWonder = Object.keys(stats.wonderCount).sort((a,b) => stats.wonderCount[b] - stats.wonderCount[a])[0] || 'N/D';
-
-                        const card = document.createElement('div');
-                        card.className = 'stat-card';
-                        card.innerHTML = `<h3 class="nome">${nome}</h3>
-                                        <ul>
-                                            <li><span>Partite Giocate</span> <strong>${stats.gamesPlayed}</strong></li>
-                                            <li><span>Vittorie</span> <strong>${stats.wins} (${winRate.toFixed(1)}%)</strong></li>
-                                            <li><span>Punteggio Medio</span> <strong>${avgScore.toFixed(1)}</strong></li>
-                                            <li><span>Punteggio Massimo</span> <strong>${maxScore}</strong></li>
-                                            <li><span>Meraviglia Preferita</span> <strong>${mostPlayedWonder}</strong></li>
-                                        </ul>`;
-                        statsContainer.appendChild(card);
-                    });
-                }
-
-            } catch(e) {
-                statsContainer.innerHTML += '<p>Errore nel caricamento delle statistiche.</p>';
-                console.error(e);
+                    teamEl.innerHTML = `<div class="risultato-header"><div><span class="medaglia">${(index === 0 && isWinner) ? '🥇' : `${index + 1}.`}</span><span class="nome">${s.nome}</span></div>${scoreDisplay}</div>`;
+                    teamEl.appendChild(teamBreakdown); teamEl.appendChild(teamPlayersDetails);
+                    classificaUI.appendChild(teamEl);
+                });
+                sezioni.risultati.appendChild(classificaUI);
             }
 
-            const indietroBtn = document.createElement('button');
-            indietroBtn.className = 'bottone-grande';
-            indietroBtn.textContent = 'Indietro';
-            indietroBtn.onclick = () => mostraSezione('landing');
-            statsContainer.appendChild(indietroBtn);
-        }
+            function createBreakdownDiv(entity) {
+                const div = document.createElement('div'); div.className = 'risultato-breakdown';
+                datiPartita.categoriePartita.forEach(cat => {
+                    let pCat = cat.key === 'scienza' ? entity.punteggi.puntiScienza : (cat.key === 'tesoro' ? entity.punteggi.puntiTesoro : (entity.punteggi[cat.key] || 0));
+                    const icon = cat.label.split(' ')[0];
+                    const name = cat.label.split(' ').slice(1).join(' ');
+                    div.innerHTML += `<span class="breakdown-item" title="${name}">${icon} ${pCat}</span>`;
+                });
+                return div;
+            }
 
-        inizializzaApp();
+            function condividiComeImmagine() {
+                const shareableContent = document.createElement('div');
+                shareableContent.style.width = '1280px';
+                shareableContent.style.padding = '50px';
+                shareableContent.style.backgroundColor = getComputedStyle(document.documentElement).getPropertyValue('--colore-sfondo');
+                shareableContent.style.fontFamily = "'Roboto', sans-serif";
+                shareableContent.style.color = getComputedStyle(document.documentElement).getPropertyValue('--colore-testo');
+                
+                const logo = document.getElementById('logo').cloneNode(true);
+                logo.style.maxWidth = '50%';
+                logo.style.margin = '0 auto 40px auto';
+                
+                const results = document.getElementById('risultati-sezione').cloneNode(true);
+                results.querySelectorAll('.gruppo-bottoni, button, .header-info ~ h2 + button').forEach(el => el.remove());
+                results.querySelector('.header-info').style.fontSize = '1.2em';
+                results.querySelector('.header-info').style.marginBottom = '20px';
+
+                shareableContent.appendChild(logo);
+                shareableContent.appendChild(results);
+                
+                document.body.appendChild(shareableContent);
+
+                html2canvas(shareableContent, {
+                    width: 1280,
+                    height: Math.max(720, shareableContent.scrollHeight),
+                    scale: 1,
+                    backgroundColor: null,
+                    useCORS: true
+                }).then(canvas => {
+                    const link = document.createElement('a');
+                    link.download = `risultati-7wonders-${Date.now()}.png`;
+                    link.href = canvas.toDataURL('image/png');
+                    link.click();
+                    document.body.removeChild(shareableContent);
+                });
+            }
+            
+            function nuovaPartita() {
+                datiPartita.giocatori.forEach(g => {
+                    g.punteggi = {};
+                    g.totale = 0;
+                });
+                datiPartita.categoriaCorrenteIndex = 0;
+                datiPartita.hasCalculatedResults = false;
+                mostraSezione('setup');
+            }
+
+            function inizializzaApp() {
+                resetStato();
+                aggiornaListaGiocatoriUI();
+                mostraSezione('landing');
+                inputs.nomeGiocatore.focus();
+            }
+
+            function resetSettings() {
+                Object.values(inputs.esp).forEach(checkbox => checkbox.checked = false);
+                inputs.teamPlay.checked = false;
+                inputs.luogoPartita.value = '';
+                datiPartita.giocatori = [];
+                aggiornaListaGiocatoriUI();
+            }
+            
+            bottoni.aggiungiGiocatore.addEventListener('click', aggiungiGiocatore);
+            inputs.nomeGiocatore.addEventListener('keypress', e => { if (e.key === 'Enter') { e.preventDefault(); aggiungiGiocatore(); }});
+            bottoni.iniziaPartita.addEventListener('click', () => { if (!bottoni.iniziaPartita.disabled) avviaPartita(); });
+            bottoni.nuovaPartitaLanding.addEventListener('click', () => mostraSezione('setup'));
+            bottoni.randomWonder.addEventListener('click', assegnaMeraviglieCasuali);
+            bottoni.nextCat.addEventListener('click', () => navigaCategorie(1));
+            bottoni.prevCat.addEventListener('click', () => { salvaPunteggiCategoriaCorrente(); datiPartita.categoriaCorrenteIndex -= 1; mostraSchermataCategoria(); });
+            bottoni.backToSetup.addEventListener('click', () => { salvaPunteggiCategoriaCorrente(); mostraSezione('setup'); });
+            bottoni.resetSettings.addEventListener('click', resetSettings);
+            bottoni.backToHomeFromSetup.addEventListener('click', () => mostraSezione('landing'));
+            [...Object.values(inputs.esp), inputs.teamPlay, inputs.dateToggle].forEach(el => el.addEventListener('change', () => {
+                document.getElementById('manual-date-container').classList.toggle('hidden', !inputs.dateToggle.checked);
+                aggiornaListaGiocatoriUI();
+            }));
+            
+            inizializzaApp();
+        });
     </script>
 </body>
 </html>
