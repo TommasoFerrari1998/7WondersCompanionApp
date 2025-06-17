@@ -24,137 +24,42 @@
         .logo { display: block; margin: 0 auto 20px auto; max-width: 80%; height: auto; text-align: center; }
         .logo-container { text-align: center; margin-bottom: 20px; }
         .logo-container img { max-width: 80%; height: auto; }
-        #app-subtitle {
-            font-family: 'Cinzel', serif;
-            text-align: center;
-            font-size: 1.8em;
-            color: var(--colore-secondario);
-            margin-top: -15px;
-            margin-bottom: 25px;
-            text-shadow: 1px 1px 3px rgba(0,0,0,0.4);
-        }
-        h2, h3 { border-bottom: 2px solid var(--colore-primario); padding-bottom: 10px; margin-bottom: 20px; }
+        #app-subtitle { font-family: 'Cinzel', serif; text-align: center; font-size: 1.8em; color: var(--colore-secondario); margin-top: -15px; margin-bottom: 25px; text-shadow: 1px 1px 3px rgba(0,0,0,0.4); }
+        h2, h3, h4 { border-bottom: 2px solid var(--colore-primario); padding-bottom: 10px; margin-bottom: 20px; }
         
         section { transition: opacity 0.3s ease-in-out; }
         
         /* Language Switcher */
         #language-switcher { display: flex; justify-content: center; gap: 10px; margin-bottom: 20px; }
-        .lang-btn { background-color: #444; padding: 8px 15px; font-size: 14px; }
+        .lang-btn { background-color: #444; padding: 8px 15px; font-size: 14px; border-radius: 20px; }
         .lang-btn.active { background-color: var(--colore-secondario); color: #111; }
 
         /* Landing Page */
-        #landing-sezione .gruppo-bottoni { flex-direction: column; }
+        #landing-sezione .gruppo-bottoni { flex-direction: column; gap: 15px; }
         #support-section { margin-top: 40px; text-align: center; }
-        .paypal-logo {
-            width: 22px;
-            height: auto;
-        }
-        #paypal-btn {
-            background: linear-gradient(180deg, #0079C1 0%, #005EA6 100%);
-            display: inline-flex;
-            align-items: center;
-            justify-content: center;
-            gap: 12px;
-            width: auto;
-            max-width: 320px;
-            padding: 12px 25px;
-            border: 1px solid #003057;
-            border-radius: 25px;
-            box-shadow: 0 4px 15px rgba(0, 121, 193, 0.3);
-            transition: all 0.3s ease;
-            font-weight: bold;
-            color: white;
-            text-decoration: none;
-        }
-        #paypal-btn:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 6px 20px rgba(0, 121, 193, 0.4);
-            filter: none;
-            background: linear-gradient(180deg, #0084d6 0%, #0069b8 100%);
-        }
-        #credits {
-            margin-top: 30px;
-            text-align: center;
-            font-size: 0.8em;
-            color: var(--colore-testo-fioco);
-        }
-        #credits a {
-            color: var(--colore-secondario);
-            text-decoration: none;
-        }
-        #credits a:hover {
-            text-decoration: underline;
-        }
-
+        .paypal-logo { width: 22px; height: auto; }
+        #paypal-btn { background: linear-gradient(180deg, #0079C1 0%, #005EA6 100%); display: inline-flex; align-items: center; justify-content: center; gap: 12px; width: auto; max-width: 320px; padding: 12px 25px; border: 1px solid #003057; border-radius: 25px; box-shadow: 0 4px 15px rgba(0, 121, 193, 0.3); transition: all 0.3s ease; font-weight: bold; color: white; text-decoration: none; }
+        #paypal-btn:hover { transform: translateY(-2px); box-shadow: 0 6px 20px rgba(0, 121, 193, 0.4); filter: none; background: linear-gradient(180deg, #0084d6 0%, #0069b8 100%); }
+        #credits { margin-top: 30px; text-align: center; font-size: 0.8em; color: var(--colore-testo-fioco); }
+        #credits a { color: var(--colore-secondario); text-decoration: none; }
+        #credits a:hover { text-decoration: underline; }
 
         /* Rules Section */
-        #regolamento-sezione p {
-            text-align: left;
-            line-height: 1.6;
-            margin-bottom: 20px;
-        }
-        .collapsible-header {
-            cursor: pointer;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            padding: 10px 0;
-            color: var(--colore-secondario);
-            margin-top: 10px;
-            margin-bottom: 0;
-            border-bottom: 1px solid var(--colore-primario);
-        }
-        .collapsible-header:hover {
-            filter: brightness(1.2);
-        }
-        .toggle-icon {
-            font-size: 1.5em;
-            font-weight: bold;
-            transition: transform 0.3s ease;
-        }
-        .collapsible-header.active .toggle-icon {
-            transform: rotate(45deg);
-        }
-        .collapsible-content {
-            max-height: 0;
-            overflow: hidden;
-            transition: max-height 0.4s ease-out, padding 0.4s ease-out, margin-bottom 0.4s ease-out;
-            padding: 0 15px;
-            margin-bottom: 0;
-        }
-        .collapsible-content ul {
-            text-align: left;
-            line-height: 1.6;
-            padding-left: 20px;
-            margin-top: 15px;
-            margin-bottom: 15px;
-        }
-        .collapsible-content li {
-            margin-bottom: 10px;
-        }
+        #regolamento-sezione p, #regolamento-sezione .rule-clarification-note { text-align: left; line-height: 1.6; margin-bottom: 20px; }
+        .rule-clarification-note { font-style: italic; background-color: rgba(212, 172, 110, 0.1); padding: 10px; border-radius: 5px; border-left: 3px solid var(--colore-secondario); }
+        .collapsible-header { cursor: pointer; display: flex; justify-content: space-between; align-items: center; padding: 10px 0; color: var(--colore-secondario); margin-top: 10px; margin-bottom: 0; border-bottom: 1px solid var(--colore-primario); }
+        .collapsible-header:hover { filter: brightness(1.2); }
+        .toggle-icon { font-size: 1.5em; font-weight: bold; transition: transform 0.3s ease; }
+        .collapsible-header.active .toggle-icon { transform: rotate(45deg); }
+        .collapsible-content { max-height: 0; overflow: hidden; transition: max-height 0.4s ease-out, padding 0.4s ease-out, margin-bottom 0.4s ease-out; padding: 0 15px; margin-bottom: 0; }
+        .collapsible-content ul { text-align: left; line-height: 1.6; padding-left: 20px; margin-top: 15px; margin-bottom: 15px; }
+        .collapsible-content li { margin-bottom: 10px; }
         
         /* Game Selection Screen */
-        #selezione-gioco-sezione .gruppo-bottoni {
-            flex-direction: column;
-            gap: 15px;
-        }
-        .game-selection-btn {
-            text-align: left;
-            padding: 20px;
-            font-size: 1.1em;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-        }
-        .game-selection-btn .game-title {
-            font-weight: bold;
-        }
-        .game-selection-btn .game-subtitle {
-            font-size: 0.8em;
-            color: var(--colore-testo-fioco);
-            font-weight: normal;
-        }
-
+        #selezione-gioco-sezione .gruppo-bottoni { flex-direction: column; gap: 15px; }
+        .game-selection-btn { text-align: left; padding: 20px; font-size: 1.1em; display: flex; justify-content: space-between; align-items: center; }
+        .game-selection-btn .game-title { font-weight: bold; }
+        .game-selection-btn .game-subtitle { font-size: 0.8em; color: var(--colore-testo-fioco); font-weight: normal; }
 
         /* Setup */
         .player-header { display: flex; flex-wrap: wrap; justify-content: space-between; align-items: center; border-bottom: 2px solid var(--colore-primario); margin-bottom: 20px; }
@@ -163,7 +68,7 @@
         .player-header .checkbox-item { margin-bottom: 10px; font-size: 0.8em; }
         .form-group { display: flex; gap: 10px; margin-bottom: 25px; }
         .form-group-column { flex-direction: column; }
-        .player-input, .location-input { width: 100%; padding: 12px; border: 1px solid #444; border-radius: 8px; background-color: #333; color: var(--colore-testo); font-size: 16px; box-sizing: border-box; }
+        .player-input, .location-input, select { width: 100%; padding: 12px; border: 1px solid #444; border-radius: 8px; background-color: #333; color: var(--colore-testo); font-size: 16px; box-sizing: border-box; }
         .players-list { list-style: none; padding: 0; }
         .giocatore-setup-item { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 10px; background-color: #383838; padding: 10px 15px; border-radius: 6px; margin-bottom: 8px; font-size: 18px; }
         .nome-giocatore-input { background: none; border: none; color: var(--colore-testo); font-weight: bold; font-size: 18px; font-family: 'Roboto', sans-serif; flex-grow: 1; padding: 5px; border-radius: 4px; }
@@ -193,26 +98,12 @@
         .input-stepper { display: flex; align-items: center; justify-content: flex-end; gap: 8px; }
         .stepper-btn { font-size: 20px; width: 40px; height: 40px; text-align: center; padding: 0; line-height: 40px; flex-shrink: 0; }
         .input-punteggio { padding: 12px; border: 1px solid #444; border-radius: 8px; background-color: #333; color: var(--colore-testo); font-size: 18px; width: 60px; box-sizing: border-box; text-align: center; }
-        
-        .manual-date-input {
-            width: 100%;
-        }
+        .manual-date-input { width: 100%; }
         
         /* Stili per la sezione Scienza */
-        .science-icon-grid,
-        .punteggio-giocatore-riga.science-row {
-            display: grid;
-            grid-template-columns: 1fr repeat(4, 1fr);
-            align-items: center;
-            gap: 10px 15px;
-        }
-        .science-icon-grid {
-            margin-bottom: 8px;
-            align-items: end;
-        }
-        .punteggio-giocatore-riga.science-row .input-punteggio {
-            width: 100%;
-        }
+        .science-icon-grid, .punteggio-giocatore-riga.science-row { display: grid; grid-template-columns: 1fr repeat(4, 1fr); align-items: center; gap: 10px 15px; }
+        .science-icon-grid { margin-bottom: 8px; align-items: end; }
+        .punteggio-giocatore-riga.science-row .input-punteggio { width: 100%; }
         .science-icon { max-height: 30px; margin: auto; display: block; }
         #avviso-categoria { font-size: 0.9em; text-align: center; color: var(--colore-testo-fioco); background: #222; padding: 8px; border-radius: 5px; margin-bottom: 15px; }
         
@@ -234,6 +125,21 @@
         .dettaglio-giocatore-individuale { background-color: #2c2c2c; padding: 10px; border-radius: 6px; }
         .dettaglio-giocatore-individuale .risultato-header { font-size: 16px; }
         .dettaglio-giocatore-individuale .risultato-breakdown { font-size: 12px; margin-top: 10px; padding-top: 10px; gap: 8px; }
+        
+        /* History & Stats Section */
+        #cronologia-sezione ul, #statistiche-sezione ul { list-style: none; padding: 0; }
+        .history-item { background-color: #383838; padding: 15px; border-radius: 8px; margin-bottom: 10px; cursor: pointer; transition: background-color 0.2s; }
+        .history-item:hover { background-color: #4a4a4a; }
+        .history-item-header { display: flex; justify-content: space-between; font-weight: bold; }
+        .history-item-details { font-size: 0.8em; color: var(--colore-testo-fioco); margin-top: 5px; }
+        .stat-card { background-color: #383838; padding: 15px; border-radius: 8px; margin-bottom: 15px; }
+        .stat-card h3 { border: none; padding: 0; margin: 0 0 10px 0; font-size: 1.1em; color: var(--colore-secondario); }
+        .stat-item { display: flex; justify-content: space-between; padding: 5px 0; border-bottom: 1px solid #444; }
+        .stat-item:last-child { border-bottom: none; }
+        .stat-label { color: var(--colore-testo-fioco); }
+        .stat-value { font-weight: bold; }
+        #stats-filter-container { display: flex; flex-direction: column; gap: 10px; margin-bottom: 20px; }
+        #stats-filter-container select { flex-grow: 1; }
 
         /* Bottoni */
         button { padding: 12px 20px; border: none; border-radius: 8px; background-color: var(--colore-primario); color: white; font-size: 16px; font-weight: bold; cursor: pointer; transition: background-color 0.2s, transform 0.1s; }
@@ -260,6 +166,7 @@
             .player-header { flex-direction: column; align-items: flex-start; }
             .player-header .header-options { width: 100%; justify-content: space-between; }
             .player-header .checkbox-item { flex-direction: row; gap: 10px; }
+            #stats-filter-container { flex-direction: column; }
         }
     </style>
 </head>
@@ -277,11 +184,13 @@
             <div id="app-subtitle">Companion App</div>
             <div class="gruppo-bottoni">
                 <button id="landingNuovaPartitaBtn" class="bottone-grande" data-lang-key="startNewGame"></button>
+                <button id="landingCronologiaBtn" class="bottone-grande" data-lang-key="gameHistory"></button>
+                <button id="landingStatisticheBtn" class="bottone-grande" data-lang-key="statistics"></button>
                 <button id="landingRegolamentoBtn" class="bottone-grande" data-lang-key="rulesClarifications"></button>
             </div>
             <div id="support-section">
                 <a href="https://paypal.me/TFerrari308" target="_blank" id="paypal-btn">
-                    <img src="https://i.postimg.cc/hj0x6wFB/pngimg-com-paypal-PNG7.png" alt="PayPal Logo" class="paypal-logo">
+                    <img src="https://i.postimg.cc/hj0x6wFB/pngimg-com-paypal-PNG7.png" alt="Logo PayPal" class="paypal-logo">
                     <span data-lang-key="supportProject"></span>
                 </a>
             </div>
@@ -325,6 +234,7 @@
 
         <section id="regolamento-sezione" class="hidden">
             <h2 data-lang-key="rulesClarifications"></h2>
+            <div class="rule-clarification-note" data-lang-key="rulesEditionNote"></div>
             <p data-lang-key="rulesDisclaimer"></p>
             
             <div data-lang-group="rulesBaseGame">
@@ -347,10 +257,6 @@
                 <h4 class="collapsible-header"><span data-lang-key="rulesEdifice_title"></span><span class="toggle-icon">＋</span></h4>
                 <div class="collapsible-content"><ul></ul></div>
             </div>
-             <div data-lang-group="rulesBabel">
-                <h4 class="collapsible-header"><span data-lang-key="rulesBabel_title"></span><span class="toggle-icon">＋</span></h4>
-                <div class="collapsible-content"><ul></ul></div>
-            </div>
             <div data-lang-group="rulesPromo">
                 <h4 class="collapsible-header"><span data-lang-key="rulesPromo_title"></span><span class="toggle-icon">＋</span></h4>
                 <div class="collapsible-content"><ul></ul></div>
@@ -360,7 +266,37 @@
                 <button id="backToHomeFromRulesBtn" class="bottone-grande" data-lang-key="backToHome"></button>
             </div>
         </section>
+        
+        <section id="cronologia-sezione" class="hidden">
+            <h2 data-lang-key="gameHistory"></h2>
+            <ul id="history-list"></ul>
+            <div class="gruppo-bottoni">
+                <button id="backToHomeFromHistoryBtn" class="bottone-grande" data-lang-key="backToHome"></button>
+            </div>
+        </section>
+        
+        <section id="statistiche-sezione" class="hidden">
+            <h2 data-lang-key="statistics"></h2>
+            
+            <div class="stat-card">
+                <h3 data-lang-key="overallStats"></h3>
+                <div id="overall-stats-container"></div>
+            </div>
 
+            <div class="stat-card">
+                <h3 data-lang-key="playerStats"></h3>
+                <div id="stats-filter-container">
+                    <select id="stats-player-filter" class="player-input"></select>
+                    <select id="stats-game-version-filter" class="player-input"></select>
+                </div>
+                <div id="player-stats-container"></div>
+            </div>
+            
+            <div class="gruppo-bottoni">
+                <button id="backToHomeFromStatsBtn" class="bottone-grande" data-lang-key="backToHome"></button>
+            </div>
+        </section>
+        
         <!-- SETUP 1ST EDITION -->
         <section id="setup-1ed-sezione" class="hidden">
             <div class="logo-container">
@@ -555,12 +491,12 @@
               <div class="opzioni-partita">
                 <h4 data-lang-key="expansions"></h4>
                 <div class="checkbox-container">
-                    <div class="checkbox-item"><label for="esp-duel-pantheon">Pantheon</label><label class="toggle-switch"><input type="checkbox" id="esp-duel-pantheon"><span class="slider"></span></label></div>
-                    <div class="checkbox-item"><label for="esp-duel-agora">Agora</label><label class="toggle-switch"><input type="checkbox" id="esp-duel-agora"><span class="slider"></span></label></div>
-                    <div class="checkbox-item"><label for="esp-duel-messe">Messe</label><label class="toggle-switch"><input type="checkbox" id="esp-duel-messe"><span class="slider"></span></label></div>
-                    <div class="checkbox-item"><label for="esp-duel-statue">Statua della Libertà</label><label class="toggle-switch"><input type="checkbox" id="esp-duel-statue"><span class="slider"></span></label></div>
-                    <div class="checkbox-item"><label for="esp-duel-stonehenge">Stonehenge</label><label class="toggle-switch"><input type="checkbox" id="esp-duel-stonehenge"><span class="slider"></span></label></div>
-                    <div class="checkbox-item"><label for="esp-duel-sagrada">Sagrada Familia</label><label class="toggle-switch"><input type="checkbox" id="esp-duel-sagrada"><span class="slider"></span></label></div>
+                    <div class="checkbox-item"><label for="esp-duel-pantheon" data-lang-key="expDuelPantheon">Pantheon</label><label class="toggle-switch"><input type="checkbox" id="esp-duel-pantheon"><span class="slider"></span></label></div>
+                    <div class="checkbox-item"><label for="esp-duel-agora" data-lang-key="expDuelAgora">Agora</label><label class="toggle-switch"><input type="checkbox" id="esp-duel-agora"><span class="slider"></span></label></div>
+                    <div class="checkbox-item"><label for="esp-duel-messe" data-lang-key="expDuelMesse">Messe</label><label class="toggle-switch"><input type="checkbox" id="esp-duel-messe"><span class="slider"></span></label></div>
+                    <div class="checkbox-item"><label for="esp-duel-statue" data-lang-key="expDuelStatue">Statua della Libertà</label><label class="toggle-switch"><input type="checkbox" id="esp-duel-statue"><span class="slider"></span></label></div>
+                    <div class="checkbox-item"><label for="esp-duel-stonehenge" data-lang-key="expDuelStonehenge">Stonehenge</label><label class="toggle-switch"><input type="checkbox" id="esp-duel-stonehenge"><span class="slider"></span></label></div>
+                    <div class="checkbox-item"><label for="esp-duel-sagrada" data-lang-key="expDuelSagrada">Sagrada Familia</label><label class="toggle-switch"><input type="checkbox" id="esp-duel-sagrada"><span class="slider"></span></label></div>
                 </div>
             </div>
             <div class="opzioni-partita">
@@ -616,7 +552,9 @@
             const sezioni = { 
                 landing: document.getElementById('landing-sezione'), 
                 selezioneGioco: document.getElementById('selezione-gioco-sezione'),
-                regolamento: document.getElementById('regolamento-sezione'), 
+                regolamento: document.getElementById('regolamento-sezione'),
+                cronologia: document.getElementById('cronologia-sezione'),
+                statistiche: document.getElementById('statistiche-sezione'),
                 'setup-1ed': document.getElementById('setup-1ed-sezione'),
                 'setup-2ed': document.getElementById('setup-2ed-sezione'), 
                 'setup-architects': document.getElementById('setup-architects-sezione'),
@@ -628,7 +566,11 @@
             const bottoni = {
                 nuovaPartitaLanding: document.getElementById('landingNuovaPartitaBtn'),
                 regolamentoLanding: document.getElementById('landingRegolamentoBtn'),
+                cronologiaLanding: document.getElementById('landingCronologiaBtn'),
+                statisticheLanding: document.getElementById('landingStatisticheBtn'),
                 backToHomeFromRules: document.getElementById('backToHomeFromRulesBtn'),
+                backToHomeFromHistory: document.getElementById('backToHomeFromHistoryBtn'),
+                backToHomeFromStats: document.getElementById('backToHomeFromStatsBtn'),
                 backToHomeFromGameSelect: document.getElementById('backToHomeFromGameSelectBtn'),
                 selectGame1ed: document.getElementById('select-game-1ed'),
                 selectGame2ed: document.getElementById('select-game-2ed'),
@@ -643,7 +585,12 @@
                 titoloCategoria: document.getElementById('titolo-categoria-punteggio'), 
                 inputsContainer: document.getElementById('punteggio-inputs-container'), 
                 appSubtitle: document.getElementById('app-subtitle'),
-                credits: document.getElementById('credits')
+                credits: document.getElementById('credits'),
+                historyList: document.getElementById('history-list'),
+                overallStatsContainer: document.getElementById('overall-stats-container'),
+                playerStatsContainer: document.getElementById('player-stats-container'),
+                statsPlayerFilter: document.getElementById('stats-player-filter'),
+                statsGameVersionFilter: document.getElementById('stats-game-version-filter')
             };
             
             const MERAVIGLIE_1ED = {
@@ -674,7 +621,7 @@
                 pantheon: ['Santuario', 'Teatro Divino'],
                 agora: ['Cnosso', 'Curia Iulia'],
                 messe: ['Messe'],
-                statue: ['Statua della Libertà'],
+                statue: ['Statue of Liberty'],
                 stonehenge: ['Stonehenge'],
                 sagrada: ['Sagrada Familia']
             };
@@ -742,9 +689,7 @@
             const CATEGORIE_NEGATIVE_PERMESSE = ['militari', 'debiti', 'conflittiNavali', 'babel', 'grandiProgetti'];
             
             const wonderTranslations = { 
-                // Generic
                 "Grande Muraglia Cinese": { it: "Grande Muraglia Cinese", en: "Great Wall of China" },
-                // Architects
                 "Alessandria": {it: "Alessandria", en: "Alexandria"},
                 "Alicarnasso": {it: "Alicarnasso", en: "Halicarnassus"},
                 "Babilonia": {it: "Babilonia", en: "Babylon"},
@@ -754,8 +699,7 @@
                 "Rodi": {it: "Rodi", en: "Rhodes"},
                 "Roma": {it: "Roma", en: "Rome"},
                 "Ur": {it: "Ur", en: "Ur"},
-                // Duel
-                "Statua della Libertà": {it: "Statua della Libertà", en: "Statue of Liberty"},
+                "Statue of Liberty": {it: "Statua della Libertà", en: "Statue of Liberty"},
                 "Via Appia": { it: "Via Appia", en: "The Appian Way"},
                 "Circo Massimo": { it: "Circo Massimo", en: "Circus Maximus"},
                 "Colosso": { it: "Colosso", en: "The Colossus"},
@@ -776,7 +720,7 @@
                 "Stonehenge": { it: "Stonehenge", en: "Stonehenge" },
                 "Sagrada Familia": { it: "Sagrada Familia", en: "Sagrada Familia" }
             };
-            
+
             let datiPartita;
             let currentLanguage = 'it';
             let translations = {};
@@ -826,8 +770,8 @@
                 
                 ui.credits.innerHTML = translations.creditsText[lang];
 
-                if (datiPartita) {
-                    if (datiPartita.gameVersion === '1ed') aggiornaListaGiocatoriUI_1ed();
+                if (datiPartita && sezioni.punteggio.classList.contains('hidden') && sezioni.risultati.classList.contains('hidden')) {
+                     if (datiPartita.gameVersion === '1ed') aggiornaListaGiocatoriUI_1ed();
                     else if (datiPartita.gameVersion === '2ed') aggiornaListaGiocatoriUI_2ed();
                     else if (datiPartita.gameVersion === 'architects') aggiornaListaGiocatoriUI_architects();
                     else if (datiPartita.gameVersion === 'duel') aggiornaListaGiocatoriUI_duel();
@@ -839,25 +783,28 @@
                     pageTitle: { it: 'Segnapunti 7 Wonders', en: '7 Wonders Score Sheet' },
                     startNewGame: { it: 'Inizia Nuova Partita', en: 'Start New Game' },
                     rulesClarifications: { it: 'Chiarimenti sul regolamento', en: 'Rules Clarifications' },
+                    gameHistory: { it: 'Cronologia Partite', en: 'Game History' },
+                    statistics: { it: 'Statistiche', en: 'Statistics' },
                     supportProject: { it: 'Supporta il Progetto', en: 'Support the Project' },
                     creditsText: { 
-                        it: 'Sviluppato nel 2025 da Tommaso Ferrari. <br>Email: <a href="mailto:tommy.ferrari98@gmail.com">tommy.ferrari98@gmail.com</a> | Versione 1.9',
-                        en: 'Developed in 2025 by Tommaso Ferrari. <br>Email: <a href="mailto:tommy.ferrari98@gmail.com">tommy.ferrari98@gmail.com</a> | Version 1.9'
+                        it: 'Sviluppato nel 2025 da Tommaso Ferrari. <br>Email: <a href="mailto:tommy.ferrari98@gmail.com">tommy.ferrari98@gmail.com</a> | Versione 2.3',
+                        en: 'Developed in 2025 by Tommaso Ferrari. <br>Email: <a href="mailto:tommy.ferrari98@gmail.com">tommy.ferrari98@gmail.com</a> | Version 2.3'
                     },
-                    // Game Selection
                     chooseGameVersion: { it: 'Scegli la Versione del Gioco', en: 'Choose Game Version' },
                     game1stEdition: { it: 'Prima Edizione', en: 'First Edition' },
                     game2ndEdition: { it: 'Seconda Edizione', en: 'Second Edition' },
                     backToGameSelect: { it: 'Torna alla Scelta', en: 'Back to Selection' },
-                    comingSoon: { it: 'Disponibile a breve...', en: 'Coming soon...' },
                     setupGame1ed: { it: 'Imposta Partita', en: 'Set Up Game' },
                     setupGame2ed: { it: 'Imposta Partita', en: 'Set Up Game' },
                     setupGameArchitects: { it: 'Imposta Partita', en: 'Set Up Game' },
                     setupGameDuel: { it: 'Imposta Partita', en: 'Set Up Game' },
-
+                    rulesEditionNote: {
+                        it: '<b>Nota:</b> I seguenti chiarimenti si riferiscono specificamente a <b>7 Wonders (Seconda Edizione)</b> e le sue espansioni.',
+                        en: '<b>Note:</b> The following clarifications refer specifically to <b>7 Wonders (Second Edition)</b> and its expansions.'
+                    },
                     rulesDisclaimer: { 
-                        it: 'Questi chiarimenti sono basati sulle risposte alle FAQ presenti sul sito ufficiale del gioco (https://www.rprod.com/it/7-wonders/faq) oppure sono stati richiesti direttamente a Repos Production via Facebook.',
-                        en: 'These clarifications are based on the FAQ answers on the official game website (https://www.rprod.com/en/7-wonders/faq) or were requested directly from Repos Production via Facebook.'
+                        it: 'Questi chiarimenti sono basati sulle risposte alle FAQ presenti sul sito ufficiale del gioco o sono stati richiesti direttamente a Repos Production.',
+                        en: 'These clarifications are based on the FAQ answers on the official game website or were requested directly from Repos Production.'
                     },
                     backToHome: { it: 'Torna alla Home', en: 'Back to Home' },
                     playerNamePlaceholder: { it: 'Nome giocatore...', en: 'Player name...' },
@@ -895,7 +842,23 @@
                     freeCity: { it: 'Città Franca', en: 'Free City' },
                     shareResults: { it: 'Condividi Risultati', en: 'Share Results' },
                     newGame: { it: 'Nuova Partita', en: 'New Game' },
-                    // Categories
+                    winner: { it: 'Vincitore', en: 'Winner' },
+                    teamWinner: { it: 'Squadra Vincitrice', en: 'Winning Team' },
+                    tie: { it: 'Pareggio', en: 'Tie' },
+                    noHistory: { it: 'Nessuna partita trovata nella cronologia.', en: 'No games found in history.' },
+                    overallStats: { it: 'Statistiche Generali', en: 'Overall Stats' },
+                    playerStats: { it: 'Statistiche Giocatore', en: 'Player Stats' },
+                    totalGames: { it: 'Partite Totali', en: 'Total Games' },
+                    mostPlayedWonder: { it: 'Meraviglia più Giocata', en: 'Most Played Wonder' },
+                    mostWinningPlayer: { it: 'Giocatore più Vincente', en: 'Most Winning Player' },
+                    highestScore: { it: 'Punteggio più Alto', en: 'Highest Score' },
+                    selectPlayer: { it: 'Seleziona un giocatore', en: 'Select a player' },
+                    selectGame: { it: 'Filtra per gioco', en: 'Filter by game' },
+                    allGames: { it: 'Tutti i giochi', en: 'All games' },
+                    gamesPlayed: { it: 'Partite Giocate', en: 'Games Played' },
+                    winRate: { it: 'Tasso di Vittoria', en: 'Win Rate' },
+                    avgScore: { it: 'Punteggio Medio', en: 'Average Score' },
+                    noStats: { it: 'Nessuna statistica disponibile. Gioca qualche partita!', en: 'No stats available. Play some games!' },
                     catWonder: { it: 'Meraviglia', en: 'Wonder Board' },
                     catWonders: { it: 'Meraviglie', en: 'Wonders' },
                     catWonderStages: { it: 'Stadi Meraviglia', en: 'Wonder Stages' },
@@ -919,35 +882,158 @@
                     catNavalBlue: { it: 'Percorso Navale Blu', en: 'Blue Naval Track' },
                     catIslands: { it: 'Isole', en: 'Islands' },
                     catEdifice: { it: 'Edifici', en: 'Edifices' },
-                    catBabel: { it: 'Babele', en: 'Babel' },
-                    catGreatProjects: { it: 'Grandi Progetti', en: 'Great Projects' },
                     catCatPawn: {it: 'Pedina Gatto', en: 'Cat Pawn'},
                     catMedals: {it: 'Medaglie', en: 'Medals'},
                     catGods: {it: 'Divinità', en: 'Gods'},
                     catGrandTemples: {it: 'Grandi Templi', en: 'Grand Temples'},
                     catSenateChambers: {it: 'Camere del Senato', en: 'Senate Chambers'},
-                    // Rules Titles
+                    expDuelPantheon: { it: 'Pantheon', en: 'Pantheon' },
+                    expDuelAgora: { it: 'Agora', en: 'Agora' },
+                    expDuelMesse: { it: 'Messe', en: 'Messe' },
+                    expDuelStatue: { it: 'Statua della Libertà', en: 'Statue of Liberty' },
+                    expDuelStonehenge: { it: 'Stonehenge', en: 'Stonehenge' },
+                    expDuelSagrada: { it: 'Sagrada Familia', en: 'Sagrada Familia' },
                     rulesBaseGame_title: { it: '7 Wonders (Versione Base)', en: '7 Wonders (Base Game)' },
                     rulesLeaders_title: { it: 'Leaders', en: 'Leaders' },
                     rulesArmada_title: { it: 'Armada', en: 'Armada' },
                     rulesCities_title: { it: 'Cities', en: 'Cities' },
                     rulesEdifice_title: { it: 'Edifice', en: 'Edifice' },
-                    rulesBabel_title: { it: 'Babel', en: 'Babel'},
                     rulesPromo_title: { it: 'Carte e Meraviglie Promo', en: 'Promo Cards & Wonders' },
-                    // Rules Content (placeholders, can be filled later)
-                    rulesBaseGame: { it: [], en: [] },
-                    rulesLeaders: { it: [], en: [] },
-                    rulesArmada: { it: [], en: [] },
-                    rulesCities: { it: [], en: [] },
-                    rulesEdifice: { it: [], en: [] },
-                    rulesBabel: { it: [], en: []},
-                    rulesPromo: { it: [], en: [] }
+                    rulesBaseGame: {
+                        it: [
+                            "Con il secondo stadio di Olympía (Giorno), puoi costruire gratuitamente solo la prima carta Epoca di un colore non ancora presente nella tua città, indipendentemente dall'Epoca. Se, ad esempio, hai già costruito una carta Blu in precedenza, non puoi costruirne una gratuitamente tramite questo effetto.",
+                            "Non puoi utilizzare l'effetto di Halikarnassos per costruire gratuitamente uno stadio della Meraviglia con una carta dalla pila degli scarti.",
+                            "Non puoi costruire stadi della Meraviglia o carte Leader gratuitamente con l'effetto degli stadi 1 e 2 di Olympía (Notte).",
+                            "Con il primo stadio di Olympia (Notte), puoi costruire gratuitamente la prima carta che scegli all'inizio di ogni Epoca, non puoi invece reclutare una carta Leader.",
+                            "Solo in un caso estremamente raro è di fatto possibile utilizzare l'effetto del primo stadio di Olympia (Notte) all'inizio dell'Epoca I, quello in cui si sta utilizzando l'espansione Leaders, entrambi i tuoi vicini producono Minerale come risorsa di partenza e tu hai costruito il primo stadio di Olimpía con il tuo primo Leader.",
+                            "Se un giocatore rivela la propria carta Epoca per costruirla ma si accorge di non avere le risorse sufficienti e di non poterle acquistare in alcun modo, deve scartare quella carta e guadagnare 3 monete.",
+                            "Se più giocatori devono pescare dalla pila degli scarti nello stesso turno, questo è l'ordine di risoluzione degli effetti: Salomone, Halikarnassos, Carthage, Grande Muraglia Cinese, Manneken Pis, Società dei Falsari."
+                        ],
+                        en: [
+                            "With the second stage of Olympia (Day side), you can only build the first Age card of a color not yet present in your city for free, regardless of the Age. For example, if you have already built a Blue card previously, you cannot build one for free using this effect.",
+                            "You cannot use the effect of Halikarnassos to build a Wonder stage for free with a card from the discard pile.",
+                            "You cannot build Wonder stages or Leader cards for free with the effect of stages 1 and 2 of Olympía (Night side).",
+                            "With the first stage of Olympía (Night side), you can build the first card you choose at the beginning of each Age for free; you cannot recruit a Leader card instead.",
+                            "Only in an extremely rare case is it actually possible to use the effect of the first stage of Olympia (Night side) at the beginning of Age I: when using the Leaders expansion, both your neighbors produce Ore as a starting resource, and you have built the first stage of Olympia with your first Leader.",
+                            "If a player reveals their Age card to build it but realizes they do not have enough resources and cannot purchase them in any way, they must discard that card and gain 3 coins.",
+                            "If multiple players need to draw from the discard pile in the same turn, this is the order of effect resolution: Solomon, Halikarnassos, Carthage, Great Wall of China, Manneken Pis, Forging Agency."
+                        ]
+                    },
+                    rulesLeaders: {
+                        it: [
+                            "Le carte Leader devono essere scartate separatamente dalle carte Epoca. Gli effetti di Halikarnassos, Salomone, Società dei Falsari, Manneken Pis e Grande Muraglia Cinese permettono di costruire gratuitamente solo una carta Epoca dalla pila degli scarti corrispondente.",
+                            "Non puoi reclutare Leader gratuitamente con l'effetto del primo stadio di Olympía (Notte).",
+                            "Quando costruisci il secondo e terzo stadio di Roma (Notte), puoi usare le monete ottenute all'inizio del turno per pagare il costo di reclutamento del Leader.",
+                            "Con Hatshepsut, guadagni 1 moneta dalla riserva anche quando acquisti una risorsa al costo di O monete, ad esempio combinando gli effetti di Stazione Commerciale Est e Molo Clandestino Est.",
+                            "Puoi combinare gli effetti di Hatshepsut e Berenice, ma solo con uno dei tuoi vicini per turno.",
+                            "Se Telesilla e Nitocris vengono reclutati nello stesso turno, il segnalino Vittoria Militare guadagnato con Nitocris può essere distrutto dall'effetto di Telesilla, dal momento che in 7 Wonders la perdita di segnalini e il pagamento di tributi avvengono sempre alla fine di un turno.",
+                            "L'effetto di Berenice è valido anche quando si guadagnano monete per effetto di un Edificio (se si sta utilizzando l'espansione Edifice)."
+                        ],
+                        en: [
+                            "Leader cards must be discarded separately from Age cards. The effects of Halikarnassos, Solomon, Forging Agency, Manneken Pis, and Great Wall of China only allow building an Age card for free from the corresponding discard pile.",
+                            "You cannot recruit Leaders for free with the effect of the first stage of Olympia (Night side).",
+                            "When you build the second and third stages of Rome (Night side), you can use the coins obtained at the beginning of the turn to pay the recruitment cost of the Leader.",
+                            "With Hatshepsut, you gain 1 coin from the bank even when you purchase a resource at the cost of O coins, for example by combining the effects of East Trading Post and East Clandestine Wharf.",
+                            "You can combine the effects of Hatshepsut and Berenice, but only with one of your neighbors per turn.",
+                            "If Telesilla and Nitocris are recruited in the same turn, the Military Victory token gained with Nitocris can be destroyed by Telesilla's effect, since in 7 Wonders the loss of tokens and payment of tributes always occur at the end of a turn.",
+                            "Berenice's effect is also valid when gaining coins from an Edifice's effect (if using the Edifice expansion)."
+                        ]
+                    },
+                    rulesArmada: {
+                        it: [
+                            "L'icona della Piramide completa sulla meraviglia Siracusa indica che puoi costruire gli stadi di Siracusa nell'ordine che preferisci.",
+                            "Non puoi copiare un simbolo scientifico Maggioranza con un simbolo scientifico Maschera (Cities), poiché il simbolo Maggioranza non è considerato un simbolo scientifico vero e proprio.",
+                            "Con il Leader Tomiri, se vieni sconfitto in un'Incursione, devi dare il segnalino Sconfitta Militare al giocatore che ha vinto l'Incursione, non a uno dei tuoi due vicini.",
+                            "Se più giocatori attivano due tributi dello stesso tipo e importo nello stesso turno, ciascuno paga anch'egli (una volta) il tributo innescato dagli altri.",
+                            "Se vengono innescati tributi di tipo diverso (es. uno tramite una carta Epoca gialla e uno tramite il Percorso Navale giallo), vanno applicati entrambi."
+                        ],
+                        en: [
+                            "The complete Pyramid icon on the Siracusa wonder indicates that you can build the stages of Siracusa in any order you prefer.",
+                            "You cannot copy a Majority scientific symbol with a Mask scientific symbol (Cities), as the Majority symbol is not considered a true scientific symbol.",
+                            "With the Leader Tomyris, if you are defeated in a Boarding, you must give the Military Defeat token to the player who won the Boarding, not to one of your two neighbors.",
+                            "If multiple players trigger two tributes of the same type and amount in the same turn, each one also pays (once) the tribute triggered by the others.",
+                            "If tributes of different types are triggered (e.g., one via a yellow Age card and one via the yellow Naval Track), both must be applied."
+                        ]
+                    },
+                    rulesCities: {
+                        it: [
+                            "Non si possono prendere segnalini Debito volontariamente.",
+                            "In una partita a 3 giocatori, se durante una Risoluzione dei Conflitti Militari 2 giocatori hanno un segnalino Diplomazia, il terzo giocatore non svolge alcun Conflitto Militare.",
+                            "In una partita a squadre, se due avversari hanno entrambi un segnalino Diplomazia, nessuno dei due svolge alcun Conflitto Militare in quell'Epoca.",
+                            "Se in un turno decidi di produrre una specifica risorsa tramite una carta Marrone che permette di scegliere tra due risorse possibili a ogni turno, non puoi produrre comunque l'altra tramite l'effetto del Mercato Nero."
+                        ],
+                        en: [
+                            "You cannot voluntarily take Debt tokens.",
+                            "In a 3-player game, if during a Military Conflict resolution 2 players have a Diplomacy token, the third player does not engage in any Military Conflict.",
+                            "In a team game, if two opponents both have a Diplomacy token, neither of them engages in any Military Conflict in that Age.",
+                            "If in a turn you decide to produce a specific resource through a Brown card that allows choosing between two possible resources each turn, you cannot also produce the other one through the effect of the Black Market."
+                        ]
+                    },
+                    rulesEdifice: {
+                        it: [
+                            "Non puoi acquistare risorse che un vicino produce perché ha partecipato alla costruzione di un Edificio.",
+                            "L'effetto del Mercato Nero e del Magazzino Segreto non si applicano alle risorse ottenute dagli Edifici."
+                        ],
+                        en: [
+                            "You cannot purchase resources that a neighbor produces because they participated in the construction of an Edifice.",
+                            "The effects of the Black Market and the Secret Warehouse do not apply to resources obtained from Edifices."
+                        ]
+                    },
+                    rulesPromo: {
+                        it: [
+                            "Con Cédrick & Thomas, se scegli l'aquila, tutti i giocatori risolvono due volte anche le Incursioni. Non si risolvono invece due volte i Conflitti Navali.",
+                            "Con la Gilda degli Architetti, il punteggio è limitato a un massimo di 10 Punti Vittoria se giochi con l'espansione Armada (es: se i due vicini hanno in totale 4 gilde, guadagni 10 PV, non 12).",
+                            "Con la Gilda dei Giocatori, i punti devono essere calcolati per ogni vicino separatamente (es: 4 monete a sinistra = 1 PV, 2 monete a destra = 0 PV. Totale = 1 PV. Non si calcolano i punti sul totale delle monete, quindi in questo caso non si ottengono 2 PV).",
+                            "Manneken Pis non può copiare il 3° stadio di una meraviglia che ha 4 stadi (es. Gizah).",
+                            "Ai fini degli effetti del Manneken Pis, il 2° stadio di una meraviglia a 2 stadi (es. Rhodos) è considerato sia il secondo che l'ultimo. Il Manneken Pis può copiarlo tramite il proprio 2° o 3° stadio, a seconda della posizione.",
+                            "Come Roma (Notte), con il Manneken Pis si può conservare la quarta carta Leader per giocarla in seguito copiando l'effetto di Roma.",
+                            "Il Manneken Pis può copiare l'effetto di Abu Simbel ma deve sacrificare uno dei propri Leader per ottenere punti, anche se non c'è lo slot Sarcofago. Non copia i punti che l'avversario totalizzerà a fine partita con i Leader sacrificati da quest'ultimo.",
+                            "Il simbolo Torre che compare sugli stadi della Grande Muraglia indica che puoi costruire gli stadi di questa meraviglia nell'ordine che preferisci.",
+                            "Se il giocatore che possiede il Manneken Pis confina con Siracusa o con la Grande Muraglia Cinese, può scegliere quale stadio copiare. Può anche copiare lo stesso stadio due volte."
+                        ],
+                        en: [
+                            "With Cédrick & Thomas, if you choose the eagle, all players also resolve Boardings twice. Naval Conflicts are not resolved twice.",
+                            "With the Architects Guild, the score is limited to a maximum of 10 Victory Points if you play with the Armada expansion (e.g., if the two neighbors have a total of 4 guilds, you gain 10 VP, not 12).",
+                            "With the Gamers Guild, points must be calculated for each neighbor separately (e.g., 4 coins on the left = 1 VP, 2 coins on the right = 0 VP. Total = 1 VP. Points are not calculated on the total number of coins, so in this case, you do not get 2 VP).",
+                            "Manneken Pis cannot copy the 3rd stage of a 4-stage wonder (e.g., Giza).",
+                            "For the purposes of Manneken Pis's effects, the 2nd stage of a 2-stage wonder (e.g., Rhodos) is considered both the second and the last. Manneken Pis can copy it with its own 2nd or 3rd stage, depending on its position.",
+                            "Like Rome (Night side), with Manneken Pis you can keep the fourth Leader card to play it later by copying Rome's effect.",
+                            "Manneken Pis can copy the effect of Abu Simbel but must sacrifice one of its own Leaders to get points, even if there is no Sarcophagus slot. It does not copy the points that the opponent will score at the end of the game with the Leaders sacrificed by them.",
+                            "The Tower symbol that appears on the stages of the Great Wall of China indicates that you can build the stages of this wonder in any order you prefer.",
+                            "If the player who owns Manneken Pis is adjacent to Siracusa or the Great Wall of China, they can choose which stage to copy. They can also copy the same stage twice."
+                        ]
+                    }
                 };
             }
             
             // ===============================================
-            // C. CORE APP LOGIC
+            // C. CORE APP & STORAGE LOGIC
             // ===============================================
+            
+            function getGameHistory() {
+                try {
+                    const history = localStorage.getItem('7wondersGameHistory');
+                    return history ? JSON.parse(history) : [];
+                } catch (e) {
+                    console.error("Failed to load game history:", e);
+                    return [];
+                }
+            }
+
+            function saveGameToHistory(gameData) {
+                try {
+                    const history = getGameHistory();
+                    const existingGameIndex = history.findIndex(g => g.idPartita === gameData.idPartita);
+                    if (existingGameIndex > -1) {
+                        history[existingGameIndex] = gameData; 
+                    } else {
+                        history.push(gameData);
+                    }
+                    localStorage.setItem('7wondersGameHistory', JSON.stringify(history));
+                } catch (e) {
+                    console.error("Failed to save game history:", e);
+                }
+            }
 
             function mostraSezione(nomeSezione) { 
                 for (const key in sezioni) { 
@@ -966,7 +1052,7 @@
                     categoriaCorrenteIndex: 0, 
                     categoriePartita: [], 
                     espansioni: {}, 
-                    idPartita: Date.now() 
+                    idPartita: `game_${Date.now()}`
                 }; 
             }
             
@@ -1280,7 +1366,7 @@
             }
             
             function avviaPartita_2ed() {
-                updateExpansions_2ed(true); // Final update before starting
+                updateExpansions_2ed(true); 
                 datiPartita.categoriePartita = CATEGORIE_2ED.filter(cat => !cat.expansion || datiPartita.espansioni[cat.expansion]);
                 avviaPartitaGenerale();
             }
@@ -1725,7 +1811,7 @@
                         });
                     });
 
-                } else { // For type 'number' (includes architects science)
+                } else { 
                     datiPartita.giocatori.forEach((giocatore, playerIndex) => {
                         const riga = document.createElement('div');
                         const minAttribute = CATEGORIE_NEGATIVE_PERMESSE.includes(categoria.key) ? '' : 'min="0"';
@@ -1837,51 +1923,56 @@
                 return calcolaPuntiScienza({ compasso: c, tavoletta: t, ingranaggio: i });
             }
 
-            function mostraRisultati() {
-                datiPartita.hasCalculatedResults = true;
-                const dataPartita = datiPartita.manualDate ? new Date(datiPartita.manualDate) : new Date();
-                const locale = currentLanguage === 'it' ? 'it-IT' : 'en-US';
-                datiPartita.data = datiPartita.data || dataPartita.toLocaleString(locale, { day: '2-digit', month: '2-digit', year: '2-digit', hour: '2-digit', minute: '2-digit' });
+            function mostraRisultati(gameDataToDisplay = null) {
+                if (gameDataToDisplay) {
+                    datiPartita = gameDataToDisplay;
+                } else {
+                    datiPartita.hasCalculatedResults = true;
+                    const dataPartita = datiPartita.manualDate ? new Date(datiPartita.manualDate) : new Date();
+                    const locale = currentLanguage === 'it' ? 'it-IT' : 'en-US';
+                    datiPartita.data = datiPartita.data || dataPartita.toLocaleString(locale, { day: '2-digit', month: '2-digit', year: '2-digit', hour: '2-digit', minute: '2-digit' });
 
-                datiPartita.giocatori.forEach((g, index) => {
-                    const p = g.punteggi;
-                    let pTesoro = 0;
-                    let pScienza = 0;
-                    
-                    if (datiPartita.gameVersion === 'architects') {
-                        p.gatto = (datiPartita.giocatoreGattoIndex === index) ? 2 : 0;
-                    }
-
-                    if(datiPartita.gameVersion === '1ed' || datiPartita.gameVersion === '2ed'){
-                        pTesoro = Math.floor(Math.max(0, p.tesoro || 0) / 3);
-                        pScienza = p.scienza ? calcolaPuntiScienzaOttimizzati(p.scienza) : 0;
-                        g.punteggi.puntiTesoro = pTesoro;
-                        g.punteggi.puntiScienza = pScienza;
-                    } else if (datiPartita.gameVersion === 'duel') {
-                         pTesoro = Math.floor(Math.max(0, p.tesoro || 0) / 3);
-                         g.punteggi.puntiTesoro = pTesoro;
-                    }
-
-                    let total = 0;
-                    datiPartita.categoriePartita.forEach(cat => {
-                        const key = cat.key;
-                        if (key === 'tesoro' && (datiPartita.gameVersion === '1ed' || datiPartita.gameVersion === '2ed' || datiPartita.gameVersion === 'duel')) {
-                            total += pTesoro;
-                        } else if (key === 'scienza' && (datiPartita.gameVersion === '1ed' || datiPartita.gameVersion === '2ed')) {
-                            // handled separately
-                        } else if(key === 'wonderStages' && datiPartita.gameVersion === 'architects'){
-                             // non-scoring, for tiebreak only
-                        } else {
-                            total += (p[key] || 0);
+                    datiPartita.giocatori.forEach((g, index) => {
+                        const p = g.punteggi;
+                        let pTesoro = 0;
+                        let pScienza = 0;
+                        
+                        if (datiPartita.gameVersion === 'architects') {
+                            p.gatto = (datiPartita.giocatoreGattoIndex === index) ? 2 : 0;
                         }
+
+                        if(datiPartita.gameVersion === '1ed' || datiPartita.gameVersion === '2ed'){
+                            pTesoro = Math.floor(Math.max(0, p.tesoro || 0) / 3);
+                            pScienza = p.scienza ? calcolaPuntiScienzaOttimizzati(p.scienza) : 0;
+                            g.punteggi.puntiTesoro = pTesoro;
+                            g.punteggi.puntiScienza = pScienza;
+                        } else if (datiPartita.gameVersion === 'duel') {
+                            pTesoro = Math.floor(Math.max(0, p.tesoro || 0) / 3);
+                            g.punteggi.puntiTesoro = pTesoro;
+                        }
+
+                        let total = 0;
+                        datiPartita.categoriePartita.forEach(cat => {
+                            const key = cat.key;
+                            if (key === 'tesoro' && (datiPartita.gameVersion === '1ed' || datiPartita.gameVersion === '2ed' || datiPartita.gameVersion === 'duel')) {
+                                total += pTesoro;
+                            } else if (key === 'scienza' && (datiPartita.gameVersion === '1ed' || datiPartita.gameVersion === '2ed')) {
+                                // handled separately
+                            } else if(key === 'wonderStages' && datiPartita.gameVersion === 'architects'){
+                                 // non-scoring, for tiebreak only
+                            } else {
+                                total += (p[key] || 0);
+                            }
+                        });
+
+                        if(datiPartita.gameVersion === '1ed' || datiPartita.gameVersion === '2ed'){
+                            total += pScienza;
+                        }
+
+                        g.totale = total;
                     });
-
-                    if(datiPartita.gameVersion === '1ed' || datiPartita.gameVersion === '2ed'){
-                        total += pScienza;
-                    }
-
-                    g.totale = total;
-                });
+                    saveGameToHistory(datiPartita);
+                }
 
                 const infoEl = document.createElement('div');
                 infoEl.className = 'header-info';
@@ -1901,13 +1992,15 @@
 
                 const btnGroupTop = document.createElement('div');
                 btnGroupTop.className = 'gruppo-bottoni';
-                const backToScoreBtn = document.createElement('button');
-                backToScoreBtn.textContent = translations.back[currentLanguage];
-                backToScoreBtn.addEventListener('click', () => mostraSezione('punteggio'));
+                if (!gameDataToDisplay) {
+                    const backToScoreBtn = document.createElement('button');
+                    backToScoreBtn.textContent = translations.back[currentLanguage];
+                    backToScoreBtn.addEventListener('click', () => mostraSezione('punteggio'));
+                    btnGroupTop.appendChild(backToScoreBtn);
+                }
                 const backToHomeBtn = document.createElement('button');
                 backToHomeBtn.textContent = translations.backToHome[currentLanguage];
                 backToHomeBtn.addEventListener('click', () => mostraSezione('landing'));
-                btnGroupTop.appendChild(backToScoreBtn);
                 btnGroupTop.appendChild(backToHomeBtn);
                 sezioni.risultati.appendChild(btnGroupTop);
 
@@ -1921,8 +2014,7 @@
                 nuovaPartitaBtn.className = 'bottone-grande';
                 nuovaPartitaBtn.textContent = translations.newGame[currentLanguage];
                 nuovaPartitaBtn.addEventListener('click', () => {
-                    const setupSection = `setup-${datiPartita.gameVersion}`;
-                    mostraSezione(setupSection);
+                    mostraSezione('selezioneGioco');
                 });
                 btnGroupBottom.appendChild(shareBtn);
                 btnGroupBottom.appendChild(nuovaPartitaBtn);
@@ -2112,6 +2204,167 @@
                     document.body.removeChild(shareableContent);
                 });
             }
+            
+            // ===============================================
+            // I. HISTORY & STATS LOGIC (NEW)
+            // ===============================================
+
+            function displayGameHistory() {
+                const history = getGameHistory().sort((a, b) => (b.manualDate || new Date(parseInt(b.idPartita.split('_')[1]))) - (a.manualDate || new Date(parseInt(a.idPartita.split('_')[1]))));
+                ui.historyList.innerHTML = '';
+
+                if (history.length === 0) {
+                    ui.historyList.innerHTML = `<p>${translations.noHistory[currentLanguage]}</p>`;
+                    return;
+                }
+
+                history.forEach(game => {
+                    const li = document.createElement('li');
+                    li.className = 'history-item';
+                    li.dataset.gameId = game.idPartita;
+
+                    const giocatoriOrdinati = [...game.giocatori].sort((a, b) => b.totale - a.totale);
+                    const vincitore = giocatoriOrdinati[0] ? giocatoriOrdinati[0].nome : 'N/A';
+                    
+                    const gameVersionMap = {
+                        '1ed': translations.game1stEdition[currentLanguage],
+                        '2ed': translations.game2ndEdition[currentLanguage],
+                        'architects': 'Architects',
+                        'duel': 'Duel'
+                    };
+
+                    li.innerHTML = `
+                        <div class="history-item-header">
+                            <span>${gameVersionMap[game.gameVersion] || game.gameVersion}</span>
+                            <span>${game.data}</span>
+                        </div>
+                        <div class="history-item-details">
+                            ${translations.winner[currentLanguage]}: <strong>${vincitore}</strong> (${giocatoriOrdinati.map(g => `${g.nome} ${g.totale}`).join(', ')})
+                        </div>
+                    `;
+                    
+                    li.addEventListener('click', () => {
+                        const clickedGame = getGameHistory().find(g => g.idPartita === li.dataset.gameId);
+                        if (clickedGame) {
+                            mostraRisultati(clickedGame);
+                        }
+                    });
+
+                    ui.historyList.appendChild(li);
+                });
+            }
+            
+            function calculateAndDisplayStats() {
+                const history = getGameHistory();
+                if (history.length === 0) {
+                    ui.overallStatsContainer.innerHTML = `<p>${translations.noStats[currentLanguage]}</p>`;
+                    ui.playerStatsContainer.innerHTML = '';
+                    ui.statsPlayerFilter.classList.add('hidden');
+                    ui.statsGameVersionFilter.classList.add('hidden');
+                    return;
+                }
+
+                let totalGames = history.length;
+                let wonderCounts = {};
+                let playerWins = {};
+                let playerGames = {};
+                let highestScore = { score: -Infinity, player: '', game: '' };
+
+                history.forEach(game => {
+                    game.giocatori.forEach(player => {
+                        if (player.isFreeCity) return;
+
+                        if (player.meraviglia) {
+                            wonderCounts[player.meraviglia] = (wonderCounts[player.meraviglia] || 0) + 1;
+                        }
+                        if (player.meraviglie && Array.isArray(player.meraviglie)) {
+                            player.meraviglie.forEach(m => {
+                                if(m) wonderCounts[m] = (wonderCounts[m] || 0) + 1;
+                            });
+                        }
+                        
+                        playerGames[player.nome] = (playerGames[player.nome] || 0) + 1;
+                        
+                        if (player.totale > highestScore.score) {
+                            highestScore = { score: player.totale, player: player.nome, game: game.data };
+                        }
+                    });
+
+                    const sortedPlayers = [...game.giocatori].filter(p => !p.isFreeCity).sort((a,b) => b.totale - a.totale);
+                    if(sortedPlayers.length > 0) {
+                        const winnerName = sortedPlayers[0].nome;
+                        playerWins[winnerName] = (playerWins[winnerName] || 0) + 1;
+                    }
+                });
+
+                const mostPlayedWonder = Object.keys(wonderCounts).length > 0 ? Object.entries(wonderCounts).sort((a,b) => b[1] - a[1])[0] : ['N/A', 0];
+                const mostWinningPlayer = Object.keys(playerWins).length > 0 ? Object.entries(playerWins).sort((a,b) => b[1] - a[1])[0] : ['N/A', 0];
+
+                ui.overallStatsContainer.innerHTML = `
+                    <div class="stat-item"><span class="stat-label">${translations.totalGames[currentLanguage]}:</span> <span class="stat-value">${totalGames}</span></div>
+                    <div class="stat-item"><span class="stat-label">${translations.mostPlayedWonder[currentLanguage]}:</span> <span class="stat-value">${getWonderName(mostPlayedWonder[0])} (${mostPlayedWonder[1]}x)</span></div>
+                    <div class="stat-item"><span class="stat-label">${translations.mostWinningPlayer[currentLanguage]}:</span> <span class="stat-value">${mostWinningPlayer[0]} (${mostWinningPlayer[1]} ${translations.winner[currentLanguage].toLowerCase()})</span></div>
+                    <div class="stat-item"><span class="stat-label">${translations.highestScore[currentLanguage]}:</span> <span class="stat-value">${highestScore.score} (${highestScore.player})</span></div>
+                `;
+
+                const allPlayers = Object.keys(playerGames);
+                ui.statsPlayerFilter.innerHTML = `<option value="">${translations.selectPlayer[currentLanguage]}</option>` + allPlayers.map(p => `<option value="${p}">${p}</option>`).join('');
+                
+                const gameVersions = [...new Set(history.map(g => g.gameVersion))];
+                const gameVersionMap = {
+                        '1ed': translations.game1stEdition[currentLanguage],
+                        '2ed': translations.game2ndEdition[currentLanguage],
+                        'architects': 'Architects',
+                        'duel': 'Duel'
+                };
+                ui.statsGameVersionFilter.innerHTML = `<option value="">${translations.allGames[currentLanguage]}</option>` + gameVersions.map(v => `<option value="${v}">${gameVersionMap[v]}</option>`).join('');
+                
+                ui.statsPlayerFilter.classList.remove('hidden');
+                ui.statsGameVersionFilter.classList.remove('hidden');
+
+                displayPlayerStats(history, allPlayers);
+            }
+
+            function displayPlayerStats(fullHistory, allPlayers) {
+                const selectedPlayer = ui.statsPlayerFilter.value;
+                const selectedGameVersion = ui.statsGameVersionFilter.value;
+
+                let playersToShow = selectedPlayer ? [selectedPlayer] : allPlayers;
+                let history = selectedGameVersion ? fullHistory.filter(g => g.gameVersion === selectedGameVersion) : fullHistory;
+                
+                ui.playerStatsContainer.innerHTML = '';
+
+                playersToShow.forEach(playerName => {
+                    let gamesPlayed = 0;
+                    let wins = 0;
+                    let totalScore = 0;
+
+                    history.forEach(game => {
+                        const playerInGame = game.giocatori.find(p => p.nome === playerName);
+                        if (playerInGame) {
+                            gamesPlayed++;
+                            totalScore += playerInGame.totale;
+                            const sortedPlayers = [...game.giocatori].filter(p => !p.isFreeCity).sort((a,b) => b.totale - a.totale);
+                            if (sortedPlayers.length > 0 && sortedPlayers[0].nome === playerName) {
+                                wins++;
+                            }
+                        }
+                    });
+                    
+                    if (gamesPlayed > 0) {
+                        const winRate = ((wins / gamesPlayed) * 100).toFixed(0);
+                        const avgScore = (totalScore / gamesPlayed).toFixed(1);
+                        const playerCard = document.createElement('div');
+                        playerCard.innerHTML = `
+                            <h4>${playerName}</h4>
+                            <div class="stat-item"><span class="stat-label">${translations.gamesPlayed[currentLanguage]}:</span> <span class="stat-value">${gamesPlayed}</span></div>
+                            <div class="stat-item"><span class="stat-label">${translations.winRate[currentLanguage]}:</span> <span class="stat-value">${winRate}%</span></div>
+                            <div class="stat-item"><span class="stat-label">${translations.avgScore[currentLanguage]}:</span> <span class="stat-value">${avgScore}</span></div>
+                        `;
+                        ui.playerStatsContainer.appendChild(playerCard);
+                    }
+                });
+            }
 
             function setupCollapsibleRules() {
                 document.querySelectorAll('.collapsible-header').forEach(header => {
@@ -2132,9 +2385,9 @@
                     });
                 });
             }
-            
+
             // ===============================================
-            // H. INITIALIZATION
+            // J. INITIALIZATION
             // ===============================================
             
             function inizializzaApp() {
@@ -2142,12 +2395,18 @@
                 mostraSezione('landing');
                 setupCollapsibleRules();
                 addEventListeners();
+                setLanguage('it');
             }
 
             function addEventListeners() {
                 bottoni.nuovaPartitaLanding.addEventListener('click', () => mostraSezione('selezioneGioco'));
-                bottoni.regolamentoLanding.addEventListener('click', () => mostraSezione('regolamento'));
+                bottoni.regolamentoLanding.addEventListener('click', () => { setLanguage(currentLanguage); mostraSezione('regolamento'); });
+                bottoni.cronologiaLanding.addEventListener('click', () => { displayGameHistory(); mostraSezione('cronologia'); });
+                bottoni.statisticheLanding.addEventListener('click', () => { calculateAndDisplayStats(); mostraSezione('statistiche'); });
+
                 bottoni.backToHomeFromRules.addEventListener('click', () => mostraSezione('landing'));
+                bottoni.backToHomeFromHistory.addEventListener('click', () => mostraSezione('landing'));
+                bottoni.backToHomeFromStats.addEventListener('click', () => mostraSezione('landing'));
                 bottoni.backToHomeFromGameSelect.addEventListener('click', () => mostraSezione('landing'));
                 
                 document.querySelectorAll('.back-to-game-select').forEach(btn => {
@@ -2206,7 +2465,6 @@
                      setupDuel.ui.manualDateContainer.classList.toggle('hidden', !setupDuel.inputs.dateToggle.checked);
                 });
 
-
                 // Scoring Navigation Listeners
                 bottoni.nextCat.addEventListener('click', () => navigaCategorie(1));
                 bottoni.prevCat.addEventListener('click', () => { salvaPunteggiCategoriaCorrente(); datiPartita.categoriaCorrenteIndex -= 1; mostraSchermataCategoria(); });
@@ -2215,13 +2473,16 @@
                     mostraSezione(`setup-${datiPartita.gameVersion}`);
                 });
                 
+                // Stats filters
+                ui.statsPlayerFilter.addEventListener('change', () => displayPlayerStats(getGameHistory(), Object.keys(getGameHistory().reduce((acc, game) => { game.giocatori.forEach(p => {if (!p.isFreeCity) acc[p.nome]=1}); return acc; }, {}))));
+                ui.statsGameVersionFilter.addEventListener('change', () => displayPlayerStats(getGameHistory(), Object.keys(getGameHistory().reduce((acc, game) => { game.giocatori.forEach(p => {if (!p.isFreeCity) acc[p.nome]=1}); return acc; }, {}))));
+                
                 // Language Listeners
                 bottoni.langIt.addEventListener('click', () => setLanguage('it'));
                 bottoni.langEn.addEventListener('click', () => setLanguage('en'));
             }
 
             inizializzaApp();
-            setLanguage(currentLanguage);
         });
     </script>
 </body>
