@@ -25,6 +25,21 @@
         /* Landing Page */
         #landing-sezione .gruppo-bottoni { flex-direction: column; }
 
+        /* Rules Section */
+        #regolamento-sezione p, #regolamento-sezione ul {
+            text-align: left;
+            line-height: 1.6;
+            margin-bottom: 20px;
+        }
+        #regolamento-sezione ul {
+            padding-left: 20px;
+        }
+        #regolamento-sezione h4 {
+            color: var(--colore-secondario);
+            margin-top: 25px;
+            margin-bottom: 10px;
+        }
+
         /* Setup */
         #player-header { display: flex; flex-wrap: wrap; justify-content: space-between; align-items: center; border-bottom: 2px solid var(--colore-primario); margin-bottom: 20px; }
         #player-header h3 { border-bottom: none; margin-bottom: 0; padding-bottom: 10px; }
@@ -60,12 +75,24 @@
         .input-stepper { display: flex; align-items: center; justify-content: flex-end; gap: 8px; }
         .stepper-btn { font-size: 20px; width: 40px; height: 40px; text-align: center; padding: 0; line-height: 40px; flex-shrink: 0; }
         .input-punteggio { padding: 12px; border: 1px solid #444; border-radius: 8px; background-color: #333; color: var(--colore-testo); font-size: 18px; width: 60px; box-sizing: border-box; text-align: center; }
-        .science-input-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 10px; }
-        .science-icon-grid { display: grid; grid-template-columns: 1fr repeat(4, 1fr); gap: 10px; align-items: end; margin-bottom: 8px; }
+        
+        /* Stili per la sezione Scienza */
+        .science-icon-grid,
+        .punteggio-giocatore-riga.science-row {
+            display: grid;
+            grid-template-columns: 1fr repeat(4, 1fr);
+            align-items: center;
+            gap: 10px 15px; /* 10px vertical, 15px horizontal */
+        }
+        .science-icon-grid {
+            margin-bottom: 8px;
+            align-items: end; /* Allinea icone in basso */
+        }
+        .punteggio-giocatore-riga.science-row .input-punteggio {
+            width: 100%;
+        }
         .science-icon { max-height: 30px; margin: auto; display: block; }
         #avviso-categoria { font-size: 0.9em; text-align: center; color: var(--colore-testo-fioco); background: #222; padding: 8px; border-radius: 5px; margin-bottom: 15px; }
-        #science-grid-container { display: grid; grid-template-columns: 1fr auto; gap: 15px; align-items: center;}
-        #science-grid-container .science-input-grid { flex-grow: 1; }
         
         /* Risultati */
         .header-info { text-align: right; font-size: 0.8em; color: var(--colore-testo-fioco); margin-bottom: -10px; margin-top: -10px; }
@@ -105,7 +132,6 @@
             .punteggio-giocatore-riga { grid-template-columns: 1fr; gap: 5px; }
             .punteggio-giocatore-riga label { text-align: left; }
             .input-stepper { justify-content: flex-start; }
-            .science-input-grid { grid-template-columns: 1fr 1fr; }
             .checkbox-container { gap: 10px; }
             .checkbox-item { flex-direction: column; align-items: flex-start; gap: 8px; }
             #player-header { flex-direction: column; align-items: flex-start; }
@@ -121,6 +147,30 @@
         <section id="landing-sezione">
             <div class="gruppo-bottoni">
                 <button id="landingNuovaPartitaBtn" class="bottone-grande">Inizia Nuova Partita</button>
+                <button id="landingRegolamentoBtn" class="bottone-grande">Regolamento</button>
+            </div>
+        </section>
+
+        <section id="regolamento-sezione" class="hidden">
+            <h2>Regolamento Punteggio</h2>
+            <p>Questa utility calcola il punteggio finale per 7 Wonders e le sue espansioni. Ecco un riepilogo di come vengono calcolati i punti per ogni categoria.</p>
+            
+            <h4>Punti Scienza 🟢</h4>
+            <p>I punti per la scienza vengono calcolati in due modi:</p>
+            <ul>
+                <li><strong>Set di simboli identici:</strong> Ottieni punti pari al quadrato del numero di simboli identici che possiedi (es. 3 bussole = 3x3 = 9 punti).</li>
+                <li><strong>Set di simboli diversi:</strong> Ottieni 7 punti per ogni set completo di 3 simboli diversi (bussola, tavoletta, ingranaggio).</li>
+            </ul>
+             <p>Le carte "serie" (wildcard) vengono assegnate automaticamente al simbolo che massimizza il tuo punteggio.</p>
+
+            <h4>Punti Tesoro 💰</h4>
+            <p>Ottieni 1 punto vittoria per ogni 3 monete che possiedi alla fine della partita. Le frazioni vengono arrotondate per difetto.</p>
+
+            <h4>Tie-Breaker</h4>
+            <p>In caso di parità nel punteggio totale, il vincitore è il giocatore con il maggior numero di monete (non i punti derivanti dal tesoro, ma il totale delle monete).</p>
+            
+            <div class="gruppo-bottoni">
+                <button id="backToHomeFromRulesBtn" class="bottone-grande">Torna alla Home</button>
             </div>
         </section>
 
@@ -213,11 +263,13 @@
             ];
             const CATEGORIE_NEGATIVE_PERMESSE = ['militari', 'debiti', 'conflittiNavali'];
             
-            const sezioni = { landing: document.getElementById('landing-sezione'), setup: document.getElementById('setup-sezione'), punteggio: document.getElementById('punteggio-sezione'), risultati: document.getElementById('risultati-sezione')};
+            const sezioni = { landing: document.getElementById('landing-sezione'), regolamento: document.getElementById('regolamento-sezione'), setup: document.getElementById('setup-sezione'), punteggio: document.getElementById('punteggio-sezione'), risultati: document.getElementById('risultati-sezione')};
             const inputs = { nomeGiocatore: document.getElementById('nomeGiocatoreInput'), luogoPartita: document.getElementById('luogoPartitaInput'), esp: { cities: document.getElementById('esp-cities'), leaders: document.getElementById('esp-leaders'), armada: document.getElementById('esp-armada'), edifice: document.getElementById('esp-edifice') }, teamPlay: document.getElementById('team-play-checkbox'), dateToggle: document.getElementById('date-toggle'), manualDateInput: document.getElementById('manual-date-input') };
             const bottoni = {
                 aggiungiGiocatore: document.getElementById('aggiungiGiocatoreBtn'), iniziaPartita: document.getElementById('iniziaPartitaBtn'),
                 nuovaPartitaLanding: document.getElementById('landingNuovaPartitaBtn'),
+                regolamentoLanding: document.getElementById('landingRegolamentoBtn'),
+                backToHomeFromRules: document.getElementById('backToHomeFromRulesBtn'),
                 prevCat: document.getElementById('prevCatBtn'), nextCat: document.getElementById('nextCatBtn'),
                 randomWonder: document.getElementById('randomWonderBtn'), backToSetup: document.getElementById('backToSetupBtn'),
                 resetSettings: document.getElementById('resetSettingsBtn'),
@@ -313,11 +365,13 @@
                 ui.titoloCategoria.innerHTML = categoria.label;
                 ui.titoloCategoria.style.backgroundColor = categoria.color || 'transparent';
                 ui.inputsContainer.innerHTML = '';
+                
                 if (categoria.key === 'gilde' && datiPartita.espansioni.armada) {
                     const avviso = document.createElement('div'); avviso.id = 'avviso-categoria';
                     avviso.textContent = 'Attenzione: con l\'espansione Armada ogni Gilda può valere un massimo di 10 punti vittoria.';
                     ui.inputsContainer.appendChild(avviso);
                 }
+
                 if (categoria.type === 'science') {
                     const iconHeader = document.createElement('div');
                     iconHeader.className = 'science-icon-grid';
@@ -326,14 +380,36 @@
                                             <div><img src="https://i.postimg.cc/7b8j4rCV/tavoletta.png" class="science-icon" alt="Tavoletta"></div>
                                             <div><img src="https://i.postimg.cc/C12WvqS9/ingranaggio.png" class="science-icon" alt="Ingranaggio"></div>
                                             <div><img src="https://i.postimg.cc/43WC90Mf/serie.png" class="science-icon" alt="Serie"></div>`;
-                     ui.inputsContainer.appendChild(iconHeader);
-                }
+                    ui.inputsContainer.appendChild(iconHeader);
+                    
+                    datiPartita.giocatori.forEach((giocatore, playerIndex) => {
+                        const riga = document.createElement('div');
+                        riga.className = 'punteggio-giocatore-riga science-row';
+                        const puntiSalvati = giocatore.punteggi[categoria.key] || { compasso: 0, tavoletta: 0, ingranaggio: 0, serie: 0 };
+                        
+                        const label = document.createElement('label');
+                        label.innerHTML = `${giocatore.nome}<span id="anteprima-scienza-${playerIndex}" style="color: var(--colore-successo); font-weight: bold; display: block; font-size: 0.8em;">(${calcolaPuntiScienzaOttimizzati(puntiSalvati)}pt)</span>`;
+                        riga.appendChild(label);
+                        
+                        const scienceTypes = ['compasso', 'tavoletta', 'ingranaggio', 'serie'];
+                        scienceTypes.forEach(type => {
+                            const input = document.createElement('input');
+                            input.type = 'number';
+                            input.className = 'input-punteggio';
+                            input.dataset.playerIndex = playerIndex;
+                            input.dataset.scienceType = type;
+                            input.value = puntiSalvati[type] || 0;
+                            input.min = "0";
+                            riga.appendChild(input);
+                        });
+                        
+                        ui.inputsContainer.appendChild(riga);
+                    });
 
-                datiPartita.giocatori.forEach((giocatore, playerIndex) => {
-                    const riga = document.createElement('div');
-                    const minAttribute = CATEGORIE_NEGATIVE_PERMESSE.includes(categoria.key) ? '' : 'min="0"';
-
-                    if (categoria.type === 'number') {
+                } else { // For type 'number'
+                    datiPartita.giocatori.forEach((giocatore, playerIndex) => {
+                        const riga = document.createElement('div');
+                        const minAttribute = CATEGORIE_NEGATIVE_PERMESSE.includes(categoria.key) ? '' : 'min="0"';
                         riga.className = 'punteggio-giocatore-riga';
                         riga.innerHTML = `<label for="p-cat-${playerIndex}">${giocatore.nome}</label>
                                         <div class="input-stepper">
@@ -341,19 +417,9 @@
                                             <input type="number" id="p-cat-${playerIndex}" class="input-punteggio" data-player-index="${playerIndex}" value="${giocatore.punteggi[categoria.key] || 0}" ${minAttribute}>
                                             <button class="stepper-btn" data-player-index="${playerIndex}" data-step="1">+</button>
                                         </div>`;
-                    } else if (categoria.type === 'science') {
-                        riga.className = 'punteggio-giocatore-riga';
-                        const puntiSalvati = giocatore.punteggi[categoria.key] || { compasso: 0, tavoletta: 0, ingranaggio: 0, serie: 0 };
-                        riga.innerHTML = `<label>${giocatore.nome}<span id="anteprima-scienza-${playerIndex}" style="color: var(--colore-successo); font-weight: bold; display: block; font-size: 0.8em;">(${calcolaPuntiScienzaOttimizzati(puntiSalvati)}pt)</span></label>
-                                        <div class="science-input-grid">
-                                            <input type="number" class="input-punteggio" data-player-index="${playerIndex}" data-science-type="compasso" value="${puntiSalvati.compasso || 0}" min="0">
-                                            <input type="number" class="input-punteggio" data-player-index="${playerIndex}" data-science-type="tavoletta" value="${puntiSalvati.tavoletta || 0}" min="0">
-                                            <input type="number" class="input-punteggio" data-player-index="${playerIndex}" data-science-type="ingranaggio" value="${puntiSalvati.ingranaggio || 0}" min="0">
-                                            <input type="number" class="input-punteggio" data-player-index="${playerIndex}" data-science-type="serie" value="${puntiSalvati.serie || 0}" min="0">
-                                        </div>`;
-                    }
-                    ui.inputsContainer.appendChild(riga);
-                });
+                        ui.inputsContainer.appendChild(riga);
+                    });
+                }
                 
                 ui.inputsContainer.querySelectorAll('.stepper-btn').forEach(btn => {
                     btn.addEventListener('click', (e) => {
@@ -368,13 +434,14 @@
                     });
                 });
 
-                document.querySelectorAll('.science-input-grid input').forEach(input => {
+                ui.inputsContainer.querySelectorAll('input[data-science-type]').forEach(input => {
                     input.addEventListener('input', () => {
                         const pIndex = input.dataset.playerIndex; const simboli = { compasso: 0, tavoletta: 0, ingranaggio: 0, serie: 0 };
                         document.querySelectorAll(`input[data-player-index="${pIndex}"][data-science-type]`).forEach(i => { simboli[i.dataset.scienceType] = parseInt(i.value) || 0; });
                         document.getElementById(`anteprima-scienza-${pIndex}`).textContent = `(${calcolaPuntiScienzaOttimizzati(simboli)}pt)`;
                     });
                 });
+
                 bottoni.prevCat.disabled = index === 0;
                 const isLastCategory = index === datiPartita.categoriePartita.length - 1;
                 bottoni.nextCat.textContent = isLastCategory ? (datiPartita.hasCalculatedResults ? 'Ricalcola Risultati' : 'Vedi Risultati') : 'Avanti →';
@@ -628,10 +695,13 @@
                 aggiornaListaGiocatoriUI();
             }
             
+            // Event Listeners
             bottoni.aggiungiGiocatore.addEventListener('click', aggiungiGiocatore);
             inputs.nomeGiocatore.addEventListener('keypress', e => { if (e.key === 'Enter') { e.preventDefault(); aggiungiGiocatore(); }});
             bottoni.iniziaPartita.addEventListener('click', () => { if (!bottoni.iniziaPartita.disabled) avviaPartita(); });
             bottoni.nuovaPartitaLanding.addEventListener('click', () => mostraSezione('setup'));
+            bottoni.regolamentoLanding.addEventListener('click', () => mostraSezione('regolamento'));
+            bottoni.backToHomeFromRules.addEventListener('click', () => mostraSezione('landing'));
             bottoni.randomWonder.addEventListener('click', assegnaMeraviglieCasuali);
             bottoni.nextCat.addEventListener('click', () => navigaCategorie(1));
             bottoni.prevCat.addEventListener('click', () => { salvaPunteggiCategoriaCorrente(); datiPartita.categoriaCorrenteIndex -= 1; mostraSchermataCategoria(); });
