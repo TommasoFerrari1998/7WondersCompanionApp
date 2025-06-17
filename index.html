@@ -4,7 +4,6 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Segnapunti 7 Wonders</title>
-    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap');
@@ -61,11 +60,12 @@
         .input-stepper { display: flex; align-items: center; justify-content: flex-end; gap: 8px; }
         .stepper-btn { font-size: 20px; width: 40px; height: 40px; text-align: center; padding: 0; line-height: 40px; flex-shrink: 0; }
         .input-punteggio { padding: 12px; border: 1px solid #444; border-radius: 8px; background-color: #333; color: var(--colore-testo); font-size: 18px; width: 60px; box-sizing: border-box; text-align: center; }
-        .science-table { display: grid; grid-template-columns: 2fr 1fr 1fr 1fr 1fr; gap: 10px; align-items: center; }
-        .science-table .science-icon { max-height: 30px; margin: auto; display: block; }
-        .science-table .player-name-cell { font-size: 18px; text-align: left; }
-        .science-table .input-punteggio { width: 100%; }
+        .science-input-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 10px; }
+        .science-icon-grid { display: grid; grid-template-columns: 1fr repeat(4, 1fr); gap: 10px; align-items: end; margin-bottom: 8px; }
+        .science-icon { max-height: 30px; margin: auto; display: block; }
         #avviso-categoria { font-size: 0.9em; text-align: center; color: var(--colore-testo-fioco); background: #222; padding: 8px; border-radius: 5px; margin-bottom: 15px; }
+        #science-grid-container { display: grid; grid-template-columns: 1fr auto; gap: 15px; align-items: center;}
+        #science-grid-container .science-input-grid { flex-grow: 1; }
         
         /* Risultati */
         .header-info { text-align: right; font-size: 0.8em; color: var(--colore-testo-fioco); margin-bottom: -10px; margin-top: -10px; }
@@ -105,8 +105,7 @@
             .punteggio-giocatore-riga { grid-template-columns: 1fr; gap: 5px; }
             .punteggio-giocatore-riga label { text-align: left; }
             .input-stepper { justify-content: flex-start; }
-            .science-table { grid-template-columns: 1fr; }
-            .science-table > div:not(.player-name-cell) { display: none; }
+            .science-input-grid { grid-template-columns: 1fr 1fr; }
             .checkbox-container { gap: 10px; }
             .checkbox-item { flex-direction: column; align-items: flex-start; gap: 8px; }
             #player-header { flex-direction: column; align-items: flex-start; }
@@ -320,42 +319,41 @@
                     ui.inputsContainer.appendChild(avviso);
                 }
                 if (categoria.type === 'science') {
-                    const scienceGrid = document.createElement('div');
-                    scienceGrid.className = 'science-table';
-                    // Header row
-                    scienceGrid.innerHTML = `
-                        <div></div> 
-                        <div><img src="https://i.postimg.cc/y6gd7hgg/compasso.png" class="science-icon" alt="Compasso"></div>
-                        <div><img src="https://i.postimg.cc/7b8j4rCV/tavoletta.png" class="science-icon" alt="Tavoletta"></div>
-                        <div><img src="https://i.postimg.cc/C12WvqS9/ingranaggio.png" class="science-icon" alt="Ingranaggio"></div>
-                        <div><img src="https://i.postimg.cc/43WC90Mf/serie.png" class="science-icon" alt="Serie"></div>
-                    `;
-                    datiPartita.giocatori.forEach((giocatore, playerIndex) => {
-                        const puntiSalvati = giocatore.punteggi[categoria.key] || { compasso: 0, tavoletta: 0, ingranaggio: 0, serie: 0 };
-                        scienceGrid.innerHTML += `
-                            <div class="player-name-cell">${giocatore.nome}<span id="anteprima-scienza-${playerIndex}" style="color: var(--colore-successo); font-weight: bold; display: block; font-size: 0.8em;">(${calcolaPuntiScienzaOttimizzati(puntiSalvati)}pt)</span></div>
-                            <input type="number" class="input-punteggio" data-player-index="${playerIndex}" data-science-type="compasso" value="${puntiSalvati.compasso || 0}" min="0">
-                            <input type="number" class="input-punteggio" data-player-index="${playerIndex}" data-science-type="tavoletta" value="${puntiSalvati.tavoletta || 0}" min="0">
-                            <input type="number" class="input-punteggio" data-player-index="${playerIndex}" data-science-type="ingranaggio" value="${puntiSalvati.ingranaggio || 0}" min="0">
-                            <input type="number" class="input-punteggio" data-player-index="${playerIndex}" data-science-type="serie" value="${puntiSalvati.serie || 0}" min="0">
-                        `;
-                    });
-                    ui.inputsContainer.appendChild(scienceGrid);
+                    const iconHeader = document.createElement('div');
+                    iconHeader.className = 'science-icon-grid';
+                    iconHeader.innerHTML = `<div></div>
+                                            <div><img src="https://i.postimg.cc/y6gd7hgg/compasso.png" class="science-icon" alt="Compasso"></div>
+                                            <div><img src="https://i.postimg.cc/7b8j4rCV/tavoletta.png" class="science-icon" alt="Tavoletta"></div>
+                                            <div><img src="https://i.postimg.cc/C12WvqS9/ingranaggio.png" class="science-icon" alt="Ingranaggio"></div>
+                                            <div><img src="https://i.postimg.cc/43WC90Mf/serie.png" class="science-icon" alt="Serie"></div>`;
+                     ui.inputsContainer.appendChild(iconHeader);
+                }
 
-                } else {
-                     datiPartita.giocatori.forEach((giocatore, playerIndex) => {
-                        const riga = document.createElement('div');
+                datiPartita.giocatori.forEach((giocatore, playerIndex) => {
+                    const riga = document.createElement('div');
+                    const minAttribute = CATEGORIE_NEGATIVE_PERMESSE.includes(categoria.key) ? '' : 'min="0"';
+
+                    if (categoria.type === 'number') {
                         riga.className = 'punteggio-giocatore-riga';
-                        const minAttribute = CATEGORIE_NEGATIVE_PERMESSE.includes(categoria.key) ? '' : 'min="0"';
                         riga.innerHTML = `<label for="p-cat-${playerIndex}">${giocatore.nome}</label>
                                         <div class="input-stepper">
                                             <button class="stepper-btn" data-player-index="${playerIndex}" data-step="-1">-</button>
                                             <input type="number" id="p-cat-${playerIndex}" class="input-punteggio" data-player-index="${playerIndex}" value="${giocatore.punteggi[categoria.key] || 0}" ${minAttribute}>
                                             <button class="stepper-btn" data-player-index="${playerIndex}" data-step="1">+</button>
                                         </div>`;
-                         ui.inputsContainer.appendChild(riga);
-                    });
-                }
+                    } else if (categoria.type === 'science') {
+                        riga.className = 'punteggio-giocatore-riga';
+                        const puntiSalvati = giocatore.punteggi[categoria.key] || { compasso: 0, tavoletta: 0, ingranaggio: 0, serie: 0 };
+                        riga.innerHTML = `<label>${giocatore.nome}<span id="anteprima-scienza-${playerIndex}" style="color: var(--colore-successo); font-weight: bold; display: block; font-size: 0.8em;">(${calcolaPuntiScienzaOttimizzati(puntiSalvati)}pt)</span></label>
+                                        <div class="science-input-grid">
+                                            <input type="number" class="input-punteggio" data-player-index="${playerIndex}" data-science-type="compasso" value="${puntiSalvati.compasso || 0}" min="0">
+                                            <input type="number" class="input-punteggio" data-player-index="${playerIndex}" data-science-type="tavoletta" value="${puntiSalvati.tavoletta || 0}" min="0">
+                                            <input type="number" class="input-punteggio" data-player-index="${playerIndex}" data-science-type="ingranaggio" value="${puntiSalvati.ingranaggio || 0}" min="0">
+                                            <input type="number" class="input-punteggio" data-player-index="${playerIndex}" data-science-type="serie" value="${puntiSalvati.serie || 0}" min="0">
+                                        </div>`;
+                    }
+                    ui.inputsContainer.appendChild(riga);
+                });
                 
                 ui.inputsContainer.querySelectorAll('.stepper-btn').forEach(btn => {
                     btn.addEventListener('click', (e) => {
@@ -370,7 +368,7 @@
                     });
                 });
 
-                document.querySelectorAll('.science-table input').forEach(input => {
+                document.querySelectorAll('.science-input-grid input').forEach(input => {
                     input.addEventListener('input', () => {
                         const pIndex = input.dataset.playerIndex; const simboli = { compasso: 0, tavoletta: 0, ingranaggio: 0, serie: 0 };
                         document.querySelectorAll(`input[data-player-index="${pIndex}"][data-science-type]`).forEach(i => { simboli[i.dataset.scienceType] = parseInt(i.value) || 0; });
@@ -423,11 +421,7 @@
             }
 
             function mostraRisultati(partitaSalvata = null) {
-                if (partitaSalvata) {
-                    datiPartita = JSON.parse(JSON.stringify(partitaSalvata)); // Deep copy to avoid modifying history
-                }
                 datiPartita.hasCalculatedResults = true;
-                
                 const dataPartita = datiPartita.manualDate ? new Date(datiPartita.manualDate) : new Date();
                 datiPartita.data = datiPartita.data || dataPartita.toLocaleString('it-IT', { day: '2-digit', month: '2-digit', year: '2-digit', hour: '2-digit', minute: '2-digit' });
                 
@@ -439,23 +433,20 @@
                     g.punteggi.puntiTesoro = pTesoro;
                     g.punteggi.puntiScienza = pScienza;
 
-                    g.totale = 0;
+                    let total = 0;
                     datiPartita.categoriePartita.forEach(cat => {
                         const key = cat.key;
                         if (key === 'tesoro') {
-                            g.totale += pTesoro;
+                            total += pTesoro;
                         } else if (key === 'scienza' || key === 'scienzaSimboli') {
                             // handled separately
                         } else {
-                            g.totale += (p[key] || 0);
+                            total += (p[key] || 0);
                         }
                     });
-                    g.totale += pScienza;
+                    total += pScienza;
+                    g.totale = total;
                 });
-                
-                if(!partitaSalvata) {
-                    salvaPartitaNelloStorico();
-                }
                 
                 const infoEl = document.createElement('div');
                 infoEl.className = 'header-info';
