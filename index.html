@@ -3,10 +3,11 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Segnapunti 7 Wonders</title>
+    <title>7 Wonders Score Sheet</title>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap');
+        @import url('https://fonts.googleapis.com/css2?family=Cinzel:wght@700&display=swap');
 
         :root {
             --colore-primario: #3a5a78; --colore-secondario: #d4ac6e; --colore-sfondo: #1e1e1e;
@@ -17,26 +18,113 @@
 
         body { font-family: 'Roboto', sans-serif; background-color: var(--colore-sfondo); color: var(--colore-testo); margin: 0; padding: 20px; display: flex; justify-content: center; align-items: flex-start; min-height: 100vh; }
         main { width: 100%; max-width: 550px; background-color: var(--colore-superficie); padding: 25px 30px; border-radius: 12px; box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2); box-sizing: border-box; }
-        #logo { display: block; margin: 0 auto 25px auto; max-width: 80%; height: auto; }
+        #logo { display: block; margin: 0 auto 10px auto; max-width: 80%; height: auto; }
+        #app-subtitle {
+            font-family: 'Cinzel', serif;
+            text-align: center;
+            font-size: 1.8em;
+            color: var(--colore-secondario);
+            margin-top: -15px;
+            margin-bottom: 25px;
+            text-shadow: 1px 1px 3px rgba(0,0,0,0.4);
+        }
         h2, h3 { border-bottom: 2px solid var(--colore-primario); padding-bottom: 10px; margin-bottom: 20px; }
         
         section { transition: opacity 0.3s ease-in-out; }
         
+        /* Language Switcher */
+        #language-switcher { display: flex; justify-content: center; gap: 10px; margin-bottom: 20px; }
+        .lang-btn { background-color: #444; padding: 8px 15px; font-size: 14px; }
+        .lang-btn.active { background-color: var(--colore-secondario); color: #111; }
+
         /* Landing Page */
         #landing-sezione .gruppo-bottoni { flex-direction: column; }
+        #support-section { margin-top: 40px; text-align: center; }
+        .paypal-logo {
+            width: 22px;
+            height: auto;
+        }
+        #paypal-btn {
+            background: linear-gradient(180deg, #0079C1 0%, #005EA6 100%);
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 12px;
+            width: auto;
+            max-width: 320px;
+            padding: 12px 25px;
+            border: 1px solid #003057;
+            border-radius: 25px;
+            box-shadow: 0 4px 15px rgba(0, 121, 193, 0.3);
+            transition: all 0.3s ease;
+            font-weight: bold;
+            color: white;
+            text-decoration: none;
+        }
+        #paypal-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(0, 121, 193, 0.4);
+            filter: none;
+            background: linear-gradient(180deg, #0084d6 0%, #0069b8 100%);
+        }
+        #credits {
+            margin-top: 30px;
+            text-align: center;
+            font-size: 0.8em;
+            color: var(--colore-testo-fioco);
+        }
+        #credits a {
+            color: var(--colore-secondario);
+            text-decoration: none;
+        }
+        #credits a:hover {
+            text-decoration: underline;
+        }
+
 
         /* Rules Section */
-        #regolamento-sezione p, #regolamento-sezione ul {
+        #regolamento-sezione p {
             text-align: left;
             line-height: 1.6;
             margin-bottom: 20px;
         }
-        #regolamento-sezione ul {
-            padding-left: 20px;
-        }
-        #regolamento-sezione h4 {
+        .collapsible-header {
+            cursor: pointer;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 10px 0;
             color: var(--colore-secondario);
-            margin-top: 25px;
+            margin-top: 10px;
+            margin-bottom: 0;
+            border-bottom: 1px solid var(--colore-primario);
+        }
+        .collapsible-header:hover {
+            filter: brightness(1.2);
+        }
+        .toggle-icon {
+            font-size: 1.5em;
+            font-weight: bold;
+            transition: transform 0.3s ease;
+        }
+        .collapsible-header.active .toggle-icon {
+            transform: rotate(45deg);
+        }
+        .collapsible-content {
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.4s ease-out, padding 0.4s ease-out, margin-bottom 0.4s ease-out;
+            padding: 0 15px;
+            margin-bottom: 0;
+        }
+        .collapsible-content ul {
+            text-align: left;
+            line-height: 1.6;
+            padding-left: 20px;
+            margin-top: 15px;
+            margin-bottom: 15px;
+        }
+        .collapsible-content li {
             margin-bottom: 10px;
         }
 
@@ -76,17 +164,21 @@
         .stepper-btn { font-size: 20px; width: 40px; height: 40px; text-align: center; padding: 0; line-height: 40px; flex-shrink: 0; }
         .input-punteggio { padding: 12px; border: 1px solid #444; border-radius: 8px; background-color: #333; color: var(--colore-testo); font-size: 18px; width: 60px; box-sizing: border-box; text-align: center; }
         
+        #manual-date-input {
+            width: 100%;
+        }
+        
         /* Stili per la sezione Scienza */
         .science-icon-grid,
         .punteggio-giocatore-riga.science-row {
             display: grid;
             grid-template-columns: 1fr repeat(4, 1fr);
             align-items: center;
-            gap: 10px 15px; /* 10px vertical, 15px horizontal */
+            gap: 10px 15px;
         }
         .science-icon-grid {
             margin-bottom: 8px;
-            align-items: end; /* Allinea icone in basso */
+            align-items: end;
         }
         .punteggio-giocatore-riga.science-row .input-punteggio {
             width: 100%;
@@ -142,60 +234,83 @@
 </head>
 <body>
     <main>
-        <img id="logo" src="https://i.imgur.com/p1PgYrh.png" alt="Logo 7 Wonders">
+        <div id="language-switcher">
+            <button id="lang-it" class="lang-btn active">IT</button>
+            <button id="lang-en" class="lang-btn">EN</button>
+        </div>
 
         <section id="landing-sezione">
+            <img id="logo" src="https://i.imgur.com/p1PgYrh.png" alt="Logo 7 Wonders">
+            <div id="app-subtitle">Companion App</div>
             <div class="gruppo-bottoni">
-                <button id="landingNuovaPartitaBtn" class="bottone-grande">Inizia Nuova Partita</button>
-                <button id="landingRegolamentoBtn" class="bottone-grande">Regolamento</button>
+                <button id="landingNuovaPartitaBtn" class="bottone-grande" data-lang-key="startNewGame"></button>
+                <button id="landingRegolamentoBtn" class="bottone-grande" data-lang-key="rulesClarifications"></button>
             </div>
+            <div id="support-section">
+                <a href="https://paypal.me/TFerrari308" target="_blank" id="paypal-btn">
+                    <img src="https://i.postimg.cc/hj0x6wFB/pngimg-com-paypal-PNG7.png" alt="PayPal Logo" class="paypal-logo">
+                    <span data-lang-key="supportProject"></span>
+                </a>
+            </div>
+            <div id="credits"></div>
         </section>
 
         <section id="regolamento-sezione" class="hidden">
-            <h2>Regolamento Punteggio</h2>
-            <p>Questa utility calcola il punteggio finale per 7 Wonders e le sue espansioni. Ecco un riepilogo di come vengono calcolati i punti per ogni categoria.</p>
+            <h2 data-lang-key="rulesClarifications"></h2>
+            <p data-lang-key="rulesDisclaimer"></p>
             
-            <h4>Punti Scienza 🟢</h4>
-            <p>I punti per la scienza vengono calcolati in due modi:</p>
-            <ul>
-                <li><strong>Set di simboli identici:</strong> Ottieni punti pari al quadrato del numero di simboli identici che possiedi (es. 3 bussole = 3x3 = 9 punti).</li>
-                <li><strong>Set di simboli diversi:</strong> Ottieni 7 punti per ogni set completo di 3 simboli diversi (bussola, tavoletta, ingranaggio).</li>
-            </ul>
-             <p>Le carte "serie" (wildcard) vengono assegnate automaticamente al simbolo che massimizza il tuo punteggio.</p>
+            <div data-lang-group="rulesBaseGame">
+                <h4 class="collapsible-header"><span data-lang-key="rulesBaseGame_title"></span><span class="toggle-icon">＋</span></h4>
+                <div class="collapsible-content"><ul></ul></div>
+            </div>
+            <div data-lang-group="rulesLeaders">
+                <h4 class="collapsible-header"><span data-lang-key="rulesLeaders_title"></span><span class="toggle-icon">＋</span></h4>
+                <div class="collapsible-content"><ul></ul></div>
+            </div>
+            <div data-lang-group="rulesArmada">
+                <h4 class="collapsible-header"><span data-lang-key="rulesArmada_title"></span><span class="toggle-icon">＋</span></h4>
+                <div class="collapsible-content"><ul></ul></div>
+            </div>
+            <div data-lang-group="rulesCities">
+                <h4 class="collapsible-header"><span data-lang-key="rulesCities_title"></span><span class="toggle-icon">＋</span></h4>
+                <div class="collapsible-content"><ul></ul></div>
+            </div>
+            <div data-lang-group="rulesEdifice">
+                <h4 class="collapsible-header"><span data-lang-key="rulesEdifice_title"></span><span class="toggle-icon">＋</span></h4>
+                <div class="collapsible-content"><ul></ul></div>
+            </div>
+            <div data-lang-group="rulesPromo">
+                <h4 class="collapsible-header"><span data-lang-key="rulesPromo_title"></span><span class="toggle-icon">＋</span></h4>
+                <div class="collapsible-content"><ul></ul></div>
+            </div>
 
-            <h4>Punti Tesoro 💰</h4>
-            <p>Ottieni 1 punto vittoria per ogni 3 monete che possiedi alla fine della partita. Le frazioni vengono arrotondate per difetto.</p>
-
-            <h4>Tie-Breaker</h4>
-            <p>In caso di parità nel punteggio totale, il vincitore è il giocatore con il maggior numero di monete (non i punti derivanti dal tesoro, ma il totale delle monete).</p>
-            
             <div class="gruppo-bottoni">
-                <button id="backToHomeFromRulesBtn" class="bottone-grande">Torna alla Home</button>
+                <button id="backToHomeFromRulesBtn" class="bottone-grande" data-lang-key="backToHome"></button>
             </div>
         </section>
 
         <section id="setup-sezione" class="hidden">
-            <h2>Imposta Partita</h2>
+            <h2 data-lang-key="setupGame"></h2>
             <div class="form-group" style="flex-direction: column;">
-                <input type="text" id="nomeGiocatoreInput" placeholder="Nome giocatore...">
-                <button id="aggiungiGiocatoreBtn">Aggiungi</button>
+                <input type="text" id="nomeGiocatoreInput" data-lang-placeholder-key="playerNamePlaceholder">
+                <button id="aggiungiGiocatoreBtn" data-lang-key="add"></button>
             </div>
             <div id="player-header">
-                <h3>Giocatori e Meraviglie</h3>
+                <h3 data-lang-key="playersAndWonders"></h3>
                 <div class="header-options">
                      <div class="checkbox-item hidden" id="team-play-container">
-                        <label for="team-play-checkbox" style="font-size:1em;">Partita a squadre</label>
+                        <label for="team-play-checkbox" style="font-size:1em;" data-lang-key="teamGame"></label>
                         <label class="toggle-switch">
                             <input type="checkbox" id="team-play-checkbox">
                             <span class="slider"></span>
                         </label>
                     </div>
-                    <button id="randomWonderBtn">Meraviglie casuali 🔀</button>
+                    <button id="randomWonderBtn" data-lang-key="randomWonders"></button>
                 </div>
             </div>
             <ul id="listaGiocatori"></ul>
              <div class="opzioni-partita">
-                <h4>Espansioni</h4>
+                <h4 data-lang-key="expansions"></h4>
                 <div class="checkbox-container">
                     <div class="checkbox-item"><label for="esp-cities">Cities</label><label class="toggle-switch"><input type="checkbox" id="esp-cities"><span class="slider"></span></label></div>
                     <div class="checkbox-item"><label for="esp-leaders">Leaders</label><label class="toggle-switch"><input type="checkbox" id="esp-leaders"><span class="slider"></span></label></div>
@@ -204,15 +319,15 @@
                 </div>
             </div>
             <div class="opzioni-partita">
-                <h4>Luogo</h4>
+                <h4 data-lang-key="location"></h4>
                 <div class="form-group" style="margin-bottom: 0;">
-                     <input type="text" id="luogoPartitaInput" placeholder="Luogo della partita...">
+                     <input type="text" id="luogoPartitaInput" data-lang-placeholder-key="locationPlaceholder">
                 </div>
             </div>
             <div class="opzioni-partita">
-                <h4>Data e ora</h4>
+                <h4 data-lang-key="dateAndTime"></h4>
                 <div class="checkbox-item">
-                    <label for="date-toggle">Usa data e ora manuale</label>
+                    <label for="date-toggle" data-lang-key="useManualDate"></label>
                     <label class="toggle-switch">
                         <input type="checkbox" id="date-toggle">
                         <span class="slider"></span>
@@ -223,9 +338,9 @@
                 </div>
             </div>
             <div class="gruppo-bottoni">
-                <button id="backToHomeFromSetupBtn">Torna alla Home</button>
-                <button id="resetSettingsBtn">Reset</button>
-                <button id="iniziaPartitaBtn" class="bottone-grande" disabled>Inizia</button>
+                <button id="backToHomeFromSetupBtn" data-lang-key="backToHome"></button>
+                <button id="resetSettingsBtn" data-lang-key="reset"></button>
+                <button id="iniziaPartitaBtn" class="bottone-grande" disabled data-lang-key="start"></button>
             </div>
         </section>
 
@@ -233,9 +348,9 @@
             <h2 id="titolo-categoria-punteggio"></h2>
             <div id="punteggio-inputs-container"></div>
             <div class="gruppo-bottoni" id="nav-punteggio">
-                <button id="backToSetupBtn">Torna al Setup</button>
-                <button id="prevCatBtn">← Indietro</button>
-                <button id="nextCatBtn">Avanti →</button>
+                <button id="backToSetupBtn" data-lang-key="backToSetup"></button>
+                <button id="prevCatBtn" data-lang-key="back">← </button>
+                <button id="nextCatBtn" data-lang-key="next"> →</button>
             </div>
         </section>
 
@@ -244,25 +359,11 @@
 
     <script>
         document.addEventListener('DOMContentLoaded', () => {
-            const MERAVIGLIE = { base: ['Halikarnassos', 'Rhódos', 'Olympía', 'Alexandria', 'Babylon', 'Éphesos', 'Gizah', 'Manneken Pis', 'Grande Muraglia Cinese'], leaders: ['Roma', 'Abu Simbel'], cities: ['Byzantium', 'Petra'], armada: ['Siracusa'], edifice: ['Ur', 'Carthage'] };
-            const CATEGORIE = [
-                { key: 'meraviglia', label: '🏛️ Meraviglia', type: 'number', color: '#7f8c8d' },
-                { key: 'tesoro', label: '💰 Tesoro', type: 'number', color: '#f1c40f' },
-                { key: 'debiti', label: '💸 Debiti', type: 'number', expansion: 'cities', color: '#c0392b' },
-                { key: 'militari', label: '⚔️ Conflitti Militari', type: 'number', color: '#c0392b' },
-                { key: 'civili', label: '🔵 Edifici Civili', type: 'number', color: '#2980b9' },
-                { key: 'commerciali', label: '🟡 Edifici Commerciali', type: 'number', color: '#f1c40f' },
-                { key: 'scienza', label: '🟢 Edifici Scientifici', type: 'science', color: '#27ae60' },
-                { key: 'gilde', label: '🟣 Gilde', type: 'number', color: '#8e44ad' },
-                { key: 'cities', label: '⚫ Cities', type: 'number', expansion: 'cities', color: '#34495e' },
-                { key: 'leaders', label: '👑 Leader', type: 'number', expansion: 'leaders', color: '#bdc3c7' },
-                { key: 'conflittiNavali', label: '⚓ Conflitti Navali', type: 'number', expansion: 'armada', color: '#3498db' },
-                { key: 'percorsoMarittimo', label: '🗺️ Percorso Navale Blu', type: 'number', expansion: 'armada', color: '#3498db' },
-                { key: 'isole', label: '🏝️ Isole', type: 'number', expansion: 'armada', color: '#16a085' },
-                { key: 'edifice', label: '🏗️ Edifici', type: 'number', expansion: 'edifice', color: '#d35400' },
-            ];
-            const CATEGORIE_NEGATIVE_PERMESSE = ['militari', 'debiti', 'conflittiNavali'];
-            
+            // ===============================================
+            // A. ALL VARIABLES AND CONSTANTS
+            // ===============================================
+
+            // UI Elements
             const sezioni = { landing: document.getElementById('landing-sezione'), regolamento: document.getElementById('regolamento-sezione'), setup: document.getElementById('setup-sezione'), punteggio: document.getElementById('punteggio-sezione'), risultati: document.getElementById('risultati-sezione')};
             const inputs = { nomeGiocatore: document.getElementById('nomeGiocatoreInput'), luogoPartita: document.getElementById('luogoPartitaInput'), esp: { cities: document.getElementById('esp-cities'), leaders: document.getElementById('esp-leaders'), armada: document.getElementById('esp-armada'), edifice: document.getElementById('esp-edifice') }, teamPlay: document.getElementById('team-play-checkbox'), dateToggle: document.getElementById('date-toggle'), manualDateInput: document.getElementById('manual-date-input') };
             const bottoni = {
@@ -274,42 +375,346 @@
                 randomWonder: document.getElementById('randomWonderBtn'), backToSetup: document.getElementById('backToSetupBtn'),
                 resetSettings: document.getElementById('resetSettingsBtn'),
                 backToHomeFromSetup: document.getElementById('backToHomeFromSetupBtn'),
+                langIt: document.getElementById('lang-it'),
+                langEn: document.getElementById('lang-en'),
             };
-            const ui = { listaGiocatori: document.getElementById('listaGiocatori'), titoloCategoria: document.getElementById('titolo-categoria-punteggio'), inputsContainer: document.getElementById('punteggio-inputs-container'), teamPlayContainer: document.getElementById('team-play-container') };
+            const ui = { 
+                listaGiocatori: document.getElementById('listaGiocatori'), 
+                titoloCategoria: document.getElementById('titolo-categoria-punteggio'), 
+                inputsContainer: document.getElementById('punteggio-inputs-container'), 
+                teamPlayContainer: document.getElementById('team-play-container'),
+                appSubtitle: document.getElementById('app-subtitle'),
+                credits: document.getElementById('credits')
+             };
+            
+            // Game Data Constants
+            const MERAVIGLIE = { base: ['Halikarnassos', 'Rhódos', 'Olympía', 'Alexandria', 'Babylon', 'Éphesos', 'Gizah', 'Manneken Pis', 'Grande Muraglia Cinese'], leaders: ['Roma', 'Abu Simbel'], cities: ['Byzantium', 'Petra'], armada: ['Siracusa'], edifice: ['Ur', 'Carthage'] };
+            const CATEGORIE = [
+                { key: 'meraviglia', label: '🏛️ Meraviglia', type: 'number', color: '#7f8c8d', langKey: 'catWonder' },
+                { key: 'tesoro', label: '💰 Tesoro', type: 'number', color: '#f1c40f', langKey: 'catTreasury' },
+                { key: 'debiti', label: '💸 Debiti', type: 'number', expansion: 'cities', color: '#c0392b', langKey: 'catDebts' },
+                { key: 'militari', label: '⚔️ Conflitti Militari', type: 'number', color: '#c0392b', langKey: 'catMilitary' },
+                { key: 'civili', label: '🔵 Edifici Civili', type: 'number', color: '#2980b9', langKey: 'catCivilian' },
+                { key: 'commerciali', label: '🟡 Edifici Commerciali', type: 'number', color: '#f1c40f', langKey: 'catCommercial' },
+                { key: 'scienza', label: '🟢 Edifici Scientifici', type: 'science', color: '#27ae60', langKey: 'catScience' },
+                { key: 'gilde', label: '🟣 Gilde', type: 'number', color: '#8e44ad', langKey: 'catGuilds' },
+                { key: 'cities', label: '⚫ Cities', type: 'number', expansion: 'cities', color: '#34495e', langKey: 'catCities' },
+                { key: 'leaders', label: '👑 Leader', type: 'number', expansion: 'leaders', color: '#bdc3c7', langKey: 'catLeaders' },
+                { key: 'conflittiNavali', label: '⚓ Conflitti Navali', type: 'number', expansion: 'armada', color: '#3498db', langKey: 'catNaval' },
+                { key: 'percorsoMarittimo', label: '🗺️ Percorso Navale Blu', type: 'number', expansion: 'armada', color: '#3498db', langKey: 'catNavalBlue' },
+                { key: 'isole', label: '🏝️ Isole', type: 'number', expansion: 'armada', color: '#16a085', langKey: 'catIslands' },
+                { key: 'edifice', label: '🏗️ Edifici', type: 'number', expansion: 'edifice', color: '#d35400', langKey: 'catEdifice' },
+            ];
+            const CATEGORIE_NEGATIVE_PERMESSE = ['militari', 'debiti', 'conflittiNavali'];
+            const wonderTranslations = {
+                "Grande Muraglia Cinese": {
+                    it: "Grande Muraglia Cinese",
+                    en: "Great Wall of China"
+                }
+            };
+            
+            // State Variables
             let datiPartita;
+            let currentLanguage = 'it';
+            let translations = {};
 
-            function mostraSezione(nomeSezione) { for (const key in sezioni) { sezioni[key].classList.toggle('hidden', key !== nomeSezione); } }
-            function resetStato() { datiPartita = { giocatori: [], categoriaCorrenteIndex: 0, categoriePartita: [], espansioni: {}, idPartita: Date.now() }; }
-            function getWondersDisponibili() { let w = [...MERAVIGLIE.base]; if (inputs.esp.leaders.checked) w.push(...MERAVIGLIE.leaders); if (inputs.esp.cities.checked) w.push(...MERAVIGLIE.cities); if (inputs.esp.armada.checked) w.push(...MERAVIGLIE.armada); if (inputs.esp.edifice.checked) w.push(...MERAVIGLIE.edifice); return w.sort(); }
+            // ===============================================
+            // B. TRANSLATION LOGIC
+            // ===============================================
+
+            function getWonderName(wonderKey) {
+                if (!wonderKey) return '';
+                if (wonderTranslations[wonderKey] && wonderTranslations[wonderKey][currentLanguage]) {
+                    return wonderTranslations[wonderKey][currentLanguage];
+                }
+                return wonderKey; // Fallback to the key itself
+            }
+
+            function setLanguage(lang) {
+                currentLanguage = lang;
+                document.documentElement.lang = lang;
+
+                document.getElementById('lang-it').classList.toggle('active', lang === 'it');
+                document.getElementById('lang-en').classList.toggle('active', lang === 'en');
+                
+                document.title = translations.pageTitle[lang];
+
+                document.querySelectorAll('[data-lang-key]').forEach(el => {
+                    const key = el.dataset.langKey;
+                    if(translations[key] && translations[key][lang]) {
+                        el.innerHTML = translations[key][lang]; // Use innerHTML to render bold tags
+                    }
+                });
+
+                document.querySelectorAll('[data-lang-placeholder-key]').forEach(el => {
+                    const key = el.dataset.langPlaceholderKey;
+                    if(translations[key] && translations[key][lang]) {
+                        el.placeholder = translations[key][lang];
+                    }
+                });
+                
+                document.querySelectorAll('[data-lang-group]').forEach(group => {
+                    const groupKey = group.dataset.langGroup;
+                    const list = group.querySelector('ul');
+                    if (translations[groupKey] && list) {
+                        list.innerHTML = translations[groupKey][lang].map(rule => `<li>${rule}</li>`).join('');
+                    }
+                });
+                
+                ui.credits.innerHTML = translations.creditsText[lang];
+
+
+                if (datiPartita && datiPartita.giocatori.length > 0) {
+                    aggiornaListaGiocatoriUI();
+                }
+            }
+
+            function initializeTranslations() {
+                translations = {
+                    pageTitle: { it: 'Segnapunti 7 Wonders', en: '7 Wonders Score Sheet' },
+                    startNewGame: { it: 'Inizia Nuova Partita', en: 'Start New Game' },
+                    rulesClarifications: { it: 'Chiarimenti sul regolamento', en: 'Rules Clarifications' },
+                    supportProject: { it: 'Supporta il Progetto', en: 'Support the Project' },
+                    creditsText: { 
+                        it: 'Sviluppato nel 2025 da Tommaso Ferrari. <br>Email: <a href="mailto:tommy.ferrari98@gmail.com">tommy.ferrari98@gmail.com</a> | Versione 1.0',
+                        en: 'Developed in 2025 by Tommaso Ferrari. <br>Email: <a href="mailto:tommy.ferrari98@gmail.com">tommy.ferrari98@gmail.com</a> | Version 1.0'
+                    },
+                    rulesDisclaimer: { 
+                        it: 'Questi chiarimenti sono basati sulle risposte alle FAQ presenti sul sito ufficiale del gioco (https://www.rprod.com/it/7-wonders/faq) oppure sono stati richiesti direttamente a Repos Production via Facebook.',
+                        en: 'These clarifications are based on the FAQ answers on the official game website (https://www.rprod.com/en/7-wonders/faq) or were requested directly from Repos Production via Facebook.'
+                    },
+                    backToHome: { it: 'Torna alla Home', en: 'Back to Home' },
+                    setupGame: { it: 'Imposta Partita', en: 'Set Up Game' },
+                    playerNamePlaceholder: { it: 'Nome giocatore...', en: 'Player name...' },
+                    add: { it: 'Aggiungi', en: 'Add' },
+                    playersAndWonders: { it: 'Giocatori e Meraviglie', en: 'Players & Wonders' },
+                    teamGame: { it: 'Partita a squadre', en: 'Team Game' },
+                    randomWonders: { it: 'Meraviglie casuali 🔀', en: 'Random Wonders 🔀' },
+                    expansions: { it: 'Espansioni', en: 'Expansions' },
+                    location: { it: 'Luogo', en: 'Location' },
+                    locationPlaceholder: { it: 'Luogo della partita...', en: 'Location of the game...' },
+                    dateAndTime: { it: 'Data e ora', en: 'Date and Time' },
+                    useManualDate: { it: 'Usa data e ora manuale', en: 'Use manual date and time' },
+                    reset: { it: 'Reset', en: 'Reset' },
+                    start: { it: 'Inizia', en: 'Start' },
+                    backToSetup: { it: 'Torna al Setup', en: 'Back to Setup' },
+                    back: { it: '← Indietro', en: '← Back' },
+                    next: { it: 'Avanti', en: 'Next' },
+                    notEnoughWonders: { it: 'Non ci sono abbastanza meraviglie uniche per tutti i giocatori.', en: 'Not enough unique wonders for all players.' },
+                    chooseWonder: { it: 'Scegli Meraviglia', en: 'Choose Wonder' },
+                    deletePlayer: { it: 'Elimina giocatore', en: 'Delete player' },
+                    team: { it: 'Squadra', en: 'Team' },
+                    guildsWarning: {
+                        it: 'Attenzione: con l\'espansione Armada ogni Gilda può valere un massimo di 10 punti vittoria.',
+                        en: 'Warning: with the Armada expansion, each Guild can be worth a maximum of 10 victory points.'
+                    },
+                    recalculateResults: { it: 'Ricalcola Risultati', en: 'Recalculate Results' },
+                    seeResults: { it: 'Vedi Risultati', en: 'See Results' },
+                    finalRanking: { it: 'Classifica Finale', en: 'Final Ranking' },
+                    noWonder: { it: 'Nessuna', en: 'None' },
+                    shareResults: { it: 'Condividi Risultati', en: 'Share Results' },
+                    newGame: { it: 'Nuova Partita', en: 'New Game' },
+                    // Categories
+                    catWonder: { it: 'Meraviglia', en: 'Wonder Board' },
+                    catTreasury: { it: 'Tesoro', en: 'Treasure' },
+                    catDebts: { it: 'Debiti', en: 'Debts' },
+                    catMilitary: { it: 'Conflitti Militari', en: 'Military Conflicts' },
+                    catCivilian: { it: 'Edifici Civili', en: 'Civilian Buildings' },
+                    catCommercial: { it: 'Edifici Commerciali', en: 'Commercial Buildings' },
+                    catScience: { it: 'Edifici Scientifici', en: 'Scientific Buildings' },
+                    catGuilds: { it: 'Gilde', en: 'Guilds' },
+                    catCities: { it: 'Cities', en: 'Cities' },
+                    catLeaders: { it: 'Leader', en: 'Leaders' },
+                    catNaval: { it: 'Conflitti Navali', en: 'Naval Conflicts' },
+                    catNavalBlue: { it: 'Percorso Navale Blu', en: 'Blue Naval Track' },
+                    catIslands: { it: 'Isole', en: 'Islands' },
+                    catEdifice: { it: 'Edifici', en: 'Edifices' },
+                    // Rules Titles
+                    rulesBaseGame_title: { it: '7 Wonders (Versione Base)', en: '7 Wonders (Base Game)' },
+                    rulesLeaders_title: { it: 'Leaders', en: 'Leaders' },
+                    rulesArmada_title: { it: 'Armada', en: 'Armada' },
+                    rulesCities_title: { it: 'Cities', en: 'Cities' },
+                    rulesEdifice_title: { it: 'Edifice', en: 'Edifice' },
+                    rulesPromo_title: { it: 'Carte e Meraviglie Promo', en: 'Promo Cards & Wonders' },
+                    // Rules Content
+                    rulesBaseGame: {
+                        it: [
+                            "Con il secondo stadio di <strong>Olympía (Giorno)</strong>, puoi costruire gratuitamente solo la <strong>prima carta Epoca</strong> di un colore non ancora presente nella tua città, indipendentemente dall'Epoca. Se, ad esempio, hai già costruito una carta Blu in precedenza, non puoi costruirne una gratuitamente tramite questo effetto.",
+                            "Non puoi utilizzare l'effetto di <strong>Halikarnassos</strong> per costruire gratuitamente uno <strong>stadio della Meraviglia</strong> con una carta dalla <strong>pila degli scarti</strong>.",
+                            "Non puoi costruire stadi della Meraviglia o carte Leader gratuitamente con l'effetto degli stadi 1 e 2 di <strong>Olympía (Notte)</strong>.",
+                            "Con il primo stadio di <strong>Olympía (Notte)</strong>, puoi costruire gratuitamente la <strong>prima carta</strong> che scegli all'inizio di ogni Epoca, non puoi invece reclutare una carta Leader.",
+                            "Solo in un caso estremamente raro è di fatto possibile utilizzare l'effetto del primo stadio di <strong>Olympía (Notte)</strong> all'inizio dell'Epoca I, quello in cui si sta utilizzando l'espansione Leaders, entrambi i tuoi vicini producono Minerale come risorsa di partenza e tu hai costruito il primo stadio di Olimpía con il tuo primo Leader.",
+                            "Se un giocatore rivela la propria <strong>carta Epoca</strong> per costruirla ma si accorge di non avere le <strong>risorse sufficienti</strong> e di non poterle acquistare in alcun modo, deve <strong>scartare</strong> quella carta e guadagnare 3 monete.",
+                            "Se più giocatori devono pescare dalla <strong>pila degli scarti</strong> nello stesso turno, questo è l'ordine di risoluzione degli effetti: <strong>Salomone, Halikarnassos, Carthage, Grande Muraglia Cinese, Manneken Pis, Società dei Falsari</strong>."
+                        ],
+                        en: [
+                            "With the second stage of <strong>Olympía (Day side)</strong>, you can only build the first <strong>Age card</strong> of a color not yet present in your city for free, regardless of the Age. For example, if you have already built a Blue card previously, you cannot build one for free using this effect.",
+                            "You cannot use the effect of <strong>Halikarnassos</strong> to build a <strong>Wonder stage</strong> for free with a card from the <strong>discard pile</strong>.",
+                            "You cannot build Wonder stages or Leader cards for free with the effect of stages 1 and 2 of <strong>Olympía (Night side)</strong>.",
+                            "With the first stage of <strong>Olympía (Night side)</strong>, you can build the <strong>first card</strong> you choose at the beginning of each Age for free; you cannot recruit a Leader card instead.",
+                            "Only in an extremely rare case is it actually possible to use the effect of the first stage of <strong>Olympía (Night side)</strong> at the beginning of Age I: when using the Leaders expansion, both your neighbors produce Ore as a starting resource, and you have built the first stage of Olympia with your first Leader.",
+                            "If a player reveals their <strong>Age card</strong> to build it but realizes they do not have enough <strong>resources</strong> and cannot purchase them in any way, they must <strong>discard</strong> that card and gain 3 coins.",
+                            "If multiple players need to draw from the <strong>discard pile</strong> in the same turn, this is the order of effect resolution: <strong>Solomon, Halikarnassos, Carthage, Great Wall of China, Manneken Pis, Forging Agency</strong>."
+                        ]
+                    },
+                    rulesLeaders: {
+                        it: [
+                            "Le <strong>carte Leader</strong> devono essere scartate separatamente dalle <strong>carte Epoca</strong>. Gli effetti di <strong>Halikarnassos, Salomone, Società dei Falsari, Manneken Pis</strong> e <strong>Grande Muraglia Cinese</strong> permettono di costruire gratuitamente solo una carta Epoca dalla pila degli scarti corrispondente.",
+                            "Non puoi reclutare Leader gratuitamente con l'effetto del primo stadio di <strong>Olympía (Notte)</strong>.",
+                            "Quando costruisci il secondo e terzo stadio di <strong>Roma (Notte)</strong>, puoi usare le <strong>monete</strong> ottenute all'inizio del turno per pagare il costo di reclutamento del Leader.",
+                            "Con <strong>Hatshepsut</strong>, guadagni 1 moneta dalla riserva anche quando acquisti una risorsa al costo di 0 monete, ad esempio combinando gli effetti di <strong>Stazione Commerciale Est</strong> e <strong>Molo Clandestino Est</strong>.",
+                            "Puoi combinare gli effetti di <strong>Hatshepsut</strong> e <strong>Berenice</strong>, ma solo con uno dei tuoi vicini per turno.",
+                            "Se <strong>Telesilla</strong> e <strong>Nitocris</strong> vengono reclutati nello stesso turno, il <strong>segnalino Vittoria Militare</strong> guadagnato con Nitocris può essere distrutto dall'effetto di Telesilla, dal momento che in 7 Wonders la perdita di segnalini e il pagamento di tributi avvengono sempre alla fine di un turno.",
+                            "L'effetto di <strong>Berenice</strong> è valido anche quando si guadagnano monete per effetto di un <strong>Edificio</strong> (se si sta utilizzando l'espansione Edifice)."
+                        ],
+                        en: [
+                            "<strong>Leader cards</strong> must be discarded separately from <strong>Age cards</strong>. The effects of <strong>Halikarnassos, Solomon, Forging Agency, Manneken Pis</strong>, and <strong>Great Wall of China</strong> only allow building an Age card for free from the corresponding discard pile.",
+                            "You cannot recruit Leaders for free with the effect of the first stage of <strong>Olympia (Night side)</strong>.",
+                            "When you build the second and third stages of <strong>Rome (Night side)</strong>, you can use the <strong>coins</strong> obtained at the beginning of the turn to pay the recruitment cost of the Leader.",
+                            "With <strong>Hatshepsut</strong>, you gain 1 coin from the bank even when you purchase a resource at the cost of 0 coins, for example by combining the effects of <strong>East Trading Post</strong> and <strong>East Clandestine Wharf</strong>.",
+                            "You can combine the effects of <strong>Hatshepsut</strong> and <strong>Berenice</strong>, but only with one of your neighbors per turn.",
+                            "If <strong>Telesilla</strong> and <strong>Nitocris</strong> are recruited in the same turn, the <strong>Military Victory token</strong> gained with Nitocris can be destroyed by Telesilla's effect, since in 7 Wonders the loss of tokens and payment of tributes always occur at the end of a turn.",
+                            "<strong>Berenice</strong>'s effect is also valid when gaining coins from an <strong>Edifice</strong>'s effect (if using the Edifice expansion)."
+                        ]
+                    },
+                    rulesArmada: {
+                        it: [
+                            "L'icona della <strong>Piramide completa</strong> sulla meraviglia <strong>Siracusa</strong> indica che puoi costruire gli stadi di Siracusa nell'ordine che preferisci.",
+                            "Non puoi copiare un <strong>simbolo scientifico Maggioranza</strong> con un simbolo scientifico <strong>Maschera</strong> (Cities), poiché il simbolo Maggioranza non è considerato un simbolo scientifico vero e proprio.",
+                            "Con il Leader <strong>Tomiri</strong>, se vieni sconfitto in un'<strong>Incursione</strong>, devi dare il <strong>segnalino Sconfitta Militare</strong> al giocatore che ha vinto l'Incursione, non a uno dei tuoi due vicini.",
+                            "Se più giocatori attivano due <strong>tributi</strong> dello stesso tipo e importo nello stesso turno, ciascuno paga anch'egli (una volta) il tributo innescato dagli altri.",
+                            "Se vengono innescati <strong>tributi</strong> di tipo diverso (es. uno tramite una carta Epoca gialla e uno tramite il <strong>Percorso Navale giallo</strong>), vanno applicati entrambi."
+                        ],
+                        en: [
+                            "The <strong>complete Pyramid</strong> icon on the <strong>Siracusa</strong> wonder indicates that you can build the stages of Siracusa in any order you prefer.",
+                            "You cannot copy a <strong>Majority scientific symbol</strong> with a <strong>Mask scientific symbol</strong> (Cities), as the Majority symbol is not considered a true scientific symbol.",
+                            "With the Leader <strong>Tomyris</strong>, if you are defeated in a <strong>Boarding</strong>, you must give the <strong>Military Defeat token</strong> to the player who won the Boarding, not to one of your two neighbors.",
+                            "If multiple players trigger two <strong>tributes</strong> of the same type and amount in the same turn, each one also pays (once) the tribute triggered by the others.",
+                            "If <strong>tributes</strong> of different types are triggered (e.g., one via a yellow Age card and one via the <strong>yellow Naval Track</strong>), both must be applied."
+                        ]
+                    },
+                    rulesCities: {
+                        it: [
+                            "Non si possono prendere <strong>segnalini Debito</strong> volontariamente.",
+                            "In una partita a 3 giocatori, se durante una Risoluzione dei Conflitti Militari 2 giocatori hanno un <strong>segnalino Diplomazia</strong>, il terzo giocatore non svolge alcun Conflitto Militare.",
+                            "In una partita a squadre, se due avversari hanno entrambi un <strong>segnalino Diplomazia</strong>, nessuno dei due svolge alcun Conflitto Militare in quell'Epoca.",
+                            "Se in un turno decidi di produrre una specifica risorsa tramite una carta Marrone che permette di scegliere tra due risorse possibili a ogni turno, non puoi produrre comunque l'altra tramite l'effetto del <strong>Mercato Nero</strong>."
+                        ],
+                        en: [
+                            "You cannot voluntarily take <strong>Debt tokens</strong>.",
+                            "In a 3-player game, if during a Military Conflict resolution 2 players have a <strong>Diplomacy token</strong>, the third player does not engage in any Military Conflict.",
+                            "In a team game, if two opponents both have a <strong>Diplomacy token</strong>, neither of them engages in any Military Conflict in that Age.",
+                            "If in a turn you decide to produce a specific resource through a Brown card that allows choosing between two possible resources each turn, you cannot also produce the other one through the effect of the <strong>Black Market</strong>."
+                        ]
+                    },
+                    rulesEdifice: {
+                        it: [
+                            "Non puoi acquistare risorse che un vicino produce perché ha partecipato alla costruzione di un <strong>Edificio</strong>.",
+                            "L'effetto del <strong>Mercato Nero</strong> e del <strong>Magazzino Segreto</strong> non si applicano alle risorse ottenute dagli <strong>Edifici</strong>."
+                        ],
+                        en: [
+                            "You cannot purchase resources that a neighbor produces because they participated in the construction of an <strong>Edifice</strong>.",
+                            "The effects of the <strong>Black Market</strong> and the <strong>Secret Warehouse</strong> do not apply to resources obtained from <strong>Edifices</strong>."
+                        ]
+                    },
+                    rulesPromo: {
+                        it: [
+                            "Con <strong>Cédrick & Thomas</strong>, se scegli l'aquila, tutti i giocatori risolvono due volte anche le <strong>Incursioni</strong>. Non si risolvono invece due volte i <strong>Conflitti Navali</strong>.",
+                            "Con la <strong>Gilda degli Architetti</strong>, il punteggio è limitato a un massimo di <strong>10 Punti Vittoria</strong> se giochi con l'espansione Armada (es: se i due vicini hanno in totale 4 gilde, guadagni 10 PV, non 12).",
+                            "Con la <strong>Gilda dei Giocatori</strong>, i punti devono essere calcolati per ogni vicino separatamente (es: 4 monete a sinistra = 1 PV, 2 monete a destra = 0 PV. Totale = 1 PV. Non si calcolano i punti sul totale delle monete, quindi in questo caso non si ottengono 2 PV).",
+                            "<strong>Manneken Pis</strong> non può copiare il 3° stadio di una meraviglia che ha 4 stadi (es. Gizah).",
+                            "Ai fini degli effetti del <strong>Manneken Pis</strong>, il 2° stadio di una meraviglia a 2 stadi (es. Rhodos) è considerato sia il secondo che l'ultimo. Il Manneken Pis può copiarlo tramite il proprio 2° o 3° stadio, a seconda della posizione.",
+                            "Come <strong>Roma (Notte)</strong>, con il <strong>Manneken Pis</strong> si può conservare la quarta carta Leader per giocarla in seguito copiando l'effetto di Roma.",
+                            "Il <strong>Manneken Pis</strong> può copiare l'effetto di <strong>Abu Simbel</strong> ma deve sacrificare uno dei propri Leader per ottenere punti, anche se non c'è lo slot Sarcofago. Non copia i punti che l'avversario totalizzerà a fine partita con i Leader sacrificati da quest'ultimo.",
+                            "Il simbolo <strong>Torre</strong> che compare sugli stadi della <strong>Grande Muraglia</strong> indica che puoi costruire gli stadi di questa meraviglia nell'ordine che preferisci.",
+                            "Se il giocatore che possiede il <strong>Manneken Pis</strong> confina con <strong>Siracusa</strong> o con la <strong>Grande Muraglia Cinese</strong>, può scegliere quale stadio copiare. Può anche copiare lo stesso stadio due volte."
+                        ],
+                        en: [
+                            "With <strong>Cédrick & Thomas</strong>, if you choose the eagle, all players also resolve <strong>Boardings</strong> twice. <strong>Naval Conflicts</strong> are not resolved twice.",
+                            "With the <strong>Architects Guild</strong>, the score is limited to a maximum of <strong>10 Victory Points</strong> if you play with the Armada expansion (e.g., if the two neighbors have a total of 4 guilds, you gain 10 VP, not 12).",
+                            "With the <strong>Gamers Guild</strong>, points must be calculated for each neighbor separately (e.g., 4 coins on the left = 1 VP, 2 coins on the right = 0 VP. Total = 1 VP. Points are not calculated on the total number of coins, so in this case, you do not get 2 VP).",
+                            "<strong>Manneken Pis</strong> cannot copy the 3rd stage of a 4-stage wonder (e.g., Giza).",
+                            "For the purposes of <strong>Manneken Pis</strong>'s effects, the 2nd stage of a 2-stage wonder (e.g., Rhodos) is considered both the second and the last. Manneken Pis can copy it with its own 2nd or 3rd stage, depending on its position.",
+                            "Like <strong>Rome (Night side)</strong>, with <strong>Manneken Pis</strong> you can keep the fourth Leader card to play it later by copying Rome's effect.",
+                            "<strong>Manneken Pis</strong> can copy the effect of <strong>Abu Simbel</strong> but must sacrifice one of its own Leaders to get points, even if there is no Sarcophagus slot. It does not copy the points that the opponent will score at the end of the game with the Leaders sacrificed by them.",
+                            "The <strong>Tower</strong> symbol that appears on the stages of the <strong>Great Wall</strong> indicates that you can build the stages of this wonder in any order you prefer.",
+                            "If the player who owns <strong>Manneken Pis</strong> is adjacent to <strong>Siracusa</strong> or the <strong>Great Wall of China</strong>, they can choose which stage to copy. They can also copy the same stage twice."
+                        ]
+                    }
+                };
+            }
+            
+            // ===============================================
+            // C. CORE APP LOGIC
+            // ===============================================
+
+            function mostraSezione(nomeSezione) { 
+                for (const key in sezioni) { 
+                    sezioni[key].classList.toggle('hidden', key !== nomeSezione); 
+                }
+                document.getElementById('language-switcher').classList.toggle('hidden', nomeSezione !== 'landing');
+                ui.appSubtitle.classList.toggle('hidden', nomeSezione !== 'landing');
+                ui.credits.classList.toggle('hidden', nomeSezione !== 'landing');
+            }
+
+            function resetStato() { 
+                datiPartita = { giocatori: [], categoriaCorrenteIndex: 0, categoriePartita: [], espansioni: {}, idPartita: Date.now() }; 
+            }
+            
+            function getWondersDisponibili() { 
+                let w = [...MERAVIGLIE.base]; 
+                if (inputs.esp.leaders.checked) w.push(...MERAVIGLIE.leaders); 
+                if (inputs.esp.cities.checked) w.push(...MERAVIGLIE.cities); 
+                if (inputs.esp.armada.checked) w.push(...MERAVIGLIE.armada); 
+                if (inputs.esp.edifice.checked) w.push(...MERAVIGLIE.edifice); 
+                return w.sort(); 
+            }
 
             function aggiornaListaGiocatoriUI() {
                 ui.listaGiocatori.innerHTML = '';
                 const wondersDisponibili = getWondersDisponibili();
                 const teamPlayActive = inputs.teamPlay.checked;
                 datiPartita.giocatori.forEach((g, index) => {
-                    const li = document.createElement('li'); li.className = 'giocatore-setup-item';
+                    const li = document.createElement('li');
+                    li.className = 'giocatore-setup-item';
                     
                     const nomeInput = document.createElement('input');
-                    nomeInput.type = 'text'; nomeInput.className = 'nome-giocatore-input';
-                    nomeInput.value = g.nome; nomeInput.dataset.index = index;
-                    nomeInput.addEventListener('input', (e) => { datiPartita.giocatori[index].nome = e.target.value; });
+                    nomeInput.type = 'text';
+                    nomeInput.className = 'nome-giocatore-input';
+                    nomeInput.value = g.nome;
+                    nomeInput.dataset.index = index;
+                    nomeInput.addEventListener('input', (e) => {
+                        datiPartita.giocatori[index].nome = e.target.value;
+                    });
                     li.appendChild(nomeInput);
 
                     if(teamPlayActive) {
-                        const teamSelect = document.createElement('select'); teamSelect.className = 'team-select';
+                        const teamSelect = document.createElement('select');
+                        teamSelect.className = 'team-select';
                         const teamOptions = datiPartita.giocatori.length === 4 ? ['A', 'B'] : ['A', 'B', 'C'];
-                        teamSelect.innerHTML = teamOptions.map(t => `<option value="${t}" ${g.team === t ? 'selected' : ''}>Squadra ${t}</option>`).join('');
+                        const teamLabel = translations.team[currentLanguage];
+                        teamSelect.innerHTML = teamOptions.map(t => `<option value="${t}" ${g.team === t ? 'selected' : ''}>${teamLabel} ${t}</option>`).join('');
                         teamSelect.addEventListener('change', (e) => { g.team = e.target.value; });
                         li.appendChild(teamSelect);
                     }
-                    const selectEl = document.createElement('select'); selectEl.className = 'wonder-select'; selectEl.innerHTML = `<option value="">Scegli Meraviglia</option>`;
-                    wondersDisponibili.forEach(w => { const o = document.createElement('option'); o.value = w; o.textContent = w; if (g.meraviglia === w) o.selected = true; selectEl.appendChild(o); });
+                    
+                    const selectEl = document.createElement('select');
+                    selectEl.className = 'wonder-select'; 
+                    selectEl.innerHTML = `<option value="">${translations.chooseWonder[currentLanguage]}</option>`;
+                    wondersDisponibili.forEach(w => { 
+                        const o = document.createElement('option'); 
+                        o.value = w; 
+                        o.textContent = getWonderName(w); 
+                        if (g.meraviglia === w) o.selected = true; 
+                        selectEl.appendChild(o); 
+                    });
                     selectEl.addEventListener('change', (e) => { g.meraviglia = e.target.value; });
                     li.appendChild(selectEl); 
                     
                     const deleteBtn = document.createElement('button');
-                    deleteBtn.className = 'delete-player-btn'; deleteBtn.innerHTML = '&#10006;';
-                    deleteBtn.title = 'Elimina giocatore';
+                    deleteBtn.className = 'delete-player-btn';
+                    deleteBtn.innerHTML = '&#10006;';
+                    deleteBtn.title = translations.deletePlayer[currentLanguage];
                     deleteBtn.addEventListener('click', () => {
                         datiPartita.giocatori.splice(index, 1);
                         aggiornaListaGiocatoriUI();
@@ -336,11 +741,20 @@
             }
 
             function assegnaMeraviglieCasuali() {
-                const numGiocatori = datiPartita.giocatori.length; if (numGiocatori === 0) return;
+                const numGiocatori = datiPartita.giocatori.length;
+                if (numGiocatori === 0) return;
                 let wonders = getWondersDisponibili();
-                if (wonders.length < numGiocatori) { alert("Non ci sono abbastanza meraviglie uniche per tutti i giocatori."); return; }
-                for (let i = wonders.length - 1; i > 0; i--) { const j = Math.floor(Math.random() * (i + 1)); [wonders[i], wonders[j]] = [wonders[j], wonders[i]]; }
-                datiPartita.giocatori.forEach((g, i) => { g.meraviglia = wonders[i]; });
+                if (wonders.length < numGiocatori) {
+                    alert(translations.notEnoughWonders[currentLanguage]);
+                    return;
+                }
+                for (let i = wonders.length - 1; i > 0; i--) {
+                    const j = Math.floor(Math.random() * (i + 1));
+                    [wonders[i], wonders[j]] = [wonders[j], wonders[i]];
+                }
+                datiPartita.giocatori.forEach((g, i) => {
+                    g.meraviglia = wonders[i];
+                });
                 aggiornaListaGiocatoriUI();
             }
 
@@ -353,22 +767,25 @@
                 if (!datiPartita.hasCalculatedResults) {
                     datiPartita.categoriaCorrenteIndex = 0;
                 } else if (datiPartita.categoriaCorrenteIndex >= datiPartita.categoriePartita.length) {
-                    datiPartita.categoriaCorrenteIndex = datiPartita.categoriePartita.length -1;
+                    datiPartita.categoriaCorrenteIndex = datiPartita.categoriePartita.length - 1;
                 }
                 mostraSezione('punteggio');
                 mostraSchermataCategoria();
             }
 
             function mostraSchermataCategoria() {
-                const index = datiPartita.categoriaCorrenteIndex; const categoria = datiPartita.categoriePartita[index];
-                if (!categoria) return; 
-                ui.titoloCategoria.innerHTML = categoria.label;
+                const index = datiPartita.categoriaCorrenteIndex;
+                const categoria = datiPartita.categoriePartita[index];
+                if (!categoria) return;
+
+                ui.titoloCategoria.innerHTML = `${categoria.label.split(' ')[0]} ${translations[categoria.langKey][currentLanguage]}`;
                 ui.titoloCategoria.style.backgroundColor = categoria.color || 'transparent';
                 ui.inputsContainer.innerHTML = '';
-                
+
                 if (categoria.key === 'gilde' && datiPartita.espansioni.armada) {
-                    const avviso = document.createElement('div'); avviso.id = 'avviso-categoria';
-                    avviso.textContent = 'Attenzione: con l\'espansione Armada ogni Gilda può valere un massimo di 10 punti vittoria.';
+                    const avviso = document.createElement('div');
+                    avviso.id = 'avviso-categoria';
+                    avviso.textContent = translations.guildsWarning[currentLanguage];
                     ui.inputsContainer.appendChild(avviso);
                 }
 
@@ -381,16 +798,16 @@
                                             <div><img src="https://i.postimg.cc/C12WvqS9/ingranaggio.png" class="science-icon" alt="Ingranaggio"></div>
                                             <div><img src="https://i.postimg.cc/43WC90Mf/serie.png" class="science-icon" alt="Serie"></div>`;
                     ui.inputsContainer.appendChild(iconHeader);
-                    
+
                     datiPartita.giocatori.forEach((giocatore, playerIndex) => {
                         const riga = document.createElement('div');
                         riga.className = 'punteggio-giocatore-riga science-row';
                         const puntiSalvati = giocatore.punteggi[categoria.key] || { compasso: 0, tavoletta: 0, ingranaggio: 0, serie: 0 };
-                        
+
                         const label = document.createElement('label');
                         label.innerHTML = `${giocatore.nome}<span id="anteprima-scienza-${playerIndex}" style="color: var(--colore-successo); font-weight: bold; display: block; font-size: 0.8em;">(${calcolaPuntiScienzaOttimizzati(puntiSalvati)}pt)</span>`;
                         riga.appendChild(label);
-                        
+
                         const scienceTypes = ['compasso', 'tavoletta', 'ingranaggio', 'serie'];
                         scienceTypes.forEach(type => {
                             const input = document.createElement('input');
@@ -402,7 +819,7 @@
                             input.min = "0";
                             riga.appendChild(input);
                         });
-                        
+
                         ui.inputsContainer.appendChild(riga);
                     });
 
@@ -420,7 +837,7 @@
                         ui.inputsContainer.appendChild(riga);
                     });
                 }
-                
+
                 ui.inputsContainer.querySelectorAll('.stepper-btn').forEach(btn => {
                     btn.addEventListener('click', (e) => {
                         const input = e.target.parentElement.querySelector('input');
@@ -428,7 +845,7 @@
                         const min = parseInt(input.min);
                         const newValue = parseInt(input.value) + step;
                         if (!isNaN(min) && newValue < min) {
-                           return;
+                            return;
                         }
                         input.value = newValue;
                     });
@@ -436,15 +853,18 @@
 
                 ui.inputsContainer.querySelectorAll('input[data-science-type]').forEach(input => {
                     input.addEventListener('input', () => {
-                        const pIndex = input.dataset.playerIndex; const simboli = { compasso: 0, tavoletta: 0, ingranaggio: 0, serie: 0 };
-                        document.querySelectorAll(`input[data-player-index="${pIndex}"][data-science-type]`).forEach(i => { simboli[i.dataset.scienceType] = parseInt(i.value) || 0; });
+                        const pIndex = input.dataset.playerIndex;
+                        const simboli = { compasso: 0, tavoletta: 0, ingranaggio: 0, serie: 0 };
+                        document.querySelectorAll(`input[data-player-index="${pIndex}"][data-science-type]`).forEach(i => {
+                            simboli[i.dataset.scienceType] = parseInt(i.value) || 0;
+                        });
                         document.getElementById(`anteprima-scienza-${pIndex}`).textContent = `(${calcolaPuntiScienzaOttimizzati(simboli)}pt)`;
                     });
                 });
 
                 bottoni.prevCat.disabled = index === 0;
                 const isLastCategory = index === datiPartita.categoriePartita.length - 1;
-                bottoni.nextCat.textContent = isLastCategory ? (datiPartita.hasCalculatedResults ? 'Ricalcola Risultati' : 'Vedi Risultati') : 'Avanti →';
+                bottoni.nextCat.innerHTML = isLastCategory ? (datiPartita.hasCalculatedResults ? translations.recalculateResults[currentLanguage] : translations.seeResults[currentLanguage]) : `${translations.next[currentLanguage]} →`;
             }
 
             function navigaCategorie(dir) {
@@ -457,46 +877,63 @@
                     mostraSchermataCategoria();
                 }
             }
-            
+
             function salvaPunteggiCategoriaCorrente() {
                 const cat = datiPartita.categoriePartita[datiPartita.categoriaCorrenteIndex];
                 if (cat && cat.type === 'number') {
-                    ui.inputsContainer.querySelectorAll('.punteggio-giocatore-riga input').forEach(input => { datiPartita.giocatori[parseInt(input.dataset.playerIndex)].punteggi[cat.key] = parseInt(input.value) || 0; });
+                    ui.inputsContainer.querySelectorAll('.punteggio-giocatore-riga input').forEach(input => {
+                        datiPartita.giocatori[parseInt(input.dataset.playerIndex)].punteggi[cat.key] = parseInt(input.value) || 0;
+                    });
                 } else if (cat && cat.type === 'science') {
                     datiPartita.giocatori.forEach((g, pIndex) => {
                         const simboli = { compasso: 0, tavoletta: 0, ingranaggio: 0, serie: 0 };
-                        document.querySelectorAll(`input[data-player-index="${pIndex}"][data-science-type]`).forEach(i => { simboli[i.dataset.scienceType] = parseInt(i.value) || 0; });
+                        document.querySelectorAll(`input[data-player-index="${pIndex}"][data-science-type]`).forEach(i => {
+                            simboli[i.dataset.scienceType] = parseInt(i.value) || 0;
+                        });
                         g.punteggi[cat.key] = simboli;
                     });
                 }
             }
-            
-            function calcolaPuntiScienza(simboli) { const t = simboli.tavoletta || 0; const i = simboli.ingranaggio || 0; const c = simboli.compasso || 0; return (t*t + i*i + c*c) + (Math.min(t, i, c) * 7); }
+
+            function calcolaPuntiScienza(simboli) {
+                const t = simboli.tavoletta || 0;
+                const i = simboli.ingranaggio || 0;
+                const c = simboli.compasso || 0;
+                return (t * t + i * i + c * c) + (Math.min(t, i, c) * 7);
+            }
+
             function calcolaPuntiScienzaOttimizzati(simboli) {
                 let { compasso, tavoletta, ingranaggio, serie } = simboli;
                 if (!serie || serie === 0) return calcolaPuntiScienza(simboli);
-                let c = compasso || 0, t = tavoletta || 0, i = ingranaggio || 0;
+                let c = compasso || 0,
+                    t = tavoletta || 0,
+                    i = ingranaggio || 0;
                 for (let j = 0; j < serie; j++) {
-                    const score_c = calcolaPuntiScienza({compasso: c + 1, tavoletta: t, ingranaggio: i});
-                    const score_t = calcolaPuntiScienza({compasso: c, tavoletta: t + 1, ingranaggio: i});
-                    const score_i = calcolaPuntiScienza({compasso: c, tavoletta: t, ingranaggio: i + 1});
-                    if (score_c >= score_t && score_c >= score_i) { c++; } 
-                    else if (score_t > score_c && score_t >= score_i) { t++; } 
-                    else { i++; }
+                    const score_c = calcolaPuntiScienza({ compasso: c + 1, tavoletta: t, ingranaggio: i });
+                    const score_t = calcolaPuntiScienza({ compasso: c, tavoletta: t + 1, ingranaggio: i });
+                    const score_i = calcolaPuntiScienza({ compasso: c, tavoletta: t, ingranaggio: i + 1 });
+                    if (score_c >= score_t && score_c >= score_i) {
+                        c++;
+                    } else if (score_t > score_c && score_t >= score_i) {
+                        t++;
+                    } else {
+                        i++;
+                    }
                 }
-                return calcolaPuntiScienza({compasso: c, tavoletta: t, ingranaggio: i});
+                return calcolaPuntiScienza({ compasso: c, tavoletta: t, ingranaggio: i });
             }
 
             function mostraRisultati(partitaSalvata = null) {
                 datiPartita.hasCalculatedResults = true;
                 const dataPartita = datiPartita.manualDate ? new Date(datiPartita.manualDate) : new Date();
-                datiPartita.data = datiPartita.data || dataPartita.toLocaleString('it-IT', { day: '2-digit', month: '2-digit', year: '2-digit', hour: '2-digit', minute: '2-digit' });
-                
+                const locale = currentLanguage === 'it' ? 'it-IT' : 'en-US';
+                datiPartita.data = datiPartita.data || dataPartita.toLocaleString(locale, { day: '2-digit', month: '2-digit', year: '2-digit', hour: '2-digit', minute: '2-digit' });
+
                 datiPartita.giocatori.forEach(g => {
                     const p = g.punteggi;
                     const pTesoro = Math.floor(Math.max(0, p.tesoro || 0) / 3);
                     const pScienza = p.scienza ? calcolaPuntiScienzaOttimizzati(p.scienza) : 0;
-                    
+
                     g.punteggi.puntiTesoro = pTesoro;
                     g.punteggi.puntiScienza = pScienza;
 
@@ -514,7 +951,7 @@
                     total += pScienza;
                     g.totale = total;
                 });
-                
+
                 const infoEl = document.createElement('div');
                 infoEl.className = 'header-info';
                 infoEl.innerHTML = `<span>${datiPartita.data}${datiPartita.luogo ? `, ${datiPartita.luogo}` : ''}</span>`;
@@ -522,18 +959,22 @@
                 sezioni.risultati.innerHTML = '';
                 sezioni.risultati.appendChild(infoEl);
                 const titolo = document.createElement('h2');
-                titolo.textContent = 'Classifica Finale';
+                titolo.textContent = translations.finalRanking[currentLanguage];
                 sezioni.risultati.appendChild(titolo);
 
-                if (datiPartita.espansioni.giocoASquadre) { mostraRisultatiSquadre(); } else { mostraRisultatiIndividuali(); }
-                
+                if (datiPartita.espansioni.giocoASquadre) {
+                    mostraRisultatiSquadre();
+                } else {
+                    mostraRisultatiIndividuali();
+                }
+
                 const btnGroupTop = document.createElement('div');
                 btnGroupTop.className = 'gruppo-bottoni';
                 const backToScoreBtn = document.createElement('button');
-                backToScoreBtn.textContent = 'Indietro';
+                backToScoreBtn.textContent = translations.back[currentLanguage];
                 backToScoreBtn.addEventListener('click', () => mostraSezione('punteggio'));
                 const backToHomeBtn = document.createElement('button');
-                backToHomeBtn.textContent = 'Torna alla Home';
+                backToHomeBtn.textContent = translations.backToHome[currentLanguage];
                 backToHomeBtn.addEventListener('click', () => mostraSezione('landing'));
                 btnGroupTop.appendChild(backToScoreBtn);
                 btnGroupTop.appendChild(backToHomeBtn);
@@ -542,42 +983,45 @@
                 const btnGroupBottom = document.createElement('div');
                 btnGroupBottom.className = 'gruppo-bottoni';
                 const shareBtn = document.createElement('button');
-                shareBtn.textContent = 'Condividi Risultati';
+                shareBtn.textContent = translations.shareResults[currentLanguage];
                 shareBtn.className = 'bottone-grande';
                 shareBtn.addEventListener('click', condividiComeImmagine);
                 const nuovaPartitaBtn = document.createElement('button');
                 nuovaPartitaBtn.className = 'bottone-grande';
-                nuovaPartitaBtn.textContent = 'Nuova Partita';
+                nuovaPartitaBtn.textContent = translations.newGame[currentLanguage];
                 nuovaPartitaBtn.addEventListener('click', nuovaPartita);
                 btnGroupBottom.appendChild(shareBtn);
                 btnGroupBottom.appendChild(nuovaPartitaBtn);
                 sezioni.risultati.appendChild(btnGroupBottom);
-                
+
                 mostraSezione('risultati');
             }
 
             function mostraRisultatiIndividuali() {
                 const giocatoriOrdinati = [...datiPartita.giocatori].sort((a, b) => b.totale !== a.totale ? b.totale - a.totale : (b.punteggi.tesoro || 0) - (a.punteggi.tesoro || 0));
-                const classificaUI = document.createElement('div'); classificaUI.id = 'lista-classifica';
+                const classificaUI = document.createElement('div');
+                classificaUI.id = 'lista-classifica';
                 const isWinner = giocatoriOrdinati.length < 2 || giocatoriOrdinati[0].totale > giocatoriOrdinati[1].totale || (giocatoriOrdinati[0].totale === giocatoriOrdinati[1].totale && giocatoriOrdinati[0].punteggi.tesoro > giocatoriOrdinati[1].punteggi.tesoro);
 
                 giocatoriOrdinati.forEach((g, index) => {
-                    const li = document.createElement('div'); li.className = 'risultato-giocatore';
+                    const li = document.createElement('div');
+                    li.className = 'risultato-giocatore';
                     if (index === 0 && isWinner) li.classList.add('vincitore');
-                    const prevPlayer = giocatoriOrdinati[index - 1]; 
+                    const prevPlayer = giocatoriOrdinati[index - 1];
                     const nextPlayer = giocatoriOrdinati[index + 1];
                     const isTied = (prevPlayer && prevPlayer.totale === g.totale) || (nextPlayer && nextPlayer.totale === g.totale);
                     let scoreDisplay = `<span class="punteggio-finale">${g.totale}</span>`;
                     if (isTied) scoreDisplay = `<span class="punteggio-finale">${g.totale}<span class="tie-breaker">(${(g.punteggi.tesoro || 0)}💰)</span></span>`;
-                    li.innerHTML = `<div class="risultato-header"><div><span class="medaglia">${(index === 0 && isWinner) ? '🥇' : `${index + 1}.`}</span><div class="nome"><span>${g.nome}</span><span class="wonder-display">${g.meraviglia || 'Nessuna'}</span></div></div>${scoreDisplay}</div>`;
-                    li.appendChild(createBreakdownDiv(g)); classificaUI.appendChild(li);
+                    li.innerHTML = `<div class="risultato-header"><div><span class="medaglia">${(index === 0 && isWinner) ? '🥇' : `${index + 1}.`}</span><div class="nome"><span>${g.nome}</span><span class="wonder-display">${getWonderName(g.meraviglia) || translations.noWonder[currentLanguage]}</span></div></div>${scoreDisplay}</div>`;
+                    li.appendChild(createBreakdownDiv(g));
+                    classificaUI.appendChild(li);
                 });
                 sezioni.risultati.appendChild(classificaUI);
             }
 
             function mostraRisultatiSquadre() {
                 const squadreMap = datiPartita.giocatori.reduce((acc, g) => {
-                    if (!acc[g.team]) acc[g.team] = { nome: `Squadra ${g.team}`, giocatori: [], punteggi: {}, totale: 0 };
+                    if (!acc[g.team]) acc[g.team] = { nome: `${translations.team[currentLanguage]} ${g.team}`, giocatori: [], punteggi: {}, totale: 0 };
                     acc[g.team].giocatori.push(g);
                     return acc;
                 }, {});
@@ -586,48 +1030,61 @@
                     s.totale = s.giocatori.reduce((acc, g) => acc + g.totale, 0);
                     datiPartita.categoriePartita.forEach(cat => {
                         const key = cat.key;
-                        if (key === 'scienza') { s.punteggi.puntiScienza = s.giocatori.reduce((acc, g) => acc + (g.punteggi.puntiScienza || 0), 0); } 
-                        else if (key === 'tesoro') { s.punteggi.puntiTesoro = s.giocatori.reduce((acc, g) => acc + (g.punteggi.puntiTesoro || 0), 0); s.punteggi[key] = s.giocatori.reduce((acc, g) => acc + (g.punteggi[key] || 0), 0); } 
-                        else { s.punteggi[key] = s.giocatori.reduce((acc, g) => acc + (g.punteggi[key] || 0), 0); }
+                        if (key === 'scienza') {
+                            s.punteggi.puntiScienza = s.giocatori.reduce((acc, g) => acc + (g.punteggi.puntiScienza || 0), 0);
+                        } else if (key === 'tesoro') {
+                            s.punteggi.puntiTesoro = s.giocatori.reduce((acc, g) => acc + (g.punteggi.puntiTesoro || 0), 0);
+                            s.punteggi[key] = s.giocatori.reduce((acc, g) => acc + (g.punteggi[key] || 0), 0);
+                        } else {
+                            s.punteggi[key] = s.giocatori.reduce((acc, g) => acc + (g.punteggi[key] || 0), 0);
+                        }
                     });
                 });
                 squadre.sort((a, b) => b.totale !== a.totale ? b.totale - a.totale : (b.punteggi.tesoro || 0) - (a.punteggi.tesoro || 0));
-                const classificaUI = document.createElement('div'); classificaUI.id = 'lista-classifica';
-                
+                const classificaUI = document.createElement('div');
+                classificaUI.id = 'lista-classifica';
+
                 const isWinner = squadre.length < 2 || squadre[0].totale > squadre[1].totale || (squadre[0].totale === squadre[1].totale && squadre[0].punteggi.tesoro > squadre[1].punteggi.tesoro);
 
                 squadre.forEach((s, index) => {
-                    const teamEl = document.createElement('div'); teamEl.className = 'risultato-squadra';
-                    if(index === 0 && isWinner) teamEl.classList.add('vincitore');
+                    const teamEl = document.createElement('div');
+                    teamEl.className = 'risultato-squadra';
+                    if (index === 0 && isWinner) teamEl.classList.add('vincitore');
 
                     const teamBreakdown = createBreakdownDiv(s);
-                    const teamPlayersDetails = document.createElement('div'); teamPlayersDetails.className = 'dettaglio-squadra';
+                    const teamPlayersDetails = document.createElement('div');
+                    teamPlayersDetails.className = 'dettaglio-squadra';
                     s.giocatori.sort((a, b) => b.totale - a.totale).forEach(g => {
-                        const playerDetailEl = document.createElement('div'); playerDetailEl.className = 'dettaglio-giocatore-individuale';
+                        const playerDetailEl = document.createElement('div');
+                        playerDetailEl.className = 'dettaglio-giocatore-individuale';
                         const playerBreakdown = createBreakdownDiv(g);
-                        playerDetailEl.innerHTML = `<div class="risultato-header"><div class="nome"><span>${g.nome}</span><span class="wonder-display">${g.meraviglia || 'Nessuna'}</span></div><span class="punteggio-finale">${g.totale}</span></div>`;
+                        playerDetailEl.innerHTML = `<div class="risultato-header"><div class="nome"><span>${g.nome}</span><span class="wonder-display">${getWonderName(g.meraviglia) || translations.noWonder[currentLanguage]}</span></div><span class="punteggio-finale">${g.totale}</span></div>`;
                         playerDetailEl.appendChild(playerBreakdown);
                         teamPlayersDetails.appendChild(playerDetailEl);
                     });
 
-                    const prevTeam = squadre[index - 1]; const nextTeam = squadre[index + 1];
+                    const prevTeam = squadre[index - 1];
+                    const nextTeam = squadre[index + 1];
                     const isTied = (prevTeam && prevTeam.totale === s.totale) || (nextTeam && nextTeam.totale === s.totale);
                     let scoreDisplay = `<span class="punteggio-finale">${s.totale}</span>`;
-                    if(isTied) scoreDisplay = `<span class="punteggio-finale">${s.totale}<span class="tie-breaker">(${(s.punteggi.tesoro || 0)}💰)</span></span>`;
-                    
+                    if (isTied) scoreDisplay = `<span class="punteggio-finale">${s.totale}<span class="tie-breaker">(${(s.punteggi.tesoro || 0)}💰)</span></span>`;
+
                     teamEl.innerHTML = `<div class="risultato-header"><div><span class="medaglia">${(index === 0 && isWinner) ? '🥇' : `${index + 1}.`}</span><span class="nome">${s.nome}</span></div>${scoreDisplay}</div>`;
-                    teamEl.appendChild(teamBreakdown); teamEl.appendChild(teamPlayersDetails);
+                    teamEl.appendChild(teamBreakdown);
+                    teamEl.appendChild(teamPlayersDetails);
                     classificaUI.appendChild(teamEl);
                 });
                 sezioni.risultati.appendChild(classificaUI);
             }
 
             function createBreakdownDiv(entity) {
-                const div = document.createElement('div'); div.className = 'risultato-breakdown';
+                const div = document.createElement('div');
+                div.className = 'risultato-breakdown';
                 datiPartita.categoriePartita.forEach(cat => {
                     let pCat = cat.key === 'scienza' ? entity.punteggi.puntiScienza : (cat.key === 'tesoro' ? entity.punteggi.puntiTesoro : (entity.punteggi[cat.key] || 0));
-                    const icon = cat.label.split(' ')[0];
-                    const name = cat.label.split(' ').slice(1).join(' ');
+                    const firstSpaceIndex = cat.label.indexOf(' ');
+                    const icon = cat.label.substring(0, firstSpaceIndex);
+                    const name = translations[cat.langKey][currentLanguage];
                     div.innerHTML += `<span class="breakdown-item" title="${name}">${icon} ${pCat}</span>`;
                 });
                 return div;
@@ -635,41 +1092,40 @@
 
             function condividiComeImmagine() {
                 const shareableContent = document.createElement('div');
-                shareableContent.style.width = '1280px';
-                shareableContent.style.padding = '50px';
+                shareableContent.style.width = '450px';
+                shareableContent.style.padding = '30px';
                 shareableContent.style.backgroundColor = getComputedStyle(document.documentElement).getPropertyValue('--colore-sfondo');
                 shareableContent.style.fontFamily = "'Roboto', sans-serif";
                 shareableContent.style.color = getComputedStyle(document.documentElement).getPropertyValue('--colore-testo');
-                
+                shareableContent.style.boxSizing = 'border-box';
+
                 const logo = document.getElementById('logo').cloneNode(true);
-                logo.style.maxWidth = '50%';
-                logo.style.margin = '0 auto 40px auto';
-                
+                logo.style.maxWidth = '60%';
+                logo.style.margin = '0 auto 30px auto';
+
                 const results = document.getElementById('risultati-sezione').cloneNode(true);
                 results.querySelectorAll('.gruppo-bottoni, button, .header-info ~ h2 + button').forEach(el => el.remove());
-                results.querySelector('.header-info').style.fontSize = '1.2em';
-                results.querySelector('.header-info').style.marginBottom = '20px';
+                results.querySelector('.header-info').style.fontSize = '1em';
+                results.querySelector('.header-info').style.marginBottom = '15px';
 
                 shareableContent.appendChild(logo);
                 shareableContent.appendChild(results);
-                
+
                 document.body.appendChild(shareableContent);
 
                 html2canvas(shareableContent, {
-                    width: 1280,
-                    height: Math.max(720, shareableContent.scrollHeight),
-                    scale: 1,
+                    scale: 2.5,
                     backgroundColor: null,
                     useCORS: true
                 }).then(canvas => {
                     const link = document.createElement('a');
-                    link.download = `risultati-7wonders-${Date.now()}.png`;
+                    link.download = `7wonders-results-${Date.now()}.png`;
                     link.href = canvas.toDataURL('image/png');
                     link.click();
                     document.body.removeChild(shareableContent);
                 });
             }
-            
+
             function nuovaPartita() {
                 datiPartita.giocatori.forEach(g => {
                     g.punteggi = {};
@@ -680,13 +1136,6 @@
                 mostraSezione('setup');
             }
 
-            function inizializzaApp() {
-                resetStato();
-                aggiornaListaGiocatoriUI();
-                mostraSezione('landing');
-                inputs.nomeGiocatore.focus();
-            }
-
             function resetSettings() {
                 Object.values(inputs.esp).forEach(checkbox => checkbox.checked = false);
                 inputs.teamPlay.checked = false;
@@ -694,10 +1143,43 @@
                 datiPartita.giocatori = [];
                 aggiornaListaGiocatoriUI();
             }
+
+            function setupCollapsibleRules() {
+                document.querySelectorAll('.collapsible-header').forEach(header => {
+                    header.addEventListener('click', () => {
+                        header.classList.toggle('active');
+                        const icon = header.querySelector('.toggle-icon');
+                        const content = header.nextElementSibling;
+
+                        if (content.style.maxHeight) {
+                            content.style.maxHeight = null;
+                            content.style.marginBottom = "0";
+                            icon.textContent = '＋';
+                        } else {
+                            content.style.maxHeight = content.scrollHeight + "px";
+                            content.style.marginBottom = "10px";
+                            icon.textContent = '−';
+                        }
+                    });
+                });
+            }
             
+            // ===============================================
+            // D. INITIALIZATION
+            // ===============================================
+            
+            function inizializzaApp() {
+                initializeTranslations();
+                resetStato();
+                setLanguage(currentLanguage);
+                aggiornaListaGiocatoriUI();
+                mostraSezione('landing');
+                inputs.nomeGiocatore.focus();
+            }
+
             // Event Listeners
             bottoni.aggiungiGiocatore.addEventListener('click', aggiungiGiocatore);
-            inputs.nomeGiocatore.addEventListener('keypress', e => { if (e.key === 'Enter') { e.preventDefault(); aggiungiGiocatore(); }});
+            inputs.nomeGiocatore.addEventListener('keypress', e => { if (e.key === 'Enter') { e.preventDefault(); aggiungiGiocatore(); } });
             bottoni.iniziaPartita.addEventListener('click', () => { if (!bottoni.iniziaPartita.disabled) avviaPartita(); });
             bottoni.nuovaPartitaLanding.addEventListener('click', () => mostraSezione('setup'));
             bottoni.regolamentoLanding.addEventListener('click', () => mostraSezione('regolamento'));
@@ -713,7 +1195,12 @@
                 aggiornaListaGiocatoriUI();
             }));
             
+            bottoni.langIt.addEventListener('click', () => setLanguage('it'));
+            bottoni.langEn.addEventListener('click', () => setLanguage('en'));
+
+            // Start App
             inizializzaApp();
+            setupCollapsibleRules();
         });
     </script>
 </body>
