@@ -853,8 +853,8 @@
                 translations = {
                     newestFirst: { it: 'Dal più recente', en: 'Newest First' },
                     oldestFirst: { it: 'Dal meno recente', en: 'Oldest First' },
-                    mostUsedWonderInVersion: { it: 'Meraviglia più usata', en: 'Most Used Wonder (ver.)' },
-                    highestScoreInVersion: { it: 'Punteggio più alto', en: 'Highest Score (ver.)' },
+                    mostUsedWonderInVersion: { it: 'Meraviglia più usata', en: 'Most Used Wonder' },
+                    highestScoreInVersion: { it: 'Punteggio più alto', en: 'Highest Score' },
                     wins: { it: 'vittorie', en: 'wins'},
                     pageTitle: { it: 'Segnapunti 7 Wonders', en: '7 Wonders Score Sheet' },
                     startNewGame: { it: 'Inizia Nuova Partita', en: 'Start New Game' },
@@ -944,6 +944,7 @@
                     allGames: { it: 'Tutti le versioni', en: 'All games' },
                     gamesPlayed: { it: 'Partite Giocate', en: 'Games Played' },
                     winRate: { it: 'Tasso di Vittoria', en: 'Win Rate' },
+                    wonLost: { it: 'Vinte/Perse', en: 'Won/Lost' },
                     avgScore: { it: 'Punteggio Medio', en: 'Average Score' },
                     noStats: { it: 'Nessuna statistica disponibile. Gioca qualche partita!', en: 'No stats available. Play some games!' },
                     catWonder: { it: 'Meraviglia', en: 'Wonder Board' },
@@ -2613,19 +2614,29 @@
                             if (sorted.length > 0 && sorted[0].nome === playerName) wins++;
                         });
                         
+                        const losses = playerGames.length - wins;
                         const mostUsedWonderData = Object.entries(wonderCountsInVersion).sort((a, b) => b[1] - a[1])[0] || [null, 0];
                         
                         const playerCard = document.createElement('div');
+                        
+                        // Definiamo le stringhe HTML per le statistiche
+                        let wonLostHTML = '';
                         let versionSpecificStatsHTML = '';
+
+                        // Popoliamo le stringhe solo se è stata selezionata una versione
                         if (selectedVersion) {
+                            wonLostHTML = `<div class="stat-item"><span class="stat-label">${translations.wonLost[currentLanguage]}:</span> <span class="stat-value">${wins}/${losses}</span></div>`;
                             versionSpecificStatsHTML = `
                                 <div class="stat-item"><span class="stat-label">${translations.highestScoreInVersion[currentLanguage]}:</span> <span class="stat-value">${highestScoreInVersion}</span></div>
                                 <div class="stat-item"><span class="stat-label">${translations.mostUsedWonderInVersion[currentLanguage]}:</span> <span class="stat-value">${getWonderName(mostUsedWonderData[0]) || 'N/A'} (${mostUsedWonderData[1]}x)</span></div>
                             `;
                         }
+
+                        // Assembliamo l'HTML finale nell'ordine desiderato
                         playerCard.innerHTML = `
                             <h4>${playerName}</h4>
                             <div class="stat-item"><span class="stat-label">${translations.gamesPlayed[currentLanguage]}:</span> <span class="stat-value">${playerGames.length}</span></div>
+                            ${wonLostHTML}
                             <div class="stat-item"><span class="stat-label">${translations.winRate[currentLanguage]}:</span> <span class="stat-value">${((wins / playerGames.length) * 100).toFixed(0)}%</span></div>
                             <div class="stat-item"><span class="stat-label">${translations.avgScore[currentLanguage]}:</span> <span class="stat-value">${(totalScore / playerGames.length).toFixed(1)}</span></div>
                             ${versionSpecificStatsHTML}
