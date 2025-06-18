@@ -74,7 +74,10 @@
         .nome-giocatore-input { background: none; border: none; color: var(--colore-testo); font-weight: bold; font-size: 18px; font-family: 'Roboto', sans-serif; flex-grow: 1; padding: 5px; border-radius: 4px; }
         .nome-giocatore-input:focus { outline: none; background-color: rgba(255, 255, 255, 0.1); }
         .nome-giocatore-input:disabled { color: var(--colore-testo-fioco); cursor: not-allowed; }
-        .delete-player-btn { background: none; border: none; color: var(--colore-pericolo); font-size: 20px; cursor: pointer; padding: 0 5px; line-height: 1; }
+        .action-buttons-container { display: flex; gap: 5px; }
+        .delete-player-btn, .edit-player-btn { background: none; border: none; font-size: 20px; cursor: pointer; padding: 0 5px; line-height: 1; }
+        .delete-player-btn { color: var(--colore-pericolo); }
+        .edit-player-btn { color: var(--colore-secondario); font-size: 18px; }
         .delete-player-btn:disabled { color: #555; cursor: not-allowed; }
         .wonder-select, .team-select { background-color: #444; color: var(--colore-testo); border: 1px solid #555; border-radius: 5px; padding: 8px; font-size: 14px; flex-shrink: 0; }
         .opzioni-partita { margin-top: 20px; padding: 15px; background-color: #383838; border-radius: 8px;}
@@ -133,16 +136,14 @@
             padding: 15px; 
             border-radius: 8px; 
             margin-bottom: 10px; 
-            cursor: pointer; 
-            transition: background-color 0.2s; 
             display: flex;
             justify-content: space-between;
             align-items: center;
         }
-        .history-item:hover { background-color: #4a4a4a; }
-        .history-item-content { flex-grow: 1; }
+        .history-item-content { flex-grow: 1; cursor: pointer; transition: background-color 0.2s; border-radius: 6px; padding: 5px;}
+        .history-item-content:hover { background-color: #4a4a4a; }
         .history-item-header { display: flex; justify-content: space-between; font-weight: bold; }
-        .history-item-details { font-size: 0.8em; color: var(--colore-testo-fioco); margin-top: 5px; }
+        .history-item-details { font-size: 0.8em; color: var(--colore-testo-fioco); margin-top: 5px; line-height: 1.4; }
         .stat-card { background-color: #383838; padding: 15px; border-radius: 8px; margin-bottom: 15px; }
         .stat-card h3 { border: none; padding: 0; margin: 0 0 10px 0; font-size: 1.1em; color: var(--colore-secondario); }
         .stat-item { display: flex; justify-content: space-between; padding: 5px 0; border-bottom: 1px solid #444; }
@@ -151,6 +152,14 @@
         .stat-value { font-weight: bold; }
         #stats-filter-container { display: flex; flex-direction: column; gap: 10px; margin-bottom: 20px; }
         #stats-filter-container select { flex-grow: 1; }
+
+        /* Modal Styles */
+        .modal-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.7); display: flex; justify-content: center; align-items: center; z-index: 1000; opacity: 0; visibility: hidden; transition: opacity 0.3s, visibility 0.3s; }
+        .modal-overlay.visible { opacity: 1; visibility: visible; }
+        .modal-content { background: var(--colore-superficie); padding: 30px; border-radius: 12px; box-shadow: 0 5px 15px rgba(0,0,0,0.3); text-align: center; max-width: 90%; width: 350px; transform: scale(0.9); transition: transform 0.3s; }
+        .modal-overlay.visible .modal-content { transform: scale(1); }
+        .modal-content p { margin-top: 0; margin-bottom: 25px; line-height: 1.6; }
+        .modal-buttons { display: flex; justify-content: center; gap: 15px; }
 
         /* Bottoni */
         button { padding: 12px 20px; border: none; border-radius: 8px; background-color: var(--colore-primario); color: white; font-size: 16px; font-weight: bold; cursor: pointer; transition: background-color 0.2s, transform 0.1s; }
@@ -164,6 +173,7 @@
         .start-game-btn, #nuovaPartitaBtn { background-color: var(--colore-secondario); color: #111; }
         #nextCatBtn { background-color: var(--colore-successo); }
         .random-wonder-btn { padding: 8px 12px; font-size: 16px; flex-shrink: 0; }
+        .bottone-pericolo { background-color: var(--colore-pericolo); }
         .hidden { display: none !important; }
 
         @media (max-width: 480px) {
@@ -190,7 +200,7 @@
 
         <section id="landing-sezione">
             <div class="logo-container">
-                <img src="https://i.imgur.com/p1PgYrh.png" alt="Logo di 7 Wonders Seconda Edizione">
+                <img src="https://i.imgur.com/p1PgYrh.png" alt="Logo di 7 Wonders Seconda Edizione" onerror="this.onerror=null; this.src='https://placehold.co/400x150/1e1e1e/f0f0f0?text=7+Wonders+Logo';">
             </div>
             <div id="app-subtitle">Companion App</div>
             <div class="gruppo-bottoni">
@@ -201,7 +211,7 @@
             </div>
             <div id="support-section">
                 <a href="https://paypal.me/TFerrari308" target="_blank" id="paypal-btn">
-                    <img src="https://i.postimg.cc/hj0x6wFB/pngimg-com-paypal-PNG7.png" alt="Logo di PayPal" class="paypal-logo">
+                    <img src="https://i.postimg.cc/hj0x6wFB/pngimg-com-paypal-PNG7.png" alt="Logo di PayPal" class="paypal-logo" onerror="this.onerror=null; this.src='https://placehold.co/22x22/0079C1/ffffff?text=P';">
                     <span data-lang-key="supportProject"></span>
                 </a>
             </div>
@@ -311,7 +321,7 @@
         <!-- SETUP 1ST EDITION -->
         <section id="setup-1ed-sezione" class="hidden">
             <div class="logo-container">
-                <img src="https://i.postimg.cc/8zKZnZ89/pngegg.png" alt="Logo di 7 Wonders Prima Edizione" style="max-width: 60%;">
+                <img src="https://i.postimg.cc/8zKZnZ89/pngegg.png" alt="Logo di 7 Wonders Prima Edizione" style="max-width: 60%;" onerror="this.onerror=null; this.src='https://placehold.co/300x100/1e1e1e/f0f0f0?text=7+Wonders';">
             </div>
             <h2 data-lang-key="setupGame1ed"></h2>
             <div class="form-group form-group-column">
@@ -372,7 +382,7 @@
         <!-- SETUP 2ND EDITION -->
         <section id="setup-2ed-sezione" class="hidden">
             <div class="logo-container">
-                <img src="https://i.imgur.com/p1PgYrh.png" alt="Logo di 7 Wonders Seconda Edizione">
+                <img src="https://i.imgur.com/p1PgYrh.png" alt="Logo di 7 Wonders Seconda Edizione" onerror="this.onerror=null; this.src='https://placehold.co/400x150/1e1e1e/f0f0f0?text=7+Wonders+Logo';">
             </div>
             <h2 data-lang-key="setupGame2ed"></h2>
             <div class="form-group form-group-column">
@@ -431,7 +441,7 @@
         <!-- SETUP ARCHITECTS -->
         <section id="setup-architects-sezione" class="hidden">
             <div class="logo-container">
-                <img src="https://i.postimg.cc/mgqzt9fK/arc-common-logo-1630334595b-VXy-Z-large.png" alt="Logo di 7 Wonders Architects">
+                <img src="https://i.postimg.cc/mgqzt9fK/arc-common-logo-1630334595b-VXy-Z-large.png" alt="Logo di 7 Wonders Architects" onerror="this.onerror=null; this.src='https://placehold.co/400x100/1e1e1e/f0f0f0?text=Architects';">
             </div>
             <h2 data-lang-key="setupGameArchitects"></h2>
              <div class="form-group form-group-column">
@@ -485,7 +495,7 @@
         <!-- SETUP DUEL -->
         <section id="setup-duel-sezione" class="hidden">
             <div class="logo-container">
-                <img src="https://i.postimg.cc/vmV19mGT/7WDuel.png" alt="Logo di 7 Wonders Duel">
+                <img src="https://i.postimg.cc/vmV19mGT/7WDuel.png" alt="Logo di 7 Wonders Duel" onerror="this.onerror=null; this.src='https://placehold.co/350x150/1e1e1e/f0f0f0?text=Duel';">
             </div>
             <h2 data-lang-key="setupGameDuel"></h2>
             <div class="form-group form-group-column">
@@ -552,6 +562,18 @@
         </section>
 
         <section id="risultati-sezione" class="hidden"></section>
+
+        <!-- MODAL -->
+        <div id="confirmModal" class="modal-overlay">
+            <div class="modal-content">
+                <p id="modal-text"></p>
+                <div class="modal-buttons">
+                    <button id="modal-cancel-btn" data-lang-key="cancel"></button>
+                    <button id="modal-confirm-btn" class="bottone-pericolo" data-lang-key="confirm"></button>
+                </div>
+            </div>
+        </div>
+
     </main>
 
     <script>
@@ -601,7 +623,13 @@
                 overallStatsContainer: document.getElementById('overall-stats-container'),
                 playerStatsContainer: document.getElementById('player-stats-container'),
                 statsPlayerFilter: document.getElementById('stats-player-filter'),
-                statsGameVersionFilter: document.getElementById('stats-game-version-filter')
+                statsGameVersionFilter: document.getElementById('stats-game-version-filter'),
+                modal: {
+                    overlay: document.getElementById('confirmModal'),
+                    text: document.getElementById('modal-text'),
+                    confirmBtn: document.getElementById('modal-confirm-btn'),
+                    cancelBtn: document.getElementById('modal-cancel-btn')
+                }
             };
             
             const MERAVIGLIE_1ED = {
@@ -735,9 +763,10 @@
             let datiPartita;
             let currentLanguage = 'it';
             let translations = {};
+            let onConfirmCallback = null;
 
             // ===============================================
-            // B. LOGICA DI TRADUZIONE
+            // B. LOGICA DI TRADUZIONE E MODALE
             // ===============================================
 
             function getWonderName(wonderKey) {
@@ -788,6 +817,17 @@
                     else if (datiPartita.gameVersion === 'duel') aggiornaListaGiocatoriUI_duel();
                 }
             }
+            
+            function showConfirmationModal(text, onConfirm) {
+                ui.modal.text.textContent = text;
+                onConfirmCallback = onConfirm;
+                ui.modal.overlay.classList.add('visible');
+            }
+
+            function hideConfirmationModal() {
+                ui.modal.overlay.classList.remove('visible');
+                onConfirmCallback = null;
+            }
 
             function initializeTranslations() {
                 translations = {
@@ -798,8 +838,8 @@
                     statistics: { it: 'Statistiche', en: 'Statistics' },
                     supportProject: { it: 'Supporta il Progetto', en: 'Support the Project' },
                     creditsText: { 
-                        it: 'Sviluppato nel 2025 da Tommaso Ferrari. <br>Email: <a href="mailto:tommy.ferrari98@gmail.com">tommy.ferrari98@gmail.com</a> | Versione 2.5',
-                        en: 'Developed in 2025 by Tommaso Ferrari. <br>Email: <a href="mailto:tommy.ferrari98@gmail.com">tommy.ferrari98@gmail.com</a> | Version 2.5'
+                        it: 'Sviluppato nel 2025 da Tommaso Ferrari. <br>Email: <a href="mailto:tommy.ferrari98@gmail.com">tommy.ferrari98@gmail.com</a> | Versione 2.7',
+                        en: 'Developed in 2025 by Tommaso Ferrari. <br>Email: <a href="mailto:tommy.ferrari98@gmail.com">tommy.ferrari98@gmail.com</a> | Version 2.7'
                     },
                     chooseGameVersion: { it: 'Scegli la Versione del Gioco', en: 'Choose Game Version' },
                     game1stEdition: { it: 'Prima Edizione', en: 'First Edition' },
@@ -836,11 +876,19 @@
                     notEnoughWonders: { it: 'Non ci sono abbastanza meraviglie uniche per tutti i giocatori.', en: 'Not enough unique wonders for all players.' },
                     chooseWonder: { it: 'Scegli Meraviglia', en: 'Choose Wonder' },
                     deletePlayer: { it: 'Elimina giocatore', en: 'Delete player' },
+                    editGame: { it: 'Modifica partita', en: 'Edit game' },
                     deleteGame: { it: 'Elimina partita', en: 'Delete game' },
+                    deleteGameConfirm: { it: 'Sei sicuro di voler eliminare questa partita? L\'azione è irreversibile.', en: 'Are you sure you want to delete this game? This action is irreversible.' },
+                    confirm: { it: 'Conferma', en: 'Confirm' },
+                    cancel: { it: 'Annulla', en: 'Cancel' },
                     team: { it: 'Squadra', en: 'Team' },
                     guildsWarning: {
                         it: 'Attenzione: con l\'espansione Armada ogni Gilda può valere un massimo di 10 punti vittoria.',
                         en: 'Warning: with the Armada expansion, each Guild can be worth a maximum of 10 victory points.'
+                    },
+                    treasuryCoinInfo: {
+                        it: 'Inserire il numero di monete. Il punteggio finale sarà calcolato dividendo per 3.',
+                        en: 'Enter the number of coins. The final score will be calculated by dividing by 3.'
                     },
                     instantVictory: { it: 'Vittoria Istantanea', en: 'Instant Victory' },
                     militarySupremacy: { it: 'Supremazia Militare', en: 'Military Supremacy' },
@@ -855,6 +903,7 @@
                     shareResults: { it: 'Condividi Risultati', en: 'Share Results' },
                     newGame: { it: 'Nuova Partita', en: 'New Game' },
                     winner: { it: 'Vincitore', en: 'Winner' },
+                    winners: { it: 'Vincitori', en: 'Winners' },
                     teamWinner: { it: 'Squadra Vincitrice', en: 'Winning Team' },
                     tie: { it: 'Pareggio', en: 'Tie' },
                     noHistory: { it: 'Nessuna partita trovata nella cronologia.', en: 'No games found in history.' },
@@ -1041,11 +1090,14 @@
             function saveGameToHistory(gameData) {
                 try {
                     const history = getGameHistory();
-                    const existingGameIndex = history.findIndex(g => g.idPartita === gameData.idPartita);
+                    const gameToSave = JSON.parse(JSON.stringify(gameData)); // Deep copy
+                    delete gameToSave.isEditing; // Rimuove lo stato di modifica
+                    
+                    const existingGameIndex = history.findIndex(g => g.idPartita === gameToSave.idPartita);
                     if (existingGameIndex > -1) {
-                        history[existingGameIndex] = gameData; 
+                        history[existingGameIndex] = gameToSave; 
                     } else {
-                        history.push(gameData);
+                        history.push(gameToSave);
                     }
                     localStorage.setItem('7wondersGameHistory', JSON.stringify(history));
                 } catch (e) {
@@ -1752,11 +1804,12 @@
             // ===================================================
 
             function avviaPartitaGenerale() {
-                if (!datiPartita.hasCalculatedResults) {
+                if (!datiPartita.isEditing) {
                     datiPartita.categoriaCorrenteIndex = 0;
                 } else if (datiPartita.categoriaCorrenteIndex >= datiPartita.categoriePartita.length) {
                     datiPartita.categoriaCorrenteIndex = datiPartita.categoriePartita.length - 1;
                 }
+                delete datiPartita.isEditing; // Rimuovi il flag dopo l'uso
                 mostraSezione('punteggio');
                 mostraSchermataCategoria();
             }
@@ -1784,14 +1837,21 @@
                     ui.inputsContainer.appendChild(avviso);
                 }
 
+                if (categoria.key === 'tesoro' && ['1ed', '2ed', 'duel'].includes(datiPartita.gameVersion)) {
+                    const avviso = document.createElement('div');
+                    avviso.id = 'avviso-categoria';
+                    avviso.textContent = translations.treasuryCoinInfo[currentLanguage];
+                    ui.inputsContainer.appendChild(avviso);
+                }
+
                 if (categoria.type === 'science' && datiPartita.gameVersion !== 'architects') {
                     const iconHeader = document.createElement('div');
                     iconHeader.className = 'science-icon-grid';
                     iconHeader.innerHTML = `<div></div>
-                                            <div><img src="https://i.postimg.cc/y6gd7hgg/compasso.png" class="science-icon" alt="Icona compasso"></div>
-                                            <div><img src="https://i.postimg.cc/7b8j4rCV/tavoletta.png" class="science-icon" alt="Icona tavoletta"></div>
-                                            <div><img src="https://i.postimg.cc/C12WvqS9/ingranaggio.png" class="science-icon" alt="Icona ingranaggio"></div>
-                                            <div><img src="https://i.postimg.cc/43WC90Mf/serie.png" class="science-icon" alt="Icona serie"></div>`;
+                                            <div><img src="https://i.postimg.cc/y6gd7hgg/compasso.png" class="science-icon" alt="Icona compasso" onerror="this.style.display='none'"></div>
+                                            <div><img src="https://i.postimg.cc/7b8j4rCV/tavoletta.png" class="science-icon" alt="Icona tavoletta" onerror="this.style.display='none'"></div>
+                                            <div><img src="https://i.postimg.cc/C12WvqS9/ingranaggio.png" class="science-icon" alt="Icona ingranaggio" onerror="this.style.display='none'"></div>
+                                            <div><img src="https://i.postimg.cc/43WC90Mf/serie.png" class="science-icon" alt="Icona serie" onerror="this.style.display='none'"></div>`;
                     ui.inputsContainer.appendChild(iconHeader);
 
                     datiPartita.giocatori.forEach((giocatore, playerIndex) => {
@@ -1842,7 +1902,16 @@
                         const riga = document.createElement('div');
                         const minAttribute = CATEGORIE_NEGATIVE_PERMESSE.includes(categoria.key) ? '' : 'min="0"';
                         riga.className = 'punteggio-giocatore-riga';
-                        riga.innerHTML = `<label for="p-cat-${playerIndex}">${giocatore.nome}</label>
+                        let labelHTML = `<label for="p-cat-${playerIndex}">${giocatore.nome}`;
+                        
+                        // Aggiunta anteprima per il tesoro
+                        if (categoria.key === 'tesoro' && ['1ed', '2ed', 'duel'].includes(datiPartita.gameVersion)) {
+                            const puntiTesoro = Math.floor((giocatore.punteggi.tesoro || 0) / 3);
+                            labelHTML += `<span id="anteprima-tesoro-${playerIndex}" style="color: var(--colore-successo); font-weight: bold; display: block; font-size: 0.8em;">(${puntiTesoro}pt)</span>`;
+                        }
+                        labelHTML += '</label>';
+
+                        riga.innerHTML = `${labelHTML}
                                         <div class="input-stepper">
                                             <button class="stepper-btn" data-player-index="${playerIndex}" data-step="-1">-</button>
                                             <input type="number" id="p-cat-${playerIndex}" class="input-punteggio" data-player-index="${playerIndex}" value="${giocatore.punteggi[categoria.key] || 0}" ${minAttribute}>
@@ -1867,14 +1936,18 @@
                 });
 
                 ui.inputsContainer.querySelectorAll('input[type=number]').forEach(input => {
-                     input.addEventListener('input', () => {
-                         if (input.dataset.scienceType) {
-                            const pIndex = input.dataset.playerIndex;
+                     input.addEventListener('input', (e) => {
+                        const pIndex = e.target.dataset.playerIndex;
+                         if (e.target.dataset.scienceType) {
                             const simboli = { compasso: 0, tavoletta: 0, ingranaggio: 0, serie: 0 };
                             document.querySelectorAll(`input[data-player-index="${pIndex}"][data-science-type]`).forEach(i => {
                                 simboli[i.dataset.scienceType] = parseInt(i.value) || 0;
                             });
                             document.getElementById(`anteprima-scienza-${pIndex}`).textContent = `(${calcolaPuntiScienzaOttimizzati(simboli)}pt)`;
+                         } else if (datiPartita.categoriePartita[datiPartita.categoriaCorrenteIndex].key === 'tesoro' && ['1ed', '2ed', 'duel'].includes(datiPartita.gameVersion)) {
+                            const monete = parseInt(e.target.value) || 0;
+                            const punti = Math.floor(monete / 3);
+                            document.getElementById(`anteprima-tesoro-${pIndex}`).textContent = `(${punti}pt)`;
                          }
                     });
                 });
@@ -1951,7 +2024,7 @@
 
             function mostraRisultati(gameDataToDisplay = null) {
                 if (gameDataToDisplay) {
-                    datiPartita = gameDataToDisplay;
+                    datiPartita = JSON.parse(JSON.stringify(gameDataToDisplay)); // Deep copy to avoid modifying original history object
                 } else {
                     datiPartita.hasCalculatedResults = true;
                     const dataPartita = datiPartita.manualDate ? new Date(datiPartita.manualDate) : new Date();
@@ -2018,6 +2091,7 @@
 
                 const btnGroupTop = document.createElement('div');
                 btnGroupTop.className = 'gruppo-bottoni';
+                // Mostra il pulsante "Indietro" solo se non siamo in modalità "visualizza da cronologia"
                 if (!gameDataToDisplay) {
                     const backToScoreBtn = document.createElement('button');
                     backToScoreBtn.textContent = translations.back[currentLanguage];
@@ -2065,9 +2139,11 @@
                 const isWinner = giocatoriOrdinati.length < 2 || giocatoriOrdinati[0].totale > giocatoriOrdinati[1].totale || (giocatoriOrdinati[0].totale === giocatoriOrdinati[1].totale && (giocatoriOrdinati[0].punteggi[tieBreakerKey] || 0) > (giocatoriOrdinati[1].punteggi[tieBreakerKey] || 0));
 
                 giocatoriOrdinati.forEach((g, index) => {
+                    if (g.isFreeCity) return; // Non mostrare la città franca nei risultati finali
+
                     const li = document.createElement('div');
                     li.className = 'risultato-giocatore';
-                    if (index === 0 && isWinner && !g.isFreeCity) li.classList.add('vincitore');
+                    if (index === 0 && isWinner) li.classList.add('vincitore');
                     
                     const prevPlayer = giocatoriOrdinati[index - 1];
                     const nextPlayer = giocatoriOrdinati[index + 1];
@@ -2085,12 +2161,12 @@
                     
                     let wonderDisplayHTML = '';
                     if (datiPartita.gameVersion === 'duel' && g.meraviglie && g.meraviglie.length > 0) {
-                        wonderDisplayHTML = `<span class="wonder-display wonder-display-duel">${g.meraviglie.map(w => getWonderName(w) || '').join('<br>')}</span>`;
+                        wonderDisplayHTML = `<span class="wonder-display wonder-display-duel">${g.meraviglie.map(w => getWonderName(w) || '').filter(Boolean).join('<br>')}</span>`;
                     } else {
                         wonderDisplayHTML = `<span class="wonder-display">${getWonderName(g.meraviglia) || translations.noWonder[currentLanguage]}</span>`;
                     }
                     
-                    li.innerHTML = `<div class="risultato-header"><div><span class="medaglia">${(index === 0 && isWinner && !g.isFreeCity) ? '🥇' : `${index + 1}.`}</span><div class="nome"><span>${g.nome}</span>${wonderDisplayHTML}</div></div>${scoreDisplay}</div>`;
+                    li.innerHTML = `<div class="risultato-header"><div><span class="medaglia">${(index === 0 && isWinner) ? '🥇' : `${index + 1}.`}</span><div class="nome"><span>${g.nome}</span>${wonderDisplayHTML}</div></div>${scoreDisplay}</div>`;
                     li.appendChild(createBreakdownDiv(g));
                     classificaUI.appendChild(li);
                 });
@@ -2099,10 +2175,13 @@
 
             function mostraRisultatiSquadre() {
                 const squadreMap = datiPartita.giocatori.reduce((acc, g) => {
-                    if (!acc[g.team]) acc[g.team] = { nome: `${translations.team[currentLanguage]} ${g.team}`, giocatori: [], punteggi: {}, totale: 0 };
-                    acc[g.team].giocatori.push(g);
+                    if (!g.isFreeCity) {
+                        if (!acc[g.team]) acc[g.team] = { nome: `${translations.team[currentLanguage]} ${g.team}`, giocatori: [], punteggi: {}, totale: 0 };
+                        acc[g.team].giocatori.push(g);
+                    }
                     return acc;
                 }, {});
+
                 const squadre = Object.values(squadreMap);
                 squadre.forEach(s => {
                     s.totale = s.giocatori.reduce((acc, g) => acc + g.totale, 0);
@@ -2119,6 +2198,7 @@
                     });
                 });
                 squadre.sort((a, b) => b.totale !== a.totale ? b.totale - a.totale : (b.punteggi.tesoro || 0) - (a.punteggi.tesoro || 0));
+                
                 const classificaUI = document.createElement('div');
                 classificaUI.id = 'lista-classifica';
 
@@ -2159,21 +2239,17 @@
                 const div = document.createElement('div');
                 div.className = 'risultato-breakdown';
                 datiPartita.categoriePartita.forEach(cat => {
-                    // 'wonderStages' è solo per lo spareggio, non una categoria da mostrare
                     if (cat.key === 'wonderStages') return;
 
-                    let pCat = 0; // Default a 0
+                    let pCat = 0;
                     if (cat.key === 'scienza' && (datiPartita.gameVersion === '1ed' || datiPartita.gameVersion === '2ed')) {
                         pCat = entity.punteggi.puntiScienza || 0;
                     } else if (cat.key === 'tesoro' && (datiPartita.gameVersion === '1ed' || datiPartita.gameVersion === '2ed' || datiPartita.gameVersion === 'duel')) {
-                        // Punteggio da monete / 3
                         pCat = entity.punteggi.puntiTesoro || 0;
                     } else {
-                        // Per tutte le altre categorie
                         pCat = entity.punteggi[cat.key] || 0;
                     }
                     
-                    // Mostra tutte le categorie, anche con 0 punti
                     const firstSpaceIndex = cat.label.indexOf(' ');
                     const icon = cat.label.substring(0, firstSpaceIndex);
                     const name = translations[cat.langKey] ? translations[cat.langKey][currentLanguage] : cat.label;
@@ -2183,13 +2259,18 @@
             }
 
             function condividiComeImmagine() {
+                const SHARE_WIDTH = 500; 
+
                 const shareableContent = document.createElement('div');
-                shareableContent.style.width = '450px';
+                shareableContent.style.width = `${SHARE_WIDTH}px`;
+                shareableContent.style.height = 'auto'; // Lascia che l'altezza si adatti al contenuto
                 shareableContent.style.padding = '30px';
                 shareableContent.style.backgroundColor = getComputedStyle(document.documentElement).getPropertyValue('--colore-sfondo');
                 shareableContent.style.fontFamily = "'Roboto', sans-serif";
                 shareableContent.style.color = getComputedStyle(document.documentElement).getPropertyValue('--colore-testo');
                 shareableContent.style.boxSizing = 'border-box';
+                shareableContent.style.display = 'flex';
+                shareableContent.style.flexDirection = 'column';
 
                 let logoSrc;
                 switch(datiPartita.gameVersion){
@@ -2203,34 +2284,41 @@
                 const logo = document.createElement('img');
                 logo.src = logoSrc;
                 logo.style.maxWidth = '60%';
-                logo.style.margin = '0 auto 30px auto';
+                logo.style.maxHeight = '100px';
+                logo.style.margin = '0 auto 20px auto';
                 logo.style.display = 'block';
+                logo.style.objectFit = 'contain';
 
-                const results = document.getElementById('risultati-sezione').cloneNode(true);
-                results.querySelectorAll('.gruppo-bottoni, button, .header-info ~ h2 + button').forEach(el => el.remove());
-                results.querySelector('.header-info').style.fontSize = '1em';
-                results.querySelector('.header-info').style.marginBottom = '15px';
+                // Clona solo il contenuto necessario
+                const resultsContent = document.getElementById('lista-classifica').cloneNode(true);
+                const headerInfo = document.querySelector('#risultati-sezione .header-info').cloneNode(true);
+                const title = document.querySelector('#risultati-sezione h2').cloneNode(true);
 
                 shareableContent.appendChild(logo);
-                shareableContent.appendChild(results);
-
+                shareableContent.appendChild(headerInfo);
+                shareableContent.appendChild(title);
+                shareableContent.appendChild(resultsContent);
+                
+                // Aggiungi il container temporaneo al body per il rendering
                 document.body.appendChild(shareableContent);
 
                 html2canvas(shareableContent, {
-                    scale: 2.5,
+                    scale: 2, // Aumenta la risoluzione
                     backgroundColor: null,
-                    useCORS: true
+                    useCORS: true,
+                    // Non è necessario specificare width/height qui, le prenderà dall'elemento
                 }).then(canvas => {
                     const link = document.createElement('a');
                     link.download = `7wonders-results-${Date.now()}.png`;
                     link.href = canvas.toDataURL('image/png');
                     link.click();
-                    document.body.removeChild(shareableContent);
+                    document.body.removeChild(shareableContent); // Pulisce il DOM
                 }).catch(err => {
                     console.error("Errore durante la generazione dell'immagine:", err);
-                    document.body.removeChild(shareableContent);
+                    document.body.removeChild(shareableContent); // Pulisce anche in caso di errore
                 });
             }
+
             
             // ===============================================
             // I. LOGICA CRONOLOGIA E STATISTICHE
@@ -2255,9 +2343,34 @@
 
                     const contentDiv = document.createElement('div');
                     contentDiv.className = 'history-item-content';
+                    
+                    let detailsText = '';
+                    if (game.espansioni && game.espansioni.giocoASquadre) {
+                        const squadreMap = game.giocatori.reduce((acc, g) => {
+                            if (!g.isFreeCity) {
+                                if (!acc[g.team]) acc[g.team] = { giocatori: [], totale: 0 };
+                                acc[g.team].giocatori.push(g);
+                                acc[g.team].totale += g.totale;
+                            }
+                            return acc;
+                        }, {});
+                        const squadre = Object.values(squadreMap);
+                        squadre.sort((a, b) => b.totale - a.totale);
 
-                    const giocatoriOrdinati = [...game.giocatori].sort((a, b) => b.totale - a.totale);
-                    const vincitore = giocatoriOrdinati[0] ? giocatoriOrdinati[0].nome : 'N/A';
+                        if (squadre.length > 0) {
+                            const winningTeam = squadre[0];
+                            const winningTeamNames = winningTeam.giocatori.map(p => p.nome).join(' & ');
+                            const otherTeams = squadre.slice(1).map(s => `${s.giocatori.map(p => p.nome).join(' & ')} ${s.totale}`);
+                            detailsText = `<strong>${translations.winners[currentLanguage]}: ${winningTeamNames} ${winningTeam.totale}</strong> (${otherTeams.join(', ')})`;
+                        }
+                    } else {
+                        const giocatoriOrdinati = [...game.giocatori].filter(p => !p.isFreeCity).sort((a, b) => b.totale - a.totale);
+                        if (giocatoriOrdinati.length > 0) {
+                            const winner = giocatoriOrdinati[0];
+                            const others = giocatoriOrdinati.slice(1).map(g => `${g.nome} ${g.totale}`);
+                             detailsText = `<strong>${translations.winner[currentLanguage]}: ${winner.nome} ${winner.totale}</strong> (${others.join(', ')})`;
+                        }
+                    }
                     
                     const gameVersionName = (translations.gameVersionMap[game.gameVersion] && translations.gameVersionMap[game.gameVersion][currentLanguage]) 
                                            ? translations.gameVersionMap[game.gameVersion][currentLanguage] 
@@ -2269,7 +2382,7 @@
                             <span>${game.data}</span>
                         </div>
                         <div class="history-item-details">
-                            ${translations.winner[currentLanguage]}: <strong>${vincitore}</strong> (${giocatoriOrdinati.map(g => `${g.nome} ${g.totale}`).join(', ')})
+                           ${detailsText}
                         </div>
                     `;
                     
@@ -2280,17 +2393,41 @@
                         }
                     });
 
+                    const buttonsContainer = document.createElement('div');
+                    buttonsContainer.className = 'action-buttons-container';
+
+                    const editBtn = document.createElement('button');
+                    editBtn.className = 'edit-player-btn';
+                    editBtn.innerHTML = '&#9998;'; // icona matita
+                    editBtn.title = translations.editGame[currentLanguage];
+                    editBtn.addEventListener('click', (e) => {
+                        e.stopPropagation();
+                        const gameToEdit = getGameHistory().find(g => g.idPartita === game.idPartita);
+                        if (gameToEdit) {
+                            datiPartita = JSON.parse(JSON.stringify(gameToEdit));
+                            datiPartita.isEditing = true;
+                            mostraSezione('punteggio');
+                            mostraSchermataCategoria();
+                        }
+                    });
+
                     const deleteBtn = document.createElement('button');
                     deleteBtn.className = 'delete-player-btn';
-                    deleteBtn.innerHTML = '&#10006;';
+                    deleteBtn.innerHTML = '&#10006;'; // icona croce
                     deleteBtn.title = translations.deleteGame[currentLanguage];
                     deleteBtn.addEventListener('click', (e) => {
                         e.stopPropagation();
-                        deleteGameFromHistory(game.idPartita);
+                        showConfirmationModal(
+                            translations.deleteGameConfirm[currentLanguage],
+                            () => deleteGameFromHistory(game.idPartita)
+                        );
                     });
                     
+                    buttonsContainer.appendChild(editBtn);
+                    buttonsContainer.appendChild(deleteBtn);
+                    
                     li.appendChild(contentDiv);
-                    li.appendChild(deleteBtn);
+                    li.appendChild(buttonsContainer);
                     
                     ui.historyList.appendChild(li);
                 });
@@ -2522,6 +2659,20 @@
                 // Listener lingua
                 bottoni.langIt.addEventListener('click', () => setLanguage('it'));
                 bottoni.langEn.addEventListener('click', () => setLanguage('en'));
+                
+                // Listener modale
+                ui.modal.cancelBtn.addEventListener('click', hideConfirmationModal);
+                ui.modal.confirmBtn.addEventListener('click', () => {
+                    if(onConfirmCallback) {
+                        onConfirmCallback();
+                    }
+                    hideConfirmationModal();
+                });
+                ui.modal.overlay.addEventListener('click', (e) => {
+                    if(e.target === ui.modal.overlay) {
+                        hideConfirmationModal();
+                    }
+                });
             }
 
             inizializzaApp();
