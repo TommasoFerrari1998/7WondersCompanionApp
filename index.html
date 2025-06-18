@@ -420,6 +420,8 @@
                     <div class="checkbox-item"><label for="esp-2ed-leaders">Leaders</label><label class="toggle-switch"><input type="checkbox" id="esp-2ed-leaders"><span class="slider"></span></label></div>
                     <div class="checkbox-item"><label for="esp-2ed-armada">Armada</label><label class="toggle-switch"><input type="checkbox" id="esp-2ed-armada"><span class="slider"></span></label></div>
                     <div class="checkbox-item"><label for="esp-2ed-edifice">Edifice</label><label class="toggle-switch"><input type="checkbox" id="esp-2ed-edifice"><span class="slider"></span></label></div>
+                    <div class="checkbox-item"><label for="esp-2ed-greatwall">Grande Muraglia Cinese</label><label class="toggle-switch"><input type="checkbox" id="esp-2ed-greatwall"><span class="slider"></span></label></div>
+                    <div class="checkbox-item"><label for="esp-2ed-mannekenpis">Manneken Pis</label><label class="toggle-switch"><input type="checkbox" id="esp-2ed-mannekenpis"><span class="slider"></span></label></div>
                 </div>
             </div>
             <div class="opzioni-partita">
@@ -656,11 +658,13 @@
             };
 
             const MERAVIGLIE_2ED = { 
-                base: ['Halikarnassos', 'Rhódos', 'Olympía', 'Alexandria', 'Babylon', 'Éphesos', 'Gizah', 'Manneken Pis', 'Grande Muraglia Cinese'], 
+                base: ['Halikarnassos', 'Rhódos', 'Olympía', 'Alexandria', 'Babylon', 'Éphesos', 'Gizah'], 
                 leaders: ['Roma', 'Abu Simbel'], 
                 cities: ['Byzantium', 'Petra'], 
                 armada: ['Siracusa'], 
-                edifice: ['Ur', 'Carthage'] 
+                edifice: ['Ur', 'Carthage'], 
+                greatwall: ['Grande Muraglia Cinese'], 
+                mannekenpis: ['Manneken Pis'] 
             };
 
             const MERAVIGLIE_ARCHITECTS = {
@@ -1340,7 +1344,9 @@
                         cities: document.getElementById('esp-2ed-cities'), 
                         leaders: document.getElementById('esp-2ed-leaders'), 
                         armada: document.getElementById('esp-2ed-armada'), 
-                        edifice: document.getElementById('esp-2ed-edifice') 
+                        edifice: document.getElementById('esp-2ed-edifice'), 
+                        greatwall: document.getElementById('esp-2ed-greatwall'),
+                        mannekenpis: document.getElementById('esp-2ed-mannekenpis')
                     }, 
                     teamPlay: document.getElementById('team-play-checkbox-2ed'), 
                     dateToggle: document.getElementById('date-toggle-2ed'), 
