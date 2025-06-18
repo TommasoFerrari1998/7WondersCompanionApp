@@ -70,7 +70,7 @@
         .form-group-column { flex-direction: column; }
         .player-input, .location-input, select { width: 100%; padding: 12px; border: 1px solid #444; border-radius: 8px; background-color: #333; color: var(--colore-testo); font-size: 16px; box-sizing: border-box; }
         .players-list { list-style: none; padding: 0; }
-        .giocatore-setup-item { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 10px; background-color: #383838; padding: 10px 15px; border-radius: 6px; margin-bottom: 8px; font-size: 18px; }
+        .giocatore-setup-item { display: flex; flex-wrap: nowrap; align-items: center; justify-content: space-between; gap: 10px; background-color: #383838; padding: 10px 15px; border-radius: 6px; margin-bottom: 8px; font-size: 18px; }
         .nome-giocatore-input { background: none; border: none; color: var(--colore-testo); font-weight: bold; font-size: 18px; font-family: 'Roboto', sans-serif; flex-grow: 1; padding: 5px; border-radius: 4px; }
         .nome-giocatore-input:focus { outline: none; background-color: rgba(255, 255, 255, 0.1); }
         .nome-giocatore-input:disabled { color: var(--colore-testo-fioco); cursor: not-allowed; }
@@ -79,7 +79,7 @@
         .delete-player-btn { color: var(--colore-pericolo); }
         .edit-player-btn { color: var(--colore-secondario); font-size: 18px; }
         .delete-player-btn:disabled { color: #555; cursor: not-allowed; }
-        .wonder-select, .team-select { background-color: #444; color: var(--colore-testo); border: 1px solid #555; border-radius: 5px; padding: 8px; font-size: 14px; flex-shrink: 0; }
+        .wonder-select, .team-select { background-color: #444; color: var(--colore-testo); border: 1px solid #555; border-radius: 5px; padding: 8px; font-size: 14px; }
         .opzioni-partita { margin-top: 20px; padding: 15px; background-color: #383838; border-radius: 8px;}
         .opzioni-partita h4 { margin-top: 0; margin-bottom: 10px; }
         .checkbox-container { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; }
@@ -2346,18 +2346,22 @@
                 const history = getGameHistory();
                 ui.historyList.innerHTML = '';
             
-                // Popola il filtro della versione del gioco, se non già popolato
-                if (ui.historyGameFilter.options.length <= 1) {
-                    const gameVersions = [...new Set(history.map(g => g.gameVersion))];
-                    const allGamesText = translations.allGames[currentLanguage] || 'Tutte le versioni';
-                    ui.historyGameFilter.innerHTML = `<option value="">${allGamesText}</option>`;
-                    gameVersions.sort().forEach(v => {
-                        const gameName = (translations.gameVersionMap[v] && translations.gameVersionMap[v][currentLanguage]) 
-                                            ? translations.gameVersionMap[v][currentLanguage]
-                                            : v;
-                        ui.historyGameFilter.innerHTML += `<option value="${v}">${gameName}</option>`;
-                    });
-                }
+                // Salva il valore del filtro attualmente selezionato per non perderlo
+                const previouslySelectedVersion = ui.historyGameFilter.value;
+            
+                // Popola il filtro della versione del gioco (lo facciamo ogni volta per essere sicuri che sia aggiornato)
+                const gameVersions = [...new Set(history.map(g => g.gameVersion))];
+                const allGamesText = translations.allGames[currentLanguage] || 'Tutti i giochi';
+                ui.historyGameFilter.innerHTML = `<option value="">${allGamesText}</option>`;
+                gameVersions.sort().forEach(v => {
+                    const gameName = (translations.gameVersionMap[v] && translations.gameVersionMap[v][currentLanguage]) 
+                                        ? translations.gameVersionMap[v][currentLanguage]
+                                        : v;
+                    ui.historyGameFilter.innerHTML += `<option value="${v}">${gameName}</option>`;
+                });
+            
+                // Ripristina la selezione precedente dell'utente, se ancora valida
+                ui.historyGameFilter.value = previouslySelectedVersion;
             
                 // Applica filtri e ordinamento
                 const versionFilter = ui.historyGameFilter.value;
