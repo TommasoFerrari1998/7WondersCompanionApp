@@ -37,9 +37,9 @@
         /* Landing Page */
         #landing-sezione .gruppo-bottoni { flex-direction: column; gap: 15px; }
         #support-section { margin-top: 40px; text-align: center; }
-        .paypal-logo { width: 22px; height: auto; }
-        #paypal-btn { background: linear-gradient(180deg, #0079C1 0%, #005EA6 100%); display: inline-flex; align-items: center; justify-content: center; gap: 12px; width: auto; max-width: 320px; padding: 12px 25px; border: 1px solid #003057; border-radius: 25px; box-shadow: 0 4px 15px rgba(0, 121, 193, 0.3); transition: all 0.3s ease; font-weight: bold; color: white; text-decoration: none; }
-        #paypal-btn:hover { transform: translateY(-2px); box-shadow: 0 6px 20px rgba(0, 121, 193, 0.4); filter: none; background: linear-gradient(180deg, #0084d6 0%, #0069b8 100%); }
+        .paypal-logo { width: 40px; height: auto; }
+        #paypal-btn { background: #ffffff; display: inline-flex; align-items: center; justify-content: center; gap: 12px; width: auto; max-width: 320px; padding: 12px 25px; border: 1px solid #dddddd; border-radius: 25px; box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1); transition: all 0.3s ease; font-weight: bold; color: #1c1c1c; text-decoration: none; }
+        #paypal-btn:hover { transform: translateY(-2px); box-shadow: 0 6px 20px rgba(0, 0, 0, 0.12); filter: none; background-color: #f7f7f7; }
         #credits { margin-top: 30px; text-align: center; font-size: 0.8em; color: var(--colore-testo-fioco); }
         #credits a { color: var(--colore-secondario); text-decoration: none; }
         #credits a:hover { text-decoration: underline; }
@@ -194,8 +194,8 @@
 <body>
     <main>
         <div id="language-switcher">
-            <button id="lang-it" class="lang-btn active">IT</button>
-            <button id="lang-en" class="lang-btn">EN</button>
+            <button id="lang-it" class="lang-btn">IT</button>
+            <button id="lang-en" class="lang-btn active">EN</button>
         </div>
 
         <section id="landing-sezione">
@@ -2654,7 +2654,7 @@
                 mostraSezione('landing');
                 setupCollapsibleRules();
                 addEventListeners();
-                setLanguage('it');
+                setLanguage('en');
             }
 
             function addEventListeners() {
