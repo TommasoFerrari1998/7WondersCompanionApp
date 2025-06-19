@@ -493,9 +493,10 @@
                 </div>
             </div>
             <div class="gruppo-bottoni">
-                <button class="back-to-game-select bottone-grande" data-lang-key="backToGameSelect"></button>
-                <button id="iniziaPartitaBtn-1ed" class="bottone-grande start-game-btn" disabled data-lang-key="start"></button>
-            </div>
+            <button class="back-to-game-select bottone-grande" data-lang-key="backToGameSelect"></button>
+            <button id="resetSettingsBtn-1ed" class="bottone-pericolo" data-lang-key="reset"></button>
+            <button id="iniziaPartitaBtn-1ed" class="bottone-grande start-game-btn" disabled data-lang-key="start"></button>
+        </div>
         </section>
 
         <!-- SETUP 2ND EDITION -->
@@ -557,7 +558,7 @@
             </div>
             <div class="gruppo-bottoni">
                 <button class="back-to-game-select bottone-grande" data-lang-key="backToGameSelect"></button>
-                <button id="resetSettingsBtn-2ed" data-lang-key="reset"></button>
+                <button id="resetSettingsBtn-2ed" class="bottone-pericolo" data-lang-key="reset"></button>
                 <button id="iniziaPartitaBtn-2ed" class="bottone-grande start-game-btn" disabled data-lang-key="start"></button>
             </div>
         </section>
@@ -613,10 +614,11 @@
                     <input type="datetime-local" id="manual-date-input-architects" class="input-punteggio manual-date-input">
                 </div>
             </div>
-             <div class="gruppo-bottoni">
-                 <button class="back-to-game-select bottone-grande" data-lang-key="backToGameSelect"></button>
-                 <button id="iniziaPartitaBtn-architects" class="bottone-grande start-game-btn" disabled data-lang-key="start"></button>
-             </div>
+            <div class="gruppo-bottoni">
+                <button class="back-to-game-select bottone-grande" data-lang-key="backToGameSelect"></button>
+                <button id="resetSettingsBtn-architects" class="bottone-pericolo" data-lang-key="reset"></button>
+                <button id="iniziaPartitaBtn-architects" class="bottone-grande start-game-btn" disabled data-lang-key="start"></button>
+            </div>
         </section>
 
         <!-- SETUP DUEL -->
@@ -676,9 +678,10 @@
                 </div>
             </div>
              <div class="gruppo-bottoni">
-                 <button class="back-to-game-select bottone-grande" data-lang-key="backToGameSelect"></button>
-                 <button id="iniziaPartitaBtn-duel" class="bottone-grande start-game-btn" disabled data-lang-key="start"></button>
-             </div>
+                <button class="back-to-game-select bottone-grande" data-lang-key="backToGameSelect"></button>
+                <button id="resetSettingsBtn-duel" class="bottone-pericolo" data-lang-key="reset"></button>
+                <button id="iniziaPartitaBtn-duel" class="bottone-grande start-game-btn" disabled data-lang-key="start"></button>
+            </div>
         </section>
 
         <section id="punteggio-sezione" class="hidden">
@@ -966,6 +969,7 @@
 
             function initializeTranslations() {
                 translations = {
+                    resetConfirm: { it: 'Sei sicuro di voler resettare i campi di questa schermata? L\'azione è irreversibile.', en: 'Are you sure you want to reset the fields on this screen? This action is irreversible.' },
                     newestFirst: { it: 'Dal più recente', en: 'Newest First' },
                     oldestFirst: { it: 'Dal meno recente', en: 'Oldest First' },
                     mostUsedWonderInVersion: { it: 'Meraviglia più usata', en: 'Most Used Wonder' },
@@ -2469,6 +2473,42 @@
                 });
             }
 
+            function resetSetupUI(gameVersion) {
+                const setups = {
+                    '1ed': { ui: setup1ed.ui, inputs: setup1ed.inputs, updateUI: aggiornaListaGiocatoriUI_1ed },
+                    '2ed': { ui: setup2ed.ui, inputs: setup2ed.inputs, updateUI: aggiornaListaGiocatoriUI_2ed },
+                    'architects': { ui: setupArchitects.ui, inputs: setupArchitects.inputs, updateUI: aggiornaListaGiocatoriUI_architects },
+                    'duel': { ui: setupDuel.ui, inputs: setupDuel.inputs, updateUI: aggiornaListaGiocatoriUI_duel }
+                };
+            
+                const setup = setups[gameVersion];
+                if (!setup) return;
+            
+                resetStato(gameVersion);
+            
+                // Resetta l'UI specifica
+                setup.ui.listaGiocatori.innerHTML = '';
+                if(setup.inputs.nomeGiocatore) setup.inputs.nomeGiocatore.value = '';
+                if(setup.inputs.luogoPartita) setup.inputs.luogoPartita.value = '';
+            
+                // Deseleziona tutte le espansioni
+                if(setup.inputs.esp) {
+                    for (const key in setup.inputs.esp) {
+                        if (setup.inputs.esp[key]) setup.inputs.esp[key].checked = false;
+                    }
+                }
+            
+                // Resetta opzioni specifiche (squadre, data manuale)
+                if(setup.inputs.teamPlay) setup.inputs.teamPlay.checked = false;
+                if(setup.inputs.dateToggle) {
+                    setup.inputs.dateToggle.checked = false;
+                    if(setup.ui.manualDateContainer) setup.ui.manualDateContainer.classList.add('hidden');
+                }
+            
+                // Aggiorna la lista giocatori che sarà vuota
+                setup.updateUI();
+            }
+
             // ===================================================
             // NUOVE FUNZIONI PER IMPORT/EXPORT
             // ===================================================
@@ -3064,7 +3104,30 @@
                     aggiornaListaGiocatoriUI_duel();
                 }));
                 setupDuel.inputs.dateToggle.addEventListener('change', () => setupDuel.ui.manualDateContainer.classList.toggle('hidden', !setupDuel.inputs.dateToggle.checked));
-            
+
+                // Logica per tutti i pulsanti di Reset
+                const resetButtons = {
+                    'resetSettingsBtn-1ed': '1ed',
+                    'resetSettingsBtn-2ed': '2ed',
+                    'resetSettingsBtn-architects': 'architects',
+                    'resetSettingsBtn-duel': 'duel'
+                };
+                
+                for (const [buttonId, gameVersion] of Object.entries(resetButtons)) {
+                    const button = document.getElementById(buttonId);
+                    // Il bottone della 2ED esiste già ma non ha un listener, gli altri sono stati appena aggiunti.
+                    // Questo ciclo li gestisce tutti.
+                    if (button) {
+                        button.addEventListener('click', (e) => {
+                            e.preventDefault();
+                            showConfirmationModal(
+                                translations.resetConfirm[currentLanguage],
+                                () => resetSetupUI(gameVersion)
+                            );
+                        });
+                    }
+                }
+                
                 // Navigazione punteggio
                 bottoni.nextCat.addEventListener('click', () => navigaCategorie(1));
                 bottoni.prevCat.addEventListener('click', () => { salvaPunteggiCategoriaCorrente(); datiPartita.categoriaCorrenteIndex -= 1; mostraSchermataCategoria(); });
