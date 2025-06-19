@@ -301,6 +301,8 @@
                 </select>
             </div>
             <ul id="history-list"></ul>
+            <div id="history-pagination" class="gruppo-bottoni" style="justify-content: center; align-items: center; margin-top: 15px;">
+            </div>
             <div class="gruppo-bottoni">
                 <button id="backToHomeFromHistoryBtn" class="bottone-grande" data-lang-key="backToHome"></button>
             </div>
@@ -784,6 +786,8 @@
             let currentLanguage = 'it';
             let translations = {};
             let onConfirmCallback = null;
+            let currentPage = 1;
+            const ITEMS_PER_PAGE = 10;
 
             // ===============================================
             // B. LOGICA DI TRADUZIONE E MODALE
@@ -2354,13 +2358,18 @@
             // ===============================================
 
             function displayGameHistory() {
+                // MODIFICATO: Reset della pagina corrente quando si applicano i filtri
+                if (typeof displayGameHistory.lastFilter !== 'undefined' && 
+                    (displayGameHistory.lastFilter.version !== ui.historyGameFilter.value || displayGameHistory.lastFilter.sort !== ui.historySortFilter.value)) {
+                    currentPage = 1;
+                }
+                displayGameHistory.lastFilter = { version: ui.historyGameFilter.value, sort: ui.historySortFilter.value };
+
                 const history = getGameHistory();
                 ui.historyList.innerHTML = '';
             
-                // Salva il valore del filtro attualmente selezionato per non perderlo
                 const previouslySelectedVersion = ui.historyGameFilter.value;
             
-                // Popola il filtro della versione del gioco (lo facciamo ogni volta per essere sicuri che sia aggiornato)
                 const gameVersions = [...new Set(history.map(g => g.gameVersion))];
                 const allGamesText = translations.allGames[currentLanguage] || 'Tutti i giochi';
                 ui.historyGameFilter.innerHTML = `<option value="">${allGamesText}</option>`;
@@ -2371,10 +2380,8 @@
                     ui.historyGameFilter.innerHTML += `<option value="${v}">${gameName}</option>`;
                 });
             
-                // Ripristina la selezione precedente dell'utente, se ancora valida
                 ui.historyGameFilter.value = previouslySelectedVersion;
             
-                // Applica filtri e ordinamento
                 const versionFilter = ui.historyGameFilter.value;
                 const sortOrder = ui.historySortFilter.value;
             
@@ -2389,13 +2396,19 @@
                     return sortOrder === 'newest' ? dateB - dateA : dateA - dateB;
                 });
             
-                if (filteredHistory.length === 0) {
+                // NUOVO: Logica di paginazione
+                const totalPages = Math.ceil(filteredHistory.length / ITEMS_PER_PAGE);
+                const startIndex = (currentPage - 1) * ITEMS_PER_PAGE;
+                const endIndex = startIndex + ITEMS_PER_PAGE;
+                const paginatedItems = filteredHistory.slice(startIndex, endIndex);
+
+                if (paginatedItems.length === 0) {
                     ui.historyList.innerHTML = `<p>${translations.noHistory[currentLanguage]}</p>`;
+                    document.getElementById('history-pagination').innerHTML = ''; // Nasconde i controlli se non ci sono risultati
                     return;
                 }
             
-                // La parte che genera gli elementi 'li' della cronologia rimane identica
-                filteredHistory.forEach(game => {
+                paginatedItems.forEach(game => {
                     const li = document.createElement('li');
                     li.className = 'history-item';
             
@@ -2403,8 +2416,17 @@
                     contentDiv.className = 'history-item-content';
                     
                     let detailsText = '';
+
+                    // NUOVO: Logica avanzata per spareggio e visualizzazione
+                    const getTieBreakerKey = (gameVersion) => {
+                        if (['1ed', '2ed', 'duel'].includes(gameVersion)) return 'tesoro'; // Monete
+                        if (gameVersion === 'architects') return 'wonderStages'; // Stadi meraviglia
+                        return 'totale'; // Fallback
+                    };
+                    const tieBreakerKey = getTieBreakerKey(game.gameVersion);
+
                     if (game.espansioni && game.espansioni.giocoASquadre) {
-                        const squadreMap = game.giocatori.reduce((acc, g) => {
+                         const squadreMap = game.giocatori.reduce((acc, g) => {
                             if (!g.isFreeCity) {
                                 if (!acc[g.team]) acc[g.team] = { giocatori: [], totale: 0 };
                                 acc[g.team].giocatori.push(g);
@@ -2422,11 +2444,23 @@
                             detailsText = `<strong>${translations.winners[currentLanguage]}: ${winningTeamNames} ${winningTeam.totale}</strong> (${otherTeams.join(', ')})`;
                         }
                     } else {
-                        const giocatoriOrdinati = [...game.giocatori].filter(p => !p.isFreeCity).sort((a, b) => b.totale - a.totale);
+                        const giocatoriOrdinati = [...game.giocatori].filter(p => !p.isFreeCity).sort((a, b) => {
+                            if (b.totale !== a.totale) return b.totale - a.totale;
+                            return (b.punteggi[tieBreakerKey] || 0) - (a.punteggi[tieBreakerKey] || 0);
+                        });
+
                         if (giocatoriOrdinati.length > 0) {
-                            const winner = giocatoriOrdinati[0];
-                            const others = giocatoriOrdinati.slice(1).map(g => `${g.nome} ${g.totale}`);
-                             detailsText = `<strong>${translations.winner[currentLanguage]}: ${winner.nome} ${winner.totale}</strong> (${others.join(', ')})`;
+                             const playerStrings = giocatoriOrdinati.map((g, index, arr) => {
+                                let displayString = `${g.nome} ${g.totale}`;
+                                const isTied = (index > 0 && arr[index - 1].totale === g.totale) || (index < arr.length - 1 && arr[index + 1].totale === g.totale);
+                                
+                                if (isTied) {
+                                    const tieValue = g.punteggi[tieBreakerKey] || 0;
+                                    displayString += `<sup>&nbsp;(${tieValue})</sup>`;
+                                }
+                                return displayString;
+                            });
+                             detailsText = `<strong>${translations.winner[currentLanguage]}: ${playerStrings[0]}</strong> (${playerStrings.slice(1).join(', ')})`;
                         }
                     }
                     
@@ -2499,6 +2533,37 @@
                     
                     ui.historyList.appendChild(li);
                 });
+
+                // NUOVO: Renderizza i controlli di paginazione
+                const paginationContainer = document.getElementById('history-pagination');
+                if (totalPages > 1) {
+                    paginationContainer.innerHTML = `
+                        <button id="prevPageBtn" class="bottone-grande" style="flex: 0.5;">&laquo; ${translations.back[currentLanguage].replace('← ','')}</button>
+                        <span style="font-size: 0.9em;">${currentPage} / ${totalPages}</span>
+                        <button id="nextPageBtn" class="bottone-grande" style="flex: 0.5;">${translations.next[currentLanguage]} &raquo;</button>
+                    `;
+
+                    const prevBtn = document.getElementById('prevPageBtn');
+                    const nextBtn = document.getElementById('nextPageBtn');
+
+                    prevBtn.disabled = currentPage === 1;
+                    nextBtn.disabled = currentPage === totalPages;
+
+                    prevBtn.addEventListener('click', () => {
+                        if (currentPage > 1) {
+                            currentPage--;
+                            displayGameHistory();
+                        }
+                    });
+                    nextBtn.addEventListener('click', () => {
+                        if (currentPage < totalPages) {
+                            currentPage++;
+                            displayGameHistory();
+                        }
+                    });
+                } else {
+                    paginationContainer.innerHTML = '';
+                }
             }
             
             // Sostituisci le vecchie funzioni delle statistiche con queste tre
