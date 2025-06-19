@@ -242,6 +242,47 @@
         .autocomplete-suggestions div:hover {
             background-color: var(--colore-primario);
         }
+        
+        /* Contenitore per disporre i bottoni import/export in riga */
+        .gruppo-bottoni-orizzontale {
+            display: flex;
+            gap: 15px; /* Spazio tra i due bottoni */
+            margin-top: 15px; /* Spazio sopra il contenitore */
+        }
+        
+        /* Stile grafico personalizzato per i bottoni di import/export */
+        .bottone-dati {
+            flex: 1; /* Fa in modo che i due bottoni occupino lo stesso spazio */
+            padding: 12px 15px;
+            border: 1px solid var(--colore-secondario);
+            border-radius: 8px;
+            background-color: transparent; /* Sfondo trasparente */
+            color: var(--colore-secondario); /* Colore del testo abbinato al tema */
+            font-size: 14px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: background-color 0.2s, color 0.2s, transform 0.1s;
+            display: flex; /* Necessario per allineare icona e testo */
+            align-items: center;
+            justify-content: center;
+        }
+        
+        /* Effetto al passaggio del mouse */
+        .bottone-dati:hover {
+            background-color: var(--colore-secondario);
+            color: #111; /* Testo scuro per contrasto */
+            filter: none; /* Rimuove il filtro di luminosità ereditato dai bottoni normali */
+        }
+        
+        .bottone-dati:active {
+            transform: scale(0.98);
+        }
+        
+        /* Stile per l'icona all'interno del bottone */
+        .icona-bottone {
+            margin-right: 10px; /* Spazio tra icona e testo */
+            font-size: 1.2em; /* Rende l'icona leggermente più grande del testo */
+        }
     </style>
 </head>
 <body>
@@ -261,8 +302,15 @@
                 <button id="landingCronologiaBtn" class="bottone-grande" data-lang-key="gameHistory"></button>
                 <button id="landingStatisticheBtn" class="bottone-grande" data-lang-key="statistics"></button>
                 <button id="landingRegolamentoBtn" class="bottone-grande" data-lang-key="rulesClarifications"></button>
-                <button id="exportDataBtn" class="bottone-grande" data-lang-key="exportData"></button>
-                <label for="importDataInput" id="importDataBtn" class="bottone-grande" data-lang-key="importData" style="cursor: pointer; display: flex; justify-content: center; align-items: center;"></label>
+            </div>
+            
+            <div class="gruppo-bottoni-orizzontale">
+                <button id="exportDataBtn" class="bottone-dati">
+                    <span class="icona-bottone">&#x1F4E5;</span> <span data-lang-key="exportData"></span>
+                </button>
+                <label for="importDataInput" id="importDataBtn" class="bottone-dati">
+                    <span class="icona-bottone">&#x1F4E4;</span> <span data-lang-key="importData"></span>
+                </label>
                 <input type="file" id="importDataInput" accept=".json" class="hidden">
             </div>
             <div id="support-section">
