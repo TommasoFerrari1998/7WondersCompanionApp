@@ -9,6 +9,7 @@
     <link rel="icon" href="favicon.png" type="image/png">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
     <style>
+        
         @import url('https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap');
         @import url('https://fonts.googleapis.com/css2?family=Cinzel:wght@700&display=swap');
 
@@ -192,6 +193,55 @@
             .player-header .checkbox-item { flex-direction: row; gap: 10px; }
             #stats-filter-container { flex-direction: column; }
         }
+        .header-nav {
+            display: flex;
+            justify-content: flex-start;
+            margin-bottom: 5px;
+        }
+        .back-to-home-top-btn {
+            background: none;
+            border: 1px solid var(--colore-primario);
+            color: var(--colore-secondario);
+            padding: 5px 12px;
+            font-size: 1.2em;
+            line-height: 1;
+            border-radius: 6px;
+        }
+        .back-to-home-top-btn:hover {
+            background-color: var(--colore-primario);
+            color: white;
+        }
+
+        /* Stili per l'Autocomplete dei nomi */
+        .autocomplete-container {
+            position: relative;
+            width: 100%;
+        }
+        .autocomplete-suggestions {
+            display: none; /* Inizialmente nascosto */
+            position: absolute;
+            border: 1px solid #555;
+            border-top: none;
+            z-index: 99;
+            top: 100%;
+            left: 0;
+            right: 0;
+            background-color: var(--colore-superficie);
+            border-radius: 0 0 8px 8px;
+            max-height: 160px;
+            overflow-y: auto;
+        }
+        .autocomplete-suggestions div {
+            padding: 12px;
+            cursor: pointer;
+            border-bottom: 1px solid #444;
+        }
+        .autocomplete-suggestions div:last-child {
+            border-bottom: none;
+        }
+        .autocomplete-suggestions div:hover {
+            background-color: var(--colore-primario);
+        }
     </style>
 </head>
 <body>
@@ -222,6 +272,9 @@
         </section>
         
         <section id="selezione-gioco-sezione" class="hidden">
+            <div class="header-nav">
+                <button class="back-to-home-top-btn" title="Torna alla Home">&larr;</button>
+            </div>
             <h2 data-lang-key="chooseGameVersion"></h2>
             <div class="gruppo-bottoni">
                 <button id="select-game-1ed" class="bottone-grande game-selection-btn">
@@ -251,12 +304,12 @@
                     <span>&rarr;</span>
                 </button>
             </div>
-            <div class="gruppo-bottoni">
-                <button id="backToHomeFromGameSelectBtn" class="bottone-grande" data-lang-key="backToHome"></button>
-            </div>
         </section>
 
         <section id="regolamento-sezione" class="hidden">
+            <div class="header-nav">
+                <button class="back-to-home-top-btn" title="Torna alla Home">&larr;</button>
+            </div>
             <h2 data-lang-key="rulesClarifications"></h2>
             <div class="rule-clarification-note" data-lang-key="rulesEditionNote"></div>
             <p data-lang-key="rulesDisclaimer"></p>
@@ -285,13 +338,12 @@
                 <h4 class="collapsible-header"><span data-lang-key="rulesPromo_title"></span><span class="toggle-icon">＋</span></h4>
                 <div class="collapsible-content"><ul></ul></div>
             </div>
-
-            <div class="gruppo-bottoni">
-                <button id="backToHomeFromRulesBtn" class="bottone-grande" data-lang-key="backToHome"></button>
-            </div>
         </section>
         
         <section id="cronologia-sezione" class="hidden">
+            <div class="header-nav">
+                <button class="back-to-home-top-btn" title="Torna alla Home">&larr;</button>
+            </div>
             <h2 data-lang-key="gameHistory"></h2>
             <div id="history-filter-container" class="form-group" style="margin-bottom: 20px; gap: 15px;">
                 <select id="history-game-filter" class="player-input"></select>
@@ -300,15 +352,15 @@
                     <option value="oldest" data-lang-key="oldestFirst"></option>
                 </select>
             </div>
-            <ul id="history-list"></ul>
             <div id="history-pagination" class="gruppo-bottoni" style="justify-content: center; align-items: center; margin-top: 15px;">
             </div>
-            <div class="gruppo-bottoni">
-                <button id="backToHomeFromHistoryBtn" class="bottone-grande" data-lang-key="backToHome"></button>
-            </div>
+            <ul id="history-list"></ul>
         </section>
         
         <section id="statistiche-sezione" class="hidden">
+            <div class="header-nav">
+                <button class="back-to-home-top-btn" title="Torna alla Home">&larr;</button>
+            </div>
             <h2 data-lang-key="statistics"></h2>
             
             <div class="stat-card">
@@ -325,11 +377,9 @@
                     <select id="stats-player-filter" class="player-input"></select>
                     <select id="stats-game-version-filter" class="player-input"></select>
                 </div>
+                <div id="stats-pagination" class="gruppo-bottoni" style="justify-content: center; align-items: center; margin-top: 0; margin-bottom: 15px;">
+                </div>
                 <div id="player-stats-container"></div>
-            </div>
-            
-            <div class="gruppo-bottoni">
-                <button id="backToHomeFromStatsBtn" class="bottone-grande" data-lang-key="backToHome"></button>
             </div>
         </section>
         
@@ -340,7 +390,10 @@
             </div>
             <h2 data-lang-key="setupGame1ed"></h2>
             <div class="form-group form-group-column">
-                <input type="text" id="nomeGiocatoreInput-1ed" class="player-input" data-lang-placeholder-key="playerNamePlaceholder">
+                <div class="autocomplete-container">
+                    <input type="text" id="nomeGiocatoreInput-1ed" class="player-input" data-lang-placeholder-key="playerNamePlaceholder" autocomplete="off">
+                    <div id="suggestions-1ed" class="autocomplete-suggestions"></div>
+                </div>
                 <button id="aggiungiGiocatoreBtn-1ed" data-lang-key="add"></button>
             </div>
             <div class="player-header">
@@ -401,7 +454,10 @@
             </div>
             <h2 data-lang-key="setupGame2ed"></h2>
             <div class="form-group form-group-column">
-                <input type="text" id="nomeGiocatoreInput-2ed" class="player-input" data-lang-placeholder-key="playerNamePlaceholder">
+                <div class="autocomplete-container">
+                    <input type="text" id="nomeGiocatoreInput-2ed" class="player-input" data-lang-placeholder-key="playerNamePlaceholder" autocomplete="off">
+                    <div id="suggestions-2ed" class="autocomplete-suggestions"></div>
+                </div>
                 <button id="aggiungiGiocatoreBtn-2ed" data-lang-key="add"></button>
             </div>
             <div class="player-header">
@@ -462,7 +518,10 @@
             </div>
             <h2 data-lang-key="setupGameArchitects"></h2>
              <div class="form-group form-group-column">
-                <input type="text" id="nomeGiocatoreInput-architects" class="player-input" data-lang-placeholder-key="playerNamePlaceholder">
+                <div class="autocomplete-container">
+                    <input type="text" id="nomeGiocatoreInput-architects" class="player-input" data-lang-placeholder-key="playerNamePlaceholder" autocomplete="off">
+                    <div id="suggestions-architects" class="autocomplete-suggestions"></div>
+                </div>
                 <button id="aggiungiGiocatoreBtn-architects" data-lang-key="add"></button>
             </div>
              <div class="player-header">
@@ -516,7 +575,10 @@
             </div>
             <h2 data-lang-key="setupGameDuel"></h2>
             <div class="form-group form-group-column">
-                <input type="text" id="nomeGiocatoreInput-duel" class="player-input" data-lang-placeholder-key="playerNamePlaceholder">
+                <div class="autocomplete-container">
+                    <input type="text" id="nomeGiocatoreInput-duel" class="player-input" data-lang-placeholder-key="playerNamePlaceholder" autocomplete="off">
+                    <div id="suggestions-duel" class="autocomplete-suggestions"></div>
+                </div>
                 <button id="aggiungiGiocatoreBtn-duel" data-lang-key="add"></button>
             </div>
              <div class="player-header">
@@ -618,10 +680,6 @@
                 regolamentoLanding: document.getElementById('landingRegolamentoBtn'),
                 cronologiaLanding: document.getElementById('landingCronologiaBtn'),
                 statisticheLanding: document.getElementById('landingStatisticheBtn'),
-                backToHomeFromRules: document.getElementById('backToHomeFromRulesBtn'),
-                backToHomeFromHistory: document.getElementById('backToHomeFromHistoryBtn'),
-                backToHomeFromStats: document.getElementById('backToHomeFromStatsBtn'),
-                backToHomeFromGameSelect: document.getElementById('backToHomeFromGameSelectBtn'),
                 selectGame1ed: document.getElementById('select-game-1ed'),
                 selectGame2ed: document.getElementById('select-game-2ed'),
                 selectGameArchitects: document.getElementById('select-game-architects'),
@@ -788,6 +846,8 @@
             let onConfirmCallback = null;
             let currentPage = 1;
             const ITEMS_PER_PAGE = 10;
+            let statsCurrentPage = 1;
+            const STATS_ITEMS_PER_PAGE = 5;
 
             // ===============================================
             // B. LOGICA DI TRADUZIONE E MODALE
@@ -2657,58 +2717,84 @@
             function renderPlayerStats(fullHistory, allPlayers) {
                 const selectedPlayer = ui.statsPlayerFilter.value;
                 const selectedVersion = ui.statsGameVersionFilter.value;
-                
-                const playersToShow = selectedPlayer ? [selectedPlayer] : allPlayers;
-                ui.playerStatsContainer.innerHTML = '';
+            
+                // Resetta la pagina se i filtri cambiano
+                if (typeof renderPlayerStats.lastFilter !== 'undefined' && 
+                    (renderPlayerStats.lastFilter.player !== selectedPlayer || renderPlayerStats.lastFilter.version !== selectedVersion)) {
+                    statsCurrentPage = 1;
+                }
+                renderPlayerStats.lastFilter = { player: selectedPlayer, version: selectedVersion };
                 
                 let historyForPlayerStats = selectedVersion ? fullHistory.filter(g => g.gameVersion === selectedVersion) : fullHistory;
+                
+                let playersToShow = (selectedPlayer ? [selectedPlayer] : allPlayers)
+                    .map(playerName => {
+                        const playerGames = historyForPlayerStats.filter(g => g.giocatori.some(p => p.nome === playerName));
+                        if (playerGames.length === 0) return null;
             
-                playersToShow.forEach(playerName => {
-                    const playerGames = historyForPlayerStats.filter(g => g.giocatori.some(p => p.nome === playerName));
-                    if (playerGames.length > 0) {
                         let wins = 0, totalScore = 0, highestScoreInVersion = -Infinity, wonderCountsInVersion = {};
-            
                         playerGames.forEach(game => {
                             const p = game.giocatori.find(pl => pl.nome === playerName);
                             totalScore += p.totale;
                             if (p.totale > highestScoreInVersion) highestScoreInVersion = p.totale;
                             if (p.meraviglia) wonderCountsInVersion[p.meraviglia] = (wonderCountsInVersion[p.meraviglia] || 0) + 1;
-                            if (p.meraviglie) p.meraviglie.forEach(m => { if(m) wonderCountsInVersion[m] = (wonderCountsInVersion[m] || 0) + 1; });
-                            
-                            const sorted = [...game.giocatori].filter(pl => !pl.isFreeCity).sort((a,b) => b.totale - a.totale);
+                            if (p.meraviglie) p.meraviglie.forEach(m => { if (m) wonderCountsInVersion[m] = (wonderCountsInVersion[m] || 0) + 1; });
+                            const sorted = [...game.giocatori].filter(pl => !pl.isFreeCity).sort((a, b) => b.totale - a.totale);
                             if (sorted.length > 0 && sorted[0].nome === playerName) wins++;
                         });
-                        
                         const losses = playerGames.length - wins;
                         const mostUsedWonderData = Object.entries(wonderCountsInVersion).sort((a, b) => b[1] - a[1])[0] || [null, 0];
                         
-                        const playerCard = document.createElement('div');
-                        
-                        // Definiamo le stringhe HTML per le statistiche
-                        let wonLostHTML = '';
-                        let versionSpecificStatsHTML = '';
-
-                        // Popoliamo le stringhe solo se è stata selezionata una versione
-                        if (selectedVersion) {
-                            wonLostHTML = `<div class="stat-item"><span class="stat-label">${translations.wonLost[currentLanguage]}:</span> <span class="stat-value">${wins}/${losses}</span></div>`;
-                            versionSpecificStatsHTML = `
-                                <div class="stat-item"><span class="stat-label">${translations.highestScoreInVersion[currentLanguage]}:</span> <span class="stat-value">${highestScoreInVersion}</span></div>
-                                <div class="stat-item"><span class="stat-label">${translations.mostUsedWonderInVersion[currentLanguage]}:</span> <span class="stat-value">${getWonderName(mostUsedWonderData[0]) || 'N/A'} (${mostUsedWonderData[1]}x)</span></div>
-                            `;
-                        }
-
-                        // Assembliamo l'HTML finale nell'ordine desiderato
-                        playerCard.innerHTML = `
-                            <h4>${playerName}</h4>
-                            <div class="stat-item"><span class="stat-label">${translations.gamesPlayed[currentLanguage]}:</span> <span class="stat-value">${playerGames.length}</span></div>
-                            ${wonLostHTML}
-                            <div class="stat-item"><span class="stat-label">${translations.winRate[currentLanguage]}:</span> <span class="stat-value">${((wins / playerGames.length) * 100).toFixed(0)}%</span></div>
-                            <div class="stat-item"><span class="stat-label">${translations.avgScore[currentLanguage]}:</span> <span class="stat-value">${(totalScore / playerGames.length).toFixed(1)}</span></div>
-                            ${versionSpecificStatsHTML}
+                        return { playerName, playerGames, wins, losses, totalScore, highestScoreInVersion, mostUsedWonderData };
+                    }).filter(Boolean); // Rimuove i giocatori null (senza partite)
+            
+                ui.playerStatsContainer.innerHTML = '';
+                const paginationContainer = document.getElementById('stats-pagination');
+                paginationContainer.innerHTML = '';
+            
+                if (playersToShow.length === 0) return;
+            
+                const totalPages = Math.ceil(playersToShow.length / STATS_ITEMS_PER_PAGE);
+                const startIndex = (statsCurrentPage - 1) * STATS_ITEMS_PER_PAGE;
+                const paginatedItems = playersToShow.slice(startIndex, startIndex + STATS_ITEMS_PER_PAGE);
+                
+                paginatedItems.forEach(playerData => {
+                    const { playerName, playerGames, wins, losses, totalScore, highestScoreInVersion, mostUsedWonderData } = playerData;
+                    const playerCard = document.createElement('div');
+                    let wonLostHTML = '', versionSpecificStatsHTML = '';
+            
+                    if (selectedVersion) {
+                        wonLostHTML = `<div class="stat-item"><span class="stat-label">${translations.wonLost[currentLanguage]}:</span> <span class="stat-value">${wins}/${losses}</span></div>`;
+                        versionSpecificStatsHTML = `
+                            <div class="stat-item"><span class="stat-label">${translations.highestScoreInVersion[currentLanguage]}:</span> <span class="stat-value">${highestScoreInVersion}</span></div>
+                            <div class="stat-item"><span class="stat-label">${translations.mostUsedWonderInVersion[currentLanguage]}:</span> <span class="stat-value">${getWonderName(mostUsedWonderData[0]) || 'N/A'} (${mostUsedWonderData[1]}x)</span></div>
                         `;
-                        ui.playerStatsContainer.appendChild(playerCard);
                     }
+            
+                    playerCard.innerHTML = `
+                        <h4>${playerName}</h4>
+                        <div class="stat-item"><span class="stat-label">${translations.gamesPlayed[currentLanguage]}:</span> <span class="stat-value">${playerGames.length}</span></div>
+                        ${wonLostHTML}
+                        <div class="stat-item"><span class="stat-label">${translations.winRate[currentLanguage]}:</span> <span class="stat-value">${((wins / playerGames.length) * 100).toFixed(0)}%</span></div>
+                        <div class="stat-item"><span class="stat-label">${translations.avgScore[currentLanguage]}:</span> <span class="stat-value">${(totalScore / playerGames.length).toFixed(1)}</span></div>
+                        ${versionSpecificStatsHTML}
+                    `;
+                    ui.playerStatsContainer.appendChild(playerCard);
                 });
+            
+                if (totalPages > 1) {
+                    paginationContainer.innerHTML = `
+                        <button id="prevStatsPageBtn" class="bottone-grande" style="flex: 0.5;">&laquo;</button>
+                        <span style="font-size: 0.9em;">${statsCurrentPage} / ${totalPages}</span>
+                        <button id="nextStatsPageBtn" class="bottone-grande" style="flex: 0.5;">&raquo;</button>
+                    `;
+                    const prevBtn = document.getElementById('prevStatsPageBtn');
+                    const nextBtn = document.getElementById('nextStatsPageBtn');
+                    prevBtn.disabled = statsCurrentPage === 1;
+                    nextBtn.disabled = statsCurrentPage === totalPages;
+                    prevBtn.addEventListener('click', () => { statsCurrentPage--; renderPlayerStats(fullHistory, allPlayers); });
+                    nextBtn.addEventListener('click', () => { statsCurrentPage++; renderPlayerStats(fullHistory, allPlayers); });
+                }
             }
 
             function setupCollapsibleRules() {
@@ -2735,6 +2821,56 @@
             // J. INIZIALIZZAZIONE
             // ===============================================
             
+            function getAllPlayerNames() {
+                const history = getGameHistory();
+                const playersWithData = history.flatMap(g => g.giocatori.filter(p => p && p.nome && !p.isFreeCity));
+                const names = playersWithData.map(p => p.nome.trim());
+                return [...new Set(names)].sort();
+            }
+
+            function setupAutocomplete(inputId, suggestionsId, addPlayerFunction) {
+                const inputElement = document.getElementById(inputId);
+                const suggestionsElement = document.getElementById(suggestionsId);
+                let allNames = [];
+            
+                inputElement.addEventListener('focus', () => {
+                    allNames = getAllPlayerNames();
+                });
+            
+                inputElement.addEventListener('input', () => {
+                    const value = inputElement.value.toLowerCase();
+                    suggestionsElement.innerHTML = '';
+                    if (value.length === 0) {
+                        suggestionsElement.style.display = 'none';
+                        return;
+                    }
+            
+                    const filteredNames = allNames.filter(name => name.toLowerCase().includes(value));
+                    if (filteredNames.length > 0) {
+                        filteredNames.forEach(name => {
+                            const div = document.createElement('div');
+                            div.textContent = name;
+                            div.addEventListener('click', () => {
+                                inputElement.value = name;
+                                suggestionsElement.style.display = 'none';
+                                addPlayerFunction(); // Aggiunge il giocatore automaticamente
+                            });
+                            suggestionsElement.appendChild(div);
+                        });
+                        suggestionsElement.style.display = 'block';
+                    } else {
+                        suggestionsElement.style.display = 'none';
+                    }
+                });
+            
+                // Nasconde i suggerimenti quando si clicca altrove
+                document.addEventListener('click', (e) => {
+                    if (!e.target.closest('.autocomplete-container')) {
+                        suggestionsElement.style.display = 'none';
+                    }
+                });
+            }
+            
             function inizializzaApp() {
                 initializeTranslations();
                 mostraSezione('landing');
@@ -2748,12 +2884,10 @@
                 bottoni.regolamentoLanding.addEventListener('click', () => { setLanguage(currentLanguage); mostraSezione('regolamento'); });
                 bottoni.cronologiaLanding.addEventListener('click', () => { displayGameHistory(); mostraSezione('cronologia'); });
                 bottoni.statisticheLanding.addEventListener('click', () => { calculateAndDisplayStats(); mostraSezione('statistiche'); });
-            
-                bottoni.backToHomeFromRules.addEventListener('click', () => mostraSezione('landing'));
-                bottoni.backToHomeFromHistory.addEventListener('click', () => mostraSezione('landing'));
-                bottoni.backToHomeFromStats.addEventListener('click', () => mostraSezione('landing'));
-                bottoni.backToHomeFromGameSelect.addEventListener('click', () => mostraSezione('landing'));
-                
+
+                document.querySelectorAll('.back-to-home-top-btn').forEach(btn => {
+                    btn.addEventListener('click', () => mostraSezione('landing'));
+                });
                 document.querySelectorAll('.back-to-game-select').forEach(btn => {
                     btn.addEventListener('click', () => mostraSezione('selezioneGioco'));
                 });
@@ -2818,6 +2952,11 @@
                 ui.modal.cancelBtn.addEventListener('click', hideConfirmationModal);
                 ui.modal.confirmBtn.addEventListener('click', () => { if(onConfirmCallback) onConfirmCallback(); hideConfirmationModal(); });
                 ui.modal.overlay.addEventListener('click', (e) => { if(e.target === ui.modal.overlay) hideConfirmationModal(); });
+                
+                setupAutocomplete('nomeGiocatoreInput-1ed', 'suggestions-1ed', aggiungiGiocatore_1ed);
+                setupAutocomplete('nomeGiocatoreInput-2ed', 'suggestions-2ed', aggiungiGiocatore_2ed);
+                setupAutocomplete('nomeGiocatoreInput-architects', 'suggestions-architects', aggiungiGiocatore_architects);
+                setupAutocomplete('nomeGiocatoreInput-duel', 'suggestions-duel', aggiungiGiocatore_duel);
             }
 
             inizializzaApp();
