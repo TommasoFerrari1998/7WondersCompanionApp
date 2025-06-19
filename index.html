@@ -2413,19 +2413,30 @@
             }
 
             function condividiComeImmagine() {
-                const SHARE_WIDTH = 500; 
+                // 1. Definiamo le costanti per il foglio A6 e la qualità
+                // A6 è più piccolo, quindi riduciamo le dimensioni in pixel mantenendo le proporzioni
+                const A6_WIDTH = 700;
+                const A6_HEIGHT = 990; // 700 * 1.4142
 
-                const shareableContent = document.createElement('div');
-                shareableContent.style.width = `${SHARE_WIDTH}px`;
-                shareableContent.style.height = 'auto'; // Lascia che l'altezza si adatti al contenuto
-                shareableContent.style.padding = '30px';
-                shareableContent.style.backgroundColor = getComputedStyle(document.documentElement).getPropertyValue('--colore-sfondo');
-                shareableContent.style.fontFamily = "'Roboto', sans-serif";
-                shareableContent.style.color = getComputedStyle(document.documentElement).getPropertyValue('--colore-testo');
-                shareableContent.style.boxSizing = 'border-box';
-                shareableContent.style.display = 'flex';
-                shareableContent.style.flexDirection = 'column';
+                // 2. Creiamo il contenitore esterno (il "foglio" A6)
+                const a6Sheet = document.createElement('div');
+                a6Sheet.style.width = `${A6_WIDTH}px`;
+                a6Sheet.style.height = `${A6_HEIGHT}px`;
+                a6Sheet.style.backgroundColor = getComputedStyle(document.documentElement).getPropertyValue('--colore-sfondo');
+                a6Sheet.style.overflow = 'hidden';
 
+                // 3. Creiamo un contenitore interno con Flexbox per la struttura verticale generale
+                const contentHolder = document.createElement('div');
+                contentHolder.style.width = '100%';
+                contentHolder.style.height = '100%';
+                contentHolder.style.fontFamily = "'Roboto', sans-serif";
+                contentHolder.style.color = getComputedStyle(document.documentElement).getPropertyValue('--colore-testo');
+                contentHolder.style.boxSizing = 'border-box';
+                contentHolder.style.display = 'flex';
+                contentHolder.style.flexDirection = 'column';
+                contentHolder.style.padding = '30px';
+                
+                // 4. Clona e applica stili agli elementi base (logo, titolo)
                 let logoSrc;
                 switch(datiPartita.gameVersion){
                     case '1ed': logoSrc = 'https://i.postimg.cc/8zKZnZ89/pngegg.png'; break;
@@ -2437,39 +2448,90 @@
                 
                 const logo = document.createElement('img');
                 logo.src = logoSrc;
-                logo.style.maxWidth = '60%';
-                logo.style.maxHeight = '100px';
-                logo.style.margin = '0 auto 20px auto';
                 logo.style.display = 'block';
                 logo.style.objectFit = 'contain';
+                logo.style.flexShrink = '0';
+                logo.style.width = 'auto';
+                logo.style.maxHeight = '80px'; // Leggermente più piccolo per il formato A6
+                logo.style.alignSelf = 'center';
+                logo.style.marginBottom = '15px';
 
-                // Clona solo il contenuto necessario
-                const resultsContent = document.getElementById('lista-classifica').cloneNode(true);
                 const headerInfo = document.querySelector('#risultati-sezione .header-info').cloneNode(true);
                 const title = document.querySelector('#risultati-sezione h2').cloneNode(true);
+                headerInfo.style.flexShrink = '0';
+                title.style.flexShrink = '0';
 
-                shareableContent.appendChild(logo);
-                shareableContent.appendChild(headerInfo);
-                shareableContent.appendChild(title);
-                shareableContent.appendChild(resultsContent);
+                // 5. Logica per la disposizione in pila e l'ingrandimento dei campi punteggio
+                const resultsContent = document.getElementById('lista-classifica').cloneNode(true);
+                resultsContent.style.flexGrow = '1';
+                resultsContent.style.marginTop = '15px';
+                resultsContent.style.display = 'flex';
+                resultsContent.style.flexDirection = 'column';
+                resultsContent.style.gap = '15px';
+
+                const resultItems = Array.from(resultsContent.children);
+                if (resultItems.length > 0) {
+                    resultItems.forEach(item => {
+                        item.style.flexGrow = '1';
+                        item.style.display = 'flex';
+                        item.style.flexDirection = 'column';
+
+                        const breakdownArea = item.querySelector('.risultato-breakdown');
+                        if (breakdownArea) {
+                            breakdownArea.style.flexGrow = '1';
+                            breakdownArea.style.alignContent = 'center';
+                            breakdownArea.style.justifyContent = 'center';
+                            breakdownArea.style.padding = '10px 0';
+
+                            const scoreBubbles = breakdownArea.querySelectorAll('.breakdown-item');
+                            // Riduciamo leggermente la dimensione per adattarla al formato più piccolo
+                            scoreBubbles.forEach(bubble => {
+                                bubble.style.fontSize = '1.8em';
+                                bubble.style.padding = '8px 12px';
+                                bubble.style.borderRadius = '10px';
+                                bubble.style.margin = '5px';
+                            });
+                        }
+                        
+                        const teamDetailArea = item.querySelector('.dettaglio-squadra');
+                        if(teamDetailArea){
+                            teamDetailArea.style.flexGrow = '1';
+                            teamDetailArea.style.display = 'flex';
+                            teamDetailArea.style.flexDirection = 'column';
+                            teamDetailArea.style.justifyContent = 'space-around';
+                        }
+                    });
+                }
                 
-                // Aggiungi il container temporaneo al body per il rendering
-                document.body.appendChild(shareableContent);
+                contentHolder.appendChild(logo);
+                contentHolder.appendChild(headerInfo);
+                contentHolder.appendChild(title);
+                contentHolder.appendChild(resultsContent);
+                
+                a6Sheet.appendChild(contentHolder);
+                
+                // 6. Posizioniamo il foglio off-screen per il rendering
+                a6Sheet.style.position = 'absolute';
+                a6Sheet.style.left = '-9999px';
+                a6Sheet.style.top = '0px';
+                document.body.appendChild(a6Sheet);
 
-                html2canvas(shareableContent, {
-                    scale: 2, // Aumenta la risoluzione
-                    backgroundColor: null,
+                // 7. Genera l'immagine usando le nuove dimensioni A6
+                html2canvas(a6Sheet, {
+                    scale: 1,
                     useCORS: true,
-                    // Non è necessario specificare width/height qui, le prenderà dall'elemento
+                    width: A6_WIDTH,
+                    height: A6_HEIGHT
                 }).then(canvas => {
                     const link = document.createElement('a');
-                    link.download = `7wonders-results-${Date.now()}.png`;
+                    // Aggiorniamo il nome del file per riflettere il nuovo formato
+                    link.download = `7wonders-results-enlarged-A6-${Date.now()}.png`;
                     link.href = canvas.toDataURL('image/png');
                     link.click();
-                    document.body.removeChild(shareableContent); // Pulisce il DOM
+                    document.body.removeChild(a6Sheet);
                 }).catch(err => {
                     console.error("Errore durante la generazione dell'immagine:", err);
-                    document.body.removeChild(shareableContent); // Pulisce anche in caso di errore
+                    document.body.removeChild(a6Sheet);
                 });
             }
 
