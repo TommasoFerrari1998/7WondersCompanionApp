@@ -261,6 +261,9 @@
                 <button id="landingCronologiaBtn" class="bottone-grande" data-lang-key="gameHistory"></button>
                 <button id="landingStatisticheBtn" class="bottone-grande" data-lang-key="statistics"></button>
                 <button id="landingRegolamentoBtn" class="bottone-grande" data-lang-key="rulesClarifications"></button>
+                <button id="exportDataBtn" class="bottone-grande" data-lang-key="exportData"></button>
+                <label for="importDataInput" id="importDataBtn" class="bottone-grande" data-lang-key="importData" style="cursor: pointer; display: flex; justify-content: center; align-items: center;"></label>
+                <input type="file" id="importDataInput" accept=".json" class="hidden">
             </div>
             <div id="support-section">
                 <a href="https://paypal.me/TFerrari308" target="_blank" id="paypal-btn">
@@ -1160,7 +1163,13 @@
                             "The Tower symbol that appears on the stages of the Great Wall of China indicates that you can build the stages of this wonder in any order you prefer.",
                             "If the player who owns Manneken Pis is adjacent to Siracusa or the Great Wall of China, they can choose which stage to copy. They can also copy the same stage twice."
                         ]
-                    }
+                    },
+                    exportData: { it: 'Esporta Dati', en: 'Export Data' },
+                    importData: { it: 'Importa Dati', en: 'Import Data' },
+                    exportNoData: { it: 'Nessun dato da esportare.', en: 'No data to export.' },
+                    importConfirm: { it: 'Questo sovrascriverà tutti i dati esistenti sulla cronologia e le statistiche. Sei sicuro?', en: 'This will overwrite all existing history and statistics data. Are you sure?' },
+                    importSuccess: { it: 'Dati importati con successo!', en: 'Data imported successfully!' },
+                    importError: { it: 'Errore durante l\'importazione. Assicurati che il file sia un backup JSON valido.', en: 'Error during import. Ensure the file is a valid JSON backup.' },
                 };
             }
             
@@ -2412,6 +2421,79 @@
                 });
             }
 
+            // ===================================================
+            // NUOVE FUNZIONI PER IMPORT/EXPORT
+            // ===================================================
+
+            function exportData() {
+                try {
+                    const historyJSON = localStorage.getItem('7wondersGameHistory');
+                    if (!historyJSON || historyJSON === '[]') {
+                        alert(translations.exportNoData[currentLanguage]);
+                        return;
+                    }
+
+                    const blob = new Blob([historyJSON], { type: 'application/json' });
+                    const url = URL.createObjectURL(blob);
+                    const a = document.createElement('a');
+                    
+                    const date = new Date().toISOString().slice(0, 10); // Formato YYYY-MM-DD
+                    a.href = url;
+                    a.download = `7wonders_scores_backup_${date}.json`;
+                    document.body.appendChild(a);
+                    a.click();
+                    
+                    // Cleanup
+                    document.body.removeChild(a);
+                    URL.revokeObjectURL(url);
+                } catch (e) {
+                    console.error("Failed to export data:", e);
+                    alert("An error occurred during export.");
+                }
+            }
+
+            function importData(event) {
+                const file = event.target.files[0];
+                if (!file) {
+                    return;
+                }
+
+                const reader = new FileReader();
+                reader.onload = (e) => {
+                    try {
+                        const importedData = JSON.parse(e.target.result);
+
+                        // Validazione fondamentale per assicurarsi che il file sia corretto
+                        if (!Array.isArray(importedData)) {
+                             throw new Error("Data is not an array.");
+                        }
+                        if (importedData.length > 0 && typeof importedData[0].idPartita === 'undefined') {
+                            throw new Error("Data does not seem to be a valid game history file.");
+                        }
+                        
+                        // Chiedi conferma all'utente prima di sovrascrivere
+                        showConfirmationModal(translations.importConfirm[currentLanguage], () => {
+                            localStorage.setItem('7wondersGameHistory', JSON.stringify(importedData));
+                            
+                            // Aggiorna la UI per mostrare i nuovi dati
+                            displayGameHistory(); 
+                            calculateAndDisplayStats();
+                            
+                            alert(translations.importSuccess[currentLanguage]);
+                        });
+
+                    } catch (error) {
+                        console.error("Import failed:", error);
+                        alert(translations.importError[currentLanguage]);
+                    } finally {
+                        // Resetta il valore dell'input. Questo è importante per far sì che 
+                        // l'evento 'change' si attivi anche se l'utente seleziona lo stesso file di nuovo.
+                        event.target.value = '';
+                    }
+                };
+                reader.readAsText(file);
+            }
+
             
             // ===============================================
             // I. LOGICA CRONOLOGIA E STATISTICHE
@@ -2957,6 +3039,9 @@
                 setupAutocomplete('nomeGiocatoreInput-2ed', 'suggestions-2ed', aggiungiGiocatore_2ed);
                 setupAutocomplete('nomeGiocatoreInput-architects', 'suggestions-architects', aggiungiGiocatore_architects);
                 setupAutocomplete('nomeGiocatoreInput-duel', 'suggestions-duel', aggiungiGiocatore_duel);
+
+                document.getElementById('exportDataBtn').addEventListener('click', exportData);
+                document.getElementById('importDataInput').addEventListener('change', importData);
             }
 
             inizializzaApp();
