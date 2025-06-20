@@ -20,7 +20,7 @@
             --colore-argento: #c0c0c0; --colore-bronzo: #cd7f32;
         }
 
-        body { font-family: 'Roboto', sans-serif; background-color: var(--colore-sfondo); color: var(--colore-testo); margin: 0; padding: 20px; display: flex; justify-content: center; align-items: flex-start; min-height: 100vh; }
+        body { font-family: 'Roboto', sans-serif; background-color: var(--colore-sfondo); color: var(--colore-testo); margin: 0; padding: 20px; display: flex; justify-content: center; align-items: flex-start; min-height: 100vh; animation: fadeInUp 0.6s ease-out forwards; }
         main { width: 100%; max-width: 550px; background-color: var(--colore-superficie); padding: 25px 30px; border-radius: 12px; box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2); box-sizing: border-box; }
         .logo { display: block; margin: 0 auto 20px auto; max-width: 80%; height: auto; text-align: center; }
         .logo-container { text-align: center; margin-bottom: 20px; }
@@ -71,7 +71,7 @@
         .form-group-column { flex-direction: column; }
         .player-input, .location-input, select { width: 100%; padding: 12px; border: 1px solid #444; border-radius: 8px; background-color: #333; color: var(--colore-testo); font-size: 16px; box-sizing: border-box; }
         .players-list { list-style: none; padding: 0; }
-        .giocatore-setup-item { display: flex; flex-wrap: nowrap; align-items: center; justify-content: space-between; gap: 10px; background-color: #383838; padding: 10px 15px; border-radius: 6px; margin-bottom: 8px; font-size: 18px; }
+        .giocatore-setup-item { display: flex; flex-wrap: nowrap; align-items: center; justify-content: space-between; gap: 10px; background-color: #383838; padding: 10px 15px; border-radius: 6px; margin-bottom: 8px; font-size: 18px; animation: slideInDown 0.4s ease-out forwards; }
         .nome-giocatore-input { background: none; border: none; color: var(--colore-testo); font-weight: bold; font-size: 18px; font-family: 'Roboto', sans-serif; flex-grow: 1; padding: 5px; border-radius: 4px; }
         .nome-giocatore-input:focus { outline: none; background-color: rgba(255, 255, 255, 0.1); }
         .nome-giocatore-input:disabled { color: var(--colore-testo-fioco); cursor: not-allowed; }
@@ -124,7 +124,7 @@
         .risultato-squadra.vincitore .nome, .risultato-giocatore.vincitore .nome { color: var(--colore-oro); }
         .tie-breaker { font-size: 0.7em; font-weight: normal; color: var(--colore-testo-fioco); margin-left: 5px; }
         .risultato-breakdown { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 15px; padding-top: 15px; border-top: 1px solid #444; }
-        .breakdown-item { background-color: #2c2c2c; padding: 4px 8px; border-radius: 5px; font-size: 14px; cursor: help; }
+        .breakdown-item { background-color: #2c2c2c; padding: 4px 8px; border-radius: 5px; font-size: 14px; cursor: help; animation: popIn 0.4s ease-out forwards; opacity: 0; }
         .dettaglio-squadra { margin-top: 15px; padding-top: 15px; border-top: 1px solid #444; font-size: 0.9em; display: flex; flex-direction: column; gap: 15px; }
         .dettaglio-giocatore-individuale { background-color: #2c2c2c; padding: 10px; border-radius: 6px; }
         .dettaglio-giocatore-individuale .risultato-header { font-size: 16px; }
@@ -282,6 +282,40 @@
         .icona-bottone {
             margin-right: 10px; /* Spazio tra icona e testo */
             font-size: 1.2em; /* Rende l'icona leggermente più grande del testo */
+        }
+
+        /* Keyframes per le Animazioni */
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes slideInDown {
+            from {
+                opacity: 0;
+                transform: translateY(-15px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes popIn {
+            from {
+                opacity: 0;
+                transform: scale(0.5);
+            }
+            to {
+                opacity: 1;
+                transform: scale(1);
+            }
         }
     </style>
 </head>
@@ -980,7 +1014,7 @@
                     rulesClarifications: { it: 'Chiarimenti sul regolamento', en: 'Rules Clarifications' },
                     gameHistory: { it: 'Cronologia Partite', en: 'Game History' },
                     statistics: { it: 'Statistiche', en: 'Statistics' },
-                    supportProject: { it: 'Supporta il Progetto', en: 'Support the Project' },
+                    supportProject: { it: 'Supporta il progetto', en: 'Support the project' },
                     creditsText: { 
                         it: 'Sviluppato nel 2025 da Tommaso Ferrari. <br>Email: <a href="mailto:tommy.ferrari98@gmail.com">tommy.ferrari98@gmail.com</a> | Versione 1.0',
                         en: 'Developed in 2025 by Tommaso Ferrari. <br>Email: <a href="mailto:tommy.ferrari98@gmail.com">tommy.ferrari98@gmail.com</a> | Version 1.0'
@@ -1058,7 +1092,7 @@
                     mostPlayedWonder: { it: 'Meraviglia più giocata', en: 'Most Played Wonder' },
                     mostWinningPlayer: { it: 'Giocatore più vincente', en: 'Most Winning Player' },
                     highestScore: { it: 'Punteggio più alto', en: 'Highest Score' },
-                    selectPlayer: { it: 'Seleziona un giocatore', en: 'Select a player' },
+                    selectPlayer: { it: 'Tutti i giocatori', en: 'All players' },
                     selectGame: { it: 'Filtra per versione', en: 'Filter by version' },
                     allGames: { it: 'Tutti le versioni', en: 'All games' },
                     gamesPlayed: { it: 'Partite giocate', en: 'Games Played' },
@@ -1331,7 +1365,7 @@
             
             function aggiornaListaGiocatoriUI_1ed() {
                 updateExpansions_1ed(); 
-                
+
                 const freeCityName = translations.freeCity[currentLanguage];
                 const realPlayerCount = datiPartita.giocatori.filter(g => !g.isFreeCity).length;
                 const hasFreeCity = datiPartita.giocatori.some(g => g.nome === freeCityName);
@@ -1345,6 +1379,9 @@
                 setup1ed.ui.listaGiocatori.innerHTML = '';
                 const wondersDisponibili = getWondersDisponibili_1ed();
                 const teamPlayActive = setup1ed.inputs.teamPlay.checked;
+                
+                // Ottieni le meraviglie già prese da altri giocatori
+                const selectedWonders = datiPartita.giocatori.map(p => p.meraviglia).filter(Boolean);
                 
                 datiPartita.giocatori.forEach((g, index) => {
                     const li = document.createElement('li');
@@ -1384,9 +1421,18 @@
                         o.value = w; 
                         o.textContent = getWonderName(w); 
                         if (g.meraviglia === w) o.selected = true; 
+                        
+                        // Disabilita la meraviglia se selezionata da un altro giocatore
+                        if (selectedWonders.includes(w) && g.meraviglia !== w) {
+                            o.disabled = true;
+                        }
+                        
                         selectEl.appendChild(o); 
                     });
-                    selectEl.addEventListener('change', (e) => { g.meraviglia = e.target.value; });
+                    selectEl.addEventListener('change', (e) => { 
+                        g.meraviglia = e.target.value;
+                        aggiornaListaGiocatoriUI_1ed(); // Ricarica la UI per aggiornare le opzioni disabilitate
+                    });
                     li.appendChild(selectEl); 
                     
                     const deleteBtn = document.createElement('button');
@@ -1510,6 +1556,10 @@
                 setup2ed.ui.listaGiocatori.innerHTML = '';
                 const wondersDisponibili = getWondersDisponibili_2ed();
                 const teamPlayActive = setup2ed.inputs.teamPlay.checked;
+                
+                // Ottieni le meraviglie già prese da altri giocatori
+                const selectedWonders = datiPartita.giocatori.map(p => p.meraviglia).filter(Boolean);
+
                 datiPartita.giocatori.forEach((g, index) => {
                     const li = document.createElement('li');
                     li.className = 'giocatore-setup-item';
@@ -1542,9 +1592,18 @@
                         o.value = w; 
                         o.textContent = getWonderName(w); 
                         if (g.meraviglia === w) o.selected = true; 
+                        
+                        // Disabilita la meraviglia se selezionata da un altro giocatore
+                        if (selectedWonders.includes(w) && g.meraviglia !== w) {
+                            o.disabled = true;
+                        }
+
                         selectEl.appendChild(o); 
                     });
-                    selectEl.addEventListener('change', (e) => { g.meraviglia = e.target.value; });
+                    selectEl.addEventListener('change', (e) => { 
+                        g.meraviglia = e.target.value; 
+                        aggiornaListaGiocatoriUI_2ed(); // Ricarica la UI per aggiornare le opzioni disabilitate
+                    });
                     li.appendChild(selectEl); 
                     
                     const deleteBtn = document.createElement('button');
@@ -1652,6 +1711,9 @@
                 setupArchitects.ui.listaGiocatori.innerHTML = '';
                 const wondersDisponibili = getWondersDisponibili_architects();
                 
+                // Ottieni le meraviglie già prese da altri giocatori
+                const selectedWonders = datiPartita.giocatori.map(p => p.meraviglia).filter(Boolean);
+
                 datiPartita.giocatori.forEach((g, index) => {
                     const li = document.createElement('li');
                     li.className = 'giocatore-setup-item';
@@ -1674,9 +1736,18 @@
                         o.value = w; 
                         o.textContent = getWonderName(w); 
                         if (g.meraviglia === w) o.selected = true; 
+                        
+                        // Disabilita la meraviglia se selezionata da un altro giocatore
+                        if (selectedWonders.includes(w) && g.meraviglia !== w) {
+                            o.disabled = true;
+                        }
+                        
                         selectEl.appendChild(o); 
                     });
-                    selectEl.addEventListener('change', (e) => { g.meraviglia = e.target.value; });
+                    selectEl.addEventListener('change', (e) => { 
+                        g.meraviglia = e.target.value; 
+                        aggiornaListaGiocatoriUI_architects(); // Ricarica la UI per aggiornare le opzioni disabilitate
+                    });
                     li.appendChild(selectEl); 
                     
                     const deleteBtn = document.createElement('button');
@@ -1784,6 +1855,9 @@
                 updateExpansions_duel();
                 setupDuel.ui.listaGiocatori.innerHTML = '';
                 
+                // Ottieni tutte le meraviglie già prese da entrambi i giocatori
+                const allSelectedWonders = datiPartita.giocatori.flatMap(g => g.meraviglie || []).filter(Boolean);
+
                 datiPartita.giocatori.forEach((g, playerIndex) => {
                     const li = document.createElement('li');
                     li.className = 'giocatore-setup-item form-group-column';
@@ -1824,16 +1898,26 @@
                          selectEl.className = 'wonder-select'; 
                          selectEl.innerHTML = `<option value="">${translations.chooseWonder[currentLanguage]} #${i + 1}</option>`;
                          const wondersDisponibili = getWondersDisponibili_duel();
+                         
+                         const currentWonderForThisDropdown = g.meraviglie ? g.meraviglie[i] : null;
+
                          wondersDisponibili.forEach(w => { 
                              const o = document.createElement('option'); 
                              o.value = w; 
                              o.textContent = getWonderName(w); 
-                             if (g.meraviglie && g.meraviglie[i] === w) o.selected = true; 
+                             if (currentWonderForThisDropdown && currentWonderForThisDropdown === w) o.selected = true; 
+
+                             // Disabilita la meraviglia se è già stata selezionata in un altro slot
+                             if (allSelectedWonders.includes(w) && currentWonderForThisDropdown !== w) {
+                                o.disabled = true;
+                             }
+                             
                              selectEl.appendChild(o); 
                          });
                          selectEl.addEventListener('change', (e) => { 
-                             if (!g.meraviglie) g.meraviglie = [];
+                             if (!g.meraviglie) g.meraviglie = [null, null, null, null];
                              g.meraviglie[i] = e.target.value; 
+                             aggiornaListaGiocatoriUI_duel(); // Ricarica la UI per aggiornare tutti i menu a tendina
                          });
                          wondersContainer.appendChild(selectEl);
                     }
@@ -1848,6 +1932,7 @@
                 setupDuel.bottoni.randomWonder.disabled = num !== 2;
                 aggiornaBottoniVittoriaIstantanea_duel();
             }
+            
              function assegnaMeraviglieCasuali_duel() {
                 const numGiocatori = datiPartita.giocatori.length;
                 if (numGiocatori !== 2) return;
@@ -2392,7 +2477,7 @@
             function createBreakdownDiv(entity) {
                 const div = document.createElement('div');
                 div.className = 'risultato-breakdown';
-                datiPartita.categoriePartita.forEach(cat => {
+                datiPartita.categoriePartita.forEach((cat, index) => { // <-- Aggiunto index
                     if (cat.key === 'wonderStages') return;
 
                     let pCat = 0;
@@ -2407,7 +2492,8 @@
                     const firstSpaceIndex = cat.label.indexOf(' ');
                     const icon = cat.label.substring(0, firstSpaceIndex);
                     const name = translations[cat.langKey] ? translations[cat.langKey][currentLanguage] : cat.label;
-                    div.innerHTML += `<span class="breakdown-item" title="${name}">${icon} ${pCat}</span>`;
+                    // Aggiunto l'attributo style per il ritardo dell'animazione
+                    div.innerHTML += `<span class="breakdown-item" title="${name}" style="animation-delay: ${index * 50}ms;">${icon} ${pCat}</span>`;
                 });
                 return div;
             }
