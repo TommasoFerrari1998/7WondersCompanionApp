@@ -1092,6 +1092,7 @@
                     mostPlayedWonder: { it: 'Meraviglia più giocata', en: 'Most Played Wonder' },
                     mostWinningPlayer: { it: 'Giocatore più vincente', en: 'Most Winning Player' },
                     highestScore: { it: 'Punteggio più alto', en: 'Highest Score' },
+                    lowestScore: { it: 'Punteggio più basso💩', en: 'Lowest Score💩' },
                     selectPlayer: { it: 'Tutti i giocatori', en: 'All players' },
                     selectGame: { it: 'Filtra per versione', en: 'Filter by version' },
                     allGames: { it: 'Tutti le versioni', en: 'All games' },
@@ -2979,11 +2980,13 @@
                 populateSelect(ui.overallStatsGameFilter, gameVersions.map(v => ({value: v, text: v, isVersion: true})), translations.allGames[currentLanguage]);
                 populateSelect(ui.statsGameVersionFilter, gameVersions.map(v => ({value: v, text: v, isVersion: true})), translations.allGames[currentLanguage]);
                 populateSelect(ui.statsPlayerFilter, allPlayers.map(p => ({value: p, text: p, isVersion: false})), translations.selectPlayer[currentLanguage]);
+
+                const allTimeRecords = calculateAllTimeCategoryRecords(history);
                 
                 const renderAllStats = () => {
                     const overallVersion = ui.overallStatsGameFilter.value;
                     renderOverallStats(overallVersion ? history.filter(g => g.gameVersion === overallVersion) : history);
-                    renderPlayerStats(history, allPlayers);
+                    renderPlayerStats(history, allPlayers, allTimeRecords);
                 };
                 
                 // Rimuovi e ri-aggiungi listener per evitare duplicati
@@ -3000,6 +3003,70 @@
             
                 renderAllStats();
             }
+
+            function calculateAllTimeCategoryRecords(history) {
+                const records = {};
+                const allGameCategories = { '1ed': CATEGORIE_1ED, '2ed': CATEGORIE_2ED, 'architects': CATEGORIE_ARCHITECTS, 'duel': CATEGORIE_DUEL };
+
+                history.forEach(game => {
+                    const gameVersion = game.gameVersion;
+                    if (!records[gameVersion]) records[gameVersion] = {};
+
+                    game.giocatori.forEach(player => {
+                        if (player.isFreeCity) return;
+
+                        Object.keys(player.punteggi).forEach(catKey => {
+                            // Ignora chiavi che non sono categorie dirette di punteggio
+                            if (catKey === 'puntiTesoro' || catKey === 'puntiScienza' || catKey === 'wonderStages') return;
+                            
+                            let currentScore = 0;
+                            if (catKey === 'scienza' && (gameVersion === '1ed' || gameVersion === '2ed')) {
+                                currentScore = player.punteggi.puntiScienza || 0;
+                            } else if (catKey === 'tesoro' && ['1ed', '2ed', 'duel'].includes(gameVersion)) {
+                                currentScore = player.punteggi.puntiTesoro || 0;
+                            } else {
+                                currentScore = player.punteggi[catKey] || 0;
+                            }
+
+                            const categoryDef = (allGameCategories[gameVersion] || []).find(c => c.key === catKey);
+                            if (!categoryDef) return;
+
+                            const icon = categoryDef.label.split(' ')[0];
+                            const recordKey = `${catKey}|${icon}`;
+
+                            // --- LOGICA MODIFICATA ---
+                            // Se la categoria è 'debiti', cerchiamo il punteggio più basso (più negativo).
+                            if (catKey === 'debiti') {
+                                if (!records[gameVersion][recordKey] || currentScore < records[gameVersion][recordKey].score) {
+                                    records[gameVersion][recordKey] = {
+                                        score: currentScore,
+                                        players: [player.nome],
+                                        langKey: categoryDef.langKey
+                                    };
+                                } else if (currentScore === records[gameVersion][recordKey].score) {
+                                    if (!records[gameVersion][recordKey].players.includes(player.nome)) {
+                                        records[gameVersion][recordKey].players.push(player.nome);
+                                    }
+                                }
+                            } else {
+                                // Altrimenti, per tutte le altre categorie, cerchiamo il punteggio più alto.
+                                if (!records[gameVersion][recordKey] || currentScore > records[gameVersion][recordKey].score) {
+                                    records[gameVersion][recordKey] = {
+                                        score: currentScore,
+                                        players: [player.nome],
+                                        langKey: categoryDef.langKey
+                                    };
+                                } else if (currentScore === records[gameVersion][recordKey].score) {
+                                    if (!records[gameVersion][recordKey].players.includes(player.nome)) {
+                                        records[gameVersion][recordKey].players.push(player.nome);
+                                    }
+                                }
+                            }
+                        });
+                    });
+                });
+                return records;
+            }
             
             function renderOverallStats(filteredHistory) {
                 if (filteredHistory.length === 0) {
@@ -3007,32 +3074,64 @@
                     return;
                 }
             
-                let wonderCounts = {}, playerWins = {}, highestScore = { score: -Infinity, player: '' };
+                let wonderCounts = {}, playerWins = {}, 
+                    highestScore = { score: -Infinity, players: [] },
+                    lowestScore = { score: Infinity, players: [] };
             
                 filteredHistory.forEach(game => {
                     game.giocatori.forEach(player => {
                         if (player.isFreeCity) return;
+
+                        // Aggiorna conteggio meraviglie
                         if (player.meraviglia) wonderCounts[player.meraviglia] = (wonderCounts[player.meraviglia] || 0) + 1;
                         if (player.meraviglie) player.meraviglie.forEach(m => { if(m) wonderCounts[m] = (wonderCounts[m] || 0) + 1; });
-                        if (player.totale > highestScore.score) highestScore = { score: player.totale, player: player.nome };
+                        
+                        // Controlla per il punteggio più alto
+                        if (player.totale > highestScore.score) {
+                            highestScore = { score: player.totale, players: [player.nome] };
+                        } else if (player.totale === highestScore.score) {
+                            highestScore.players.push(player.nome);
+                        }
+
+                        // Controlla per il punteggio più basso
+                        if (player.totale < lowestScore.score) {
+                            lowestScore = { score: player.totale, players: [player.nome] };
+                        } else if (player.totale === lowestScore.score) {
+                            lowestScore.players.push(player.nome);
+                        }
                     });
             
                     const sortedPlayers = [...game.giocatori].filter(p => !p.isFreeCity).sort((a,b) => b.totale - a.totale);
-                    if(sortedPlayers.length > 0) playerWins[sortedPlayers[0].nome] = (playerWins[sortedPlayers[0].nome] || 0) + 1;
+                    if(sortedPlayers.length > 0) {
+                        const winnerScore = sortedPlayers[0].totale;
+                        const winners = sortedPlayers.filter(p => p.totale === winnerScore);
+                        winners.forEach(w => {
+                            playerWins[w.nome] = (playerWins[w.nome] || 0) + 1;
+                        });
+                    }
                 });
             
                 const mostPlayedWonder = Object.entries(wonderCounts).sort((a,b) => b[1] - a[1])[0] || ['N/A', 0];
-                const mostWinningPlayer = Object.entries(playerWins).sort((a,b) => b[1] - a[1])[0] || ['N/A', 0];
-            
+                
+                // Trova il giocatore (o i giocatori) più vincente/i
+                const winsEntries = Object.entries(playerWins);
+                let mostWinningPlayers = [];
+                let maxWins = 0;
+                if (winsEntries.length > 0) {
+                    maxWins = Math.max(...winsEntries.map(entry => entry[1]));
+                    mostWinningPlayers = winsEntries.filter(entry => entry[1] === maxWins).map(entry => entry[0]);
+                }
+
                 ui.overallStatsContainer.innerHTML = `
                     <div class="stat-item"><span class="stat-label">${translations.totalGames[currentLanguage]}:</span> <span class="stat-value">${filteredHistory.length}</span></div>
                     <div class="stat-item"><span class="stat-label">${translations.mostPlayedWonder[currentLanguage]}:</span> <span class="stat-value">${getWonderName(mostPlayedWonder[0])} (${mostPlayedWonder[1]}x)</span></div>
-                    <div class="stat-item"><span class="stat-label">${translations.mostWinningPlayer[currentLanguage]}:</span> <span class="stat-value">${mostWinningPlayer[0]} (${mostWinningPlayer[1]} ${translations.wins[currentLanguage]})</span></div>
-                    <div class="stat-item"><span class="stat-label">${translations.highestScore[currentLanguage]}:</span> <span class="stat-value">${highestScore.score > -Infinity ? `${highestScore.score} (${highestScore.player})` : 'N/A'}</span></div>
+                    <div class="stat-item"><span class="stat-label">${translations.mostWinningPlayer[currentLanguage]}:</span> <span class="stat-value">${mostWinningPlayers.join(', ') || 'N/A'} (${maxWins} ${translations.wins[currentLanguage]})</span></div>
+                    <div class="stat-item"><span class="stat-label">${translations.highestScore[currentLanguage]}:</span> <span class="stat-value">${highestScore.score > -Infinity ? `${highestScore.score} (${highestScore.players.join(', ')})` : 'N/A'}</span></div>
+                    <div class="stat-item"><span class="stat-label">${translations.lowestScore[currentLanguage]}:</span> <span class="stat-value">${lowestScore.score < Infinity ? `${lowestScore.score} (${lowestScore.players.join(', ')})` : 'N/A'}</span></div>
                 `;
             }
             
-            function renderPlayerStats(fullHistory, allPlayers) {
+            function renderPlayerStats(fullHistory, allPlayers, allTimeRecords) {
                 const selectedPlayer = ui.statsPlayerFilter.value;
                 const selectedVersion = ui.statsGameVersionFilter.value;
             
@@ -3057,8 +3156,15 @@
                             if (p.totale > highestScoreInVersion) highestScoreInVersion = p.totale;
                             if (p.meraviglia) wonderCountsInVersion[p.meraviglia] = (wonderCountsInVersion[p.meraviglia] || 0) + 1;
                             if (p.meraviglie) p.meraviglie.forEach(m => { if (m) wonderCountsInVersion[m] = (wonderCountsInVersion[m] || 0) + 1; });
+                            
                             const sorted = [...game.giocatori].filter(pl => !pl.isFreeCity).sort((a, b) => b.totale - a.totale);
-                            if (sorted.length > 0 && sorted[0].nome === playerName) wins++;
+                            if (sorted.length > 0) {
+                                const winnerScore = sorted[0].totale;
+                                const winners = sorted.filter(p => p.totale === winnerScore);
+                                if(winners.some(w => w.nome === playerName)) {
+                                    wins++;
+                                }
+                            }
                         });
                         const losses = playerGames.length - wins;
                         const mostUsedWonderData = Object.entries(wonderCountsInVersion).sort((a, b) => b[1] - a[1])[0] || [null, 0];
@@ -3079,7 +3185,18 @@
                 paginatedItems.forEach(playerData => {
                     const { playerName, playerGames, wins, losses, totalScore, highestScoreInVersion, mostUsedWonderData } = playerData;
                     const playerCard = document.createElement('div');
-                    let wonLostHTML = '', versionSpecificStatsHTML = '';
+                    let wonLostHTML = '', versionSpecificStatsHTML = '', recordsHTML = '';
+
+                    // NUOVA LOGICA PER I RECORD
+                    if (selectedVersion && allTimeRecords[selectedVersion]) {
+                        Object.entries(allTimeRecords[selectedVersion]).forEach(([recordKey, recordData]) => {
+                            if (recordData.players.includes(playerName)) {
+                                const [catKey, icon] = recordKey.split('|');
+                                const catName = translations[recordData.langKey] ? translations[recordData.langKey][currentLanguage] : catKey;
+                                recordsHTML += `<div class="stat-item"><span class="stat-label">🏆 Record: ${catName}</span> <span class="stat-value">${icon} ${recordData.score}</span></div>`;
+                            }
+                        });
+                    }
             
                     if (selectedVersion) {
                         wonLostHTML = `<div class="stat-item"><span class="stat-label">${translations.wonLost[currentLanguage]}:</span> <span class="stat-value">${wins}/${losses}</span></div>`;
@@ -3093,9 +3210,10 @@
                         <h4>${playerName}</h4>
                         <div class="stat-item"><span class="stat-label">${translations.gamesPlayed[currentLanguage]}:</span> <span class="stat-value">${playerGames.length}</span></div>
                         ${wonLostHTML}
-                        <div class="stat-item"><span class="stat-label">${translations.winRate[currentLanguage]}:</span> <span class="stat-value">${((wins / playerGames.length) * 100).toFixed(0)}%</span></div>
-                        <div class="stat-item"><span class="stat-label">${translations.avgScore[currentLanguage]}:</span> <span class="stat-value">${(totalScore / playerGames.length).toFixed(1)}</span></div>
+                        <div class="stat-item"><span class="stat-label">${translations.winRate[currentLanguage]}:</span> <span class="stat-value">${(playerGames.length > 0 ? (wins / playerGames.length) * 100 : 0).toFixed(0)}%</span></div>
+                        <div class="stat-item"><span class="stat-label">${translations.avgScore[currentLanguage]}:</span> <span class="stat-value">${(playerGames.length > 0 ? totalScore / playerGames.length : 0).toFixed(1)}</span></div>
                         ${versionSpecificStatsHTML}
+                        ${recordsHTML} 
                     `;
                     ui.playerStatsContainer.appendChild(playerCard);
                 });
@@ -3110,8 +3228,8 @@
                     const nextBtn = document.getElementById('nextStatsPageBtn');
                     prevBtn.disabled = statsCurrentPage === 1;
                     nextBtn.disabled = statsCurrentPage === totalPages;
-                    prevBtn.addEventListener('click', () => { statsCurrentPage--; renderPlayerStats(fullHistory, allPlayers); });
-                    nextBtn.addEventListener('click', () => { statsCurrentPage++; renderPlayerStats(fullHistory, allPlayers); });
+                    prevBtn.addEventListener('click', () => { statsCurrentPage--; renderPlayerStats(fullHistory, allPlayers, allTimeRecords); });
+                    nextBtn.addEventListener('click', () => { statsCurrentPage++; renderPlayerStats(fullHistory, allPlayers, allTimeRecords); });
                 }
             }
 
