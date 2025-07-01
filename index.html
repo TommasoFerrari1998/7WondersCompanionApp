@@ -3077,6 +3077,8 @@
                 let wonderCounts = {}, playerWins = {}, 
                     highestScore = { score: -Infinity, players: [] },
                     lowestScore = { score: Infinity, players: [] };
+
+                let highestTreasury = { score: -Infinity, coins: 0, players: [] };
             
                 filteredHistory.forEach(game => {
                     game.giocatori.forEach(player => {
@@ -3099,6 +3101,19 @@
                         } else if (player.totale === lowestScore.score) {
                             lowestScore.players.push(player.nome);
                         }
+
+                        const currentTreasuryCoins = player.punteggi.tesoro || 0; // Monete originali
+                        const currentTreasuryScore = Math.floor(currentTreasuryCoins / 3); // Punti del tesoro
+
+                        if (currentTreasuryScore > highestTreasury.score) {
+                            highestTreasury = { score: currentTreasuryScore, coins: currentTreasuryCoins, players: [player.nome] };
+                        } else if (currentTreasuryScore === highestTreasury.score) {
+                            if (currentTreasuryCoins > highestTreasury.coins) { // In caso di parità di punti, vince chi ha più monete
+                                highestTreasury = { score: currentTreasuryScore, coins: currentTreasuryCoins, players: [player.nome] };
+                            } else if (currentTreasuryCoins === highestTreasury.coins) {
+                                highestTreasury.players.push(player.nome);
+                            }
+                        }
                     });
             
                     const sortedPlayers = [...game.giocatori].filter(p => !p.isFreeCity).sort((a,b) => b.totale - a.totale);
@@ -3120,6 +3135,16 @@
                 if (winsEntries.length > 0) {
                     maxWins = Math.max(...winsEntries.map(entry => entry[1]));
                     mostWinningPlayers = winsEntries.filter(entry => entry[1] === maxWins).map(entry => entry[0]);
+                }
+
+                let treasuryStatHtml = '';
+                if (highestTreasury.score > -Infinity) {
+                     // Recupera l'icona e il nome della categoria tesoro
+                    const treasuryCatDef = CATEGORIE_1ED.find(cat => cat.key === 'tesoro') || CATEGORIE_2ED.find(cat => cat.key === 'tesoro') || CATEGORIE_DUEL.find(cat => cat.key === 'tesoro');
+                    const treasuryIcon = treasuryCatDef ? treasuryCatDef.label.split(' ')[0] : '💰';
+                    const treasuryName = translations.catTreasury[currentLanguage];
+
+                    treasuryStatHtml = `<div class="stat-item"><span class="stat-label">🏆 Record: ${treasuryName}</span> <span class="stat-value">${treasuryIcon} ${highestTreasury.score}(${highestTreasury.coins}) (${highestTreasury.players.join(', ')})</span></div>`;
                 }
 
                 ui.overallStatsContainer.innerHTML = `
