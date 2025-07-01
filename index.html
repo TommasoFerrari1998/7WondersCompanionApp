@@ -2263,9 +2263,8 @@
             }
 
             function mostraRisultati(gameDataToDisplay = null) {
-                if (gameDataToDisplay) {
-                    datiPartita = JSON.parse(JSON.stringify(gameDataToDisplay)); // Deep copy to avoid modifying original history object
-                } else {
+                // Se non stiamo visualizzando dati dalla cronologia, calcola e salva i risultati
+                if (!gameDataToDisplay) {
                     datiPartita.hasCalculatedResults = true;
                     const dataPartita = datiPartita.manualDate ? new Date(datiPartita.manualDate) : new Date();
                     const locale = currentLanguage === 'it' ? 'it-IT' : 'en-US';
@@ -2317,8 +2316,28 @@
                 infoEl.className = 'header-info';
                 infoEl.innerHTML = `<span>${datiPartita.data}${datiPartita.luogo ? `, ${datiPartita.luogo}` : ''}</span>`;
 
-                sezioni.risultati.innerHTML = '';
-                sezioni.risultati.appendChild(infoEl);
+                sezioni.risultati.innerHTML = ''; // Pulisci il contenuto esistente della sezione risultati
+                
+                // Contenitore per la navigazione in alto (pulsante "Indietro")
+                const topNavContainer = document.createElement('div');
+                topNavContainer.className = 'header-nav';
+
+                // Aggiungi il pulsante "Indietro" per tornare alla cronologia se si visualizza una partita passata
+                if (gameDataToDisplay) {
+                    const backToHistoryTopBtn = document.createElement('button');
+                    backToHistoryTopBtn.className = 'back-to-home-top-btn'; // Riutilizza lo stile esistente
+                    backToHistoryTopBtn.textContent = '←'; // Freccia semplice per indicare "indietro"
+                    backToHistoryTopBtn.title = translations.gameHistory[currentLanguage]; // Tooltip
+                    backToHistoryTopBtn.addEventListener('click', () => {
+                        displayGameHistory(); // Ricarica la cronologia per assicurarsi che sia aggiornata
+                        mostraSezione('cronologia');
+                    });
+                    topNavContainer.appendChild(backToHistoryTopBtn);
+                }
+                sezioni.risultati.appendChild(topNavContainer); // Aggiungi il contenitore di navigazione in alto
+
+                sezioni.risultati.appendChild(infoEl); // Aggiungi le info della partita dopo la navigazione in alto
+
                 const titolo = document.createElement('h2');
                 titolo.textContent = translations.finalRanking[currentLanguage];
                 sezioni.risultati.appendChild(titolo);
@@ -2329,47 +2348,28 @@
                     mostraRisultatiIndividuali();
                 }
 
-                const btnGroupTop = document.createElement('div');
-                btnGroupTop.className = 'gruppo-bottoni';
-                
-                // Pulsante "Torna alla Cronologia" se la partita è stata visualizzata dalla cronologia
-                if (gameDataToDisplay) {
-                    const backToHistoryBtn = document.createElement('button');
-                    backToHistoryBtn.textContent = translations.gameHistory[currentLanguage]; // Usa la traduzione per "Cronologia Partite"
-                    backToHistoryBtn.addEventListener('click', () => {
-                        displayGameHistory(); // Ricarica la cronologia per assicurarsi che sia aggiornata
-                        mostraSezione('cronologia');
-                    });
-                    btnGroupTop.appendChild(backToHistoryBtn);
-                } else {
-                    // Se non siamo in modalità visualizzazione da cronologia (quindi siamo arrivati dai punteggi),
-                    // mostra il pulsante "Torna al Punteggio"
-                    const backToScoreBtn = document.createElement('button');
-                    backToScoreBtn.textContent = translations.back[currentLanguage];
-                    backToScoreBtn.addEventListener('click', () => mostraSezione('punteggio'));
-                    btnGroupTop.appendChild(backToScoreBtn);
-                }
-
-                const backToHomeBtn = document.createElement('button');
-                backToHomeBtn.textContent = translations.backToHome[currentLanguage];
-                backToHomeBtn.addEventListener('click', () => mostraSezione('landing'));
-                btnGroupTop.appendChild(backToHomeBtn);
-                sezioni.risultati.appendChild(btnGroupTop);
-
+                // Gruppo di bottoni in basso
                 const btnGroupBottom = document.createElement('div');
                 btnGroupBottom.className = 'gruppo-bottoni';
+                btnGroupBottom.style.marginTop = '20px'; // Aggiungi un po' di margine per separazione visiva
+
                 const shareBtn = document.createElement('button');
                 shareBtn.textContent = translations.shareResults[currentLanguage];
                 shareBtn.className = 'bottone-grande';
                 shareBtn.addEventListener('click', condividiComeImmagine);
-                const nuovaPartitaBtn = document.createElement('button');
-                nuovaPartitaBtn.className = 'bottone-grande';
-                nuovaPartitaBtn.textContent = translations.newGame[currentLanguage];
-                nuovaPartitaBtn.addEventListener('click', () => {
-                    mostraSezione('selezioneGioco');
-                });
                 btnGroupBottom.appendChild(shareBtn);
-                btnGroupBottom.appendChild(nuovaPartitaBtn);
+
+                // Aggiungi il pulsante "Nuova Partita" SOLO SE NON si sta visualizzando dalla cronologia
+                if (!gameDataToDisplay) {
+                    const nuovaPartitaBtn = document.createElement('button');
+                    nuovaPartitaBtn.className = 'bottone-grande';
+                    nuovaPartitaBtn.textContent = translations.newGame[currentLanguage];
+                    nuovaPartitaBtn.addEventListener('click', () => {
+                        mostraSezione('selezioneGioco');
+                    });
+                    btnGroupBottom.appendChild(nuovaPartitaBtn);
+                }
+
                 sezioni.risultati.appendChild(btnGroupBottom);
 
                 mostraSezione('risultati');
