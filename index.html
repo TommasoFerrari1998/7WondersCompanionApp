@@ -2331,13 +2331,25 @@
 
                 const btnGroupTop = document.createElement('div');
                 btnGroupTop.className = 'gruppo-bottoni';
-                // Mostra il pulsante "Indietro" solo se non siamo in modalità "visualizza da cronologia"
-                if (!gameDataToDisplay) {
+                
+                // Pulsante "Torna alla Cronologia" se la partita è stata visualizzata dalla cronologia
+                if (gameDataToDisplay) {
+                    const backToHistoryBtn = document.createElement('button');
+                    backToHistoryBtn.textContent = translations.gameHistory[currentLanguage]; // Usa la traduzione per "Cronologia Partite"
+                    backToHistoryBtn.addEventListener('click', () => {
+                        displayGameHistory(); // Ricarica la cronologia per assicurarsi che sia aggiornata
+                        mostraSezione('cronologia');
+                    });
+                    btnGroupTop.appendChild(backToHistoryBtn);
+                } else {
+                    // Se non siamo in modalità visualizzazione da cronologia (quindi siamo arrivati dai punteggi),
+                    // mostra il pulsante "Torna al Punteggio"
                     const backToScoreBtn = document.createElement('button');
                     backToScoreBtn.textContent = translations.back[currentLanguage];
                     backToScoreBtn.addEventListener('click', () => mostraSezione('punteggio'));
                     btnGroupTop.appendChild(backToScoreBtn);
                 }
+
                 const backToHomeBtn = document.createElement('button');
                 backToHomeBtn.textContent = translations.backToHome[currentLanguage];
                 backToHomeBtn.addEventListener('click', () => mostraSezione('landing'));
@@ -2876,19 +2888,59 @@
                         const gameToEdit = getGameHistory().find(g => g.idPartita === game.idPartita);
                         if (gameToEdit) {
                             datiPartita = JSON.parse(JSON.stringify(gameToEdit));
-                            datiPartita.isEditing = true;
-                            const gameCategories = {
-                                '1ed': CATEGORIE_1ED, '2ed': CATEGORIE_2ED, 
-                                'architects': CATEGORIE_ARCHITECTS, 'duel': CATEGORIE_DUEL
+                            datiPartita.isEditing = true; // Flag per indicare che siamo in modalità modifica
+
+                            // Popola i campi del setup con i dati della partita
+                            const setupInputs = {
+                                '1ed': setup1ed.inputs,
+                                '2ed': setup2ed.inputs,
+                                'architects': setupArchitects.inputs,
+                                'duel': setupDuel.inputs
                             };
-                            datiPartita.categoriePartita = gameCategories[datiPartita.gameVersion].filter(cat => {
-                                if (datiPartita.gameVersion === 'duel' && cat.key === 'gilde' && datiPartita.espansioni.pantheon) {
-                                    return false;
+                            const currentSetupInputs = setupInputs[datiPartita.gameVersion];
+
+                            if (currentSetupInputs) {
+                                // Popola i giocatori e le meraviglie
+                                // Nota: la funzione aggiornaListaGiocatoriUI_Xed gestirà la creazione degli input
+                                // e la selezione delle meraviglie, ma dobbiamo prima assicurarci che datiPartita.giocatori
+                                // sia già impostato con i valori della partita da modificare.
+                                
+                                // Popola le espansioni
+                                for (const expKey in currentSetupInputs.esp) {
+                                    if (currentSetupInputs.esp[expKey]) {
+                                        currentSetupInputs.esp[expKey].checked = datiPartita.espansioni[expKey] || false;
+                                    }
                                 }
-                                return !cat.expansion || (datiPartita.espansioni && datiPartita.espansioni[cat.expansion]);
-                            });
-                            mostraSezione('punteggio');
-                            mostraSchermataCategoria();
+                                // Popola il gioco a squadre (se presente)
+                                if (currentSetupInputs.teamPlay) {
+                                    currentSetupInputs.teamPlay.checked = datiPartita.espansioni.giocoASquadre || false;
+                                }
+                                // Popola il luogo
+                                if (currentSetupInputs.luogoPartita) {
+                                    currentSetupInputs.luogoPartita.value = datiPartita.luogo || '';
+                                }
+                                // Popola la data manuale
+                                if (currentSetupInputs.dateToggle) {
+                                    currentSetupInputs.dateToggle.checked = !!datiPartita.manualDate;
+                                    if (currentSetupInputs.manualDateInput) {
+                                        currentSetupInputs.manualDateInput.value = datiPartita.manualDate || '';
+                                    }
+                                    // Mostra/nasconde il contenitore della data manuale
+                                    const manualDateContainer = document.getElementById(`manual-date-container-${datiPartita.gameVersion}`);
+                                    if (manualDateContainer) {
+                                        manualDateContainer.classList.toggle('hidden', !currentSetupInputs.dateToggle.checked);
+                                    }
+                                }
+                            }
+
+                            // Aggiorna l'UI dei giocatori e delle meraviglie dopo aver popolato i dati
+                            if (datiPartita.gameVersion === '1ed') aggiornaListaGiocatoriUI_1ed();
+                            else if (datiPartita.gameVersion === '2ed') aggiornaListaGiocatoriUI_2ed();
+                            else if (datiPartita.gameVersion === 'architects') aggiornaListaGiocatoriUI_architects();
+                            else if (datiPartita.gameVersion === 'duel') aggiornaListaGiocatoriUI_duel();
+
+                            // Mostra la sezione di setup corretta
+                            mostraSezione(`setup-${datiPartita.gameVersion}`);
                         }
                     });
             
