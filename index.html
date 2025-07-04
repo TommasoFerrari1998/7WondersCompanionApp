@@ -794,6 +794,17 @@
             </div>
         </div>
 
+        <div id="tutorialModal" class="modal-overlay hidden">
+            <div class="modal-content">
+                <h3 data-lang-key="tutorialTitle">Benvenuto!</h3>
+                <p data-lang-key="tutorialWelcome"></p>
+                <p data-lang-key="tutorialFeatures"></p>
+                <div class="modal-buttons">
+                    <button id="closeTutorialBtn" data-lang-key="gotIt"></button>
+                </div>
+            </div>
+        </div>
+
     </main>
 
     <script>
@@ -1310,6 +1321,16 @@
                     importConfirm: { it: 'Questo sovrascriverà tutti i dati esistenti sulla cronologia e le statistiche. Sei sicuro?', en: 'This will overwrite all existing history and statistics data. Are you sure?' },
                     importSuccess: { it: 'Dati importati con successo!', en: 'Data imported successfully!' },
                     importError: { it: 'Errore durante l\'importazione. Assicurati che il file sia un backup JSON valido.', en: 'Error during import. Ensure the file is a valid JSON backup.' },
+                    tutorialTitle: { it: 'Benvenuto in 7 Wonders Companion App PRO!', en: 'Welcome to 7 Wonders Companion App PRO!' },
+                    tutorialWelcome: {
+                        it: 'Questa app ti aiuta a tenere traccia dei punteggi delle tue partite a 7 Wonders (e le sue versioni derivate) e a consultare rapidamente le regole.',
+                        en: 'This app helps you track scores for your 7 Wonders games (and its derived versions) and quickly consult the rules.'
+                    },
+                    tutorialFeatures: {
+                        it: 'Puoi avviare nuove partite, visualizzare la cronologia, consultare statistiche dettagliate e chiarimenti sul regolamento. I tuoi dati vengono salvati localmente sul tuo dispositivo.',
+                        en: 'You can start new games, view game history, check detailed statistics, and clarify rules. Your data is saved locally on your device.'
+                    },
+                    gotIt: { it: 'Ho capito!', en: 'Got it!' },
                 };
             }
             
@@ -3328,6 +3349,9 @@
                 setupCollapsibleRules();
                 addEventListeners();
                 setLanguage('en');
+                if (!localStorage.getItem('7wondersProTutorialShown')) {
+                    document.getElementById('tutorialModal').classList.add('visible');
+                }
             }
 
             function addEventListeners() {
@@ -3441,10 +3465,35 @@
 
                 document.getElementById('exportDataBtn').addEventListener('click', exportData);
                 document.getElementById('importDataInput').addEventListener('change', importData);
+
+                // Logica per chiudere il tutorial
+                document.getElementById('closeTutorialBtn').addEventListener('click', () => {
+                    document.getElementById('tutorialModal').classList.remove('visible');
+                    localStorage.setItem('7wondersProTutorialShown', 'true'); // Imposta un flag per non mostrarlo più
+                });
+
+                // Chiudi il tutorial cliccando sull'overlay (opzionale, ma buona UX)
+                document.getElementById('tutorialModal').addEventListener('click', (e) => {
+                    if (e.target.id === 'tutorialModal') {
+                        document.getElementById('tutorialModal').classList.remove('visible');
+                        localStorage.setItem('7wondersProTutorialShown', 'true');
+                    }
+                });
             }
 
             inizializzaApp();
         });
+        if ('serviceWorker' in navigator) {
+            window.addEventListener('load', () => {
+                navigator.serviceWorker.register('/service-worker.js')
+                    .then(registration => {
+                        console.log('ServiceWorker registration successful with scope: ', registration.scope);
+                    })
+                    .catch(err => {
+                        console.log('ServiceWorker registration failed: ', err);
+                    });
+            });
+        }
     </script>
 </body>
 </html>
