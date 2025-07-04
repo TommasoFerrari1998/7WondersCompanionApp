@@ -4,7 +4,7 @@ Welcome to **7 Wonders Companion App PRO**. Designed to be intuitive and feature
 
 ## 🧩 Main Features
 
-- ✅ **Full support for all game versions**: 7 Wonders (1st Edition), 7 Wonders (2nd Edition), 7 Wonders: Duel, 7 Wonders: Architects.
+- ✅ **Full support for all game versions**: 7 Wonders (1st Edition), 7 Wonders (2nd Edition), 7 Wonders: Duel, 7 Wonders: Architects. Full support for team games as well!
 - 🧮 **Expansion management**: Enable/disable expansions to adapt score calculation to your game.
 - 📚 **Game history**: Save, edit and review all your previous games, complete with details and results.
 - 📊 **In-depth statistics**: Analyze your performance with detailed statistics on total games played, most used wonders, most winning players, highest and lowest scores, individual player statistics (games played, win rate, average score, category records).
