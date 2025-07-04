@@ -246,7 +246,7 @@
         .gruppo-bottoni-orizzontale {
             display: flex;
             gap: 15px; /* Spazio tra i due bottoni */
-            margin-top: 15px; /* Spazio sopra il contenitore */
+            margin-top: 25px; /* Spazio sopra il contenitore */
         }
         
         /* Stile grafico personalizzato per i bottoni di import/export */
@@ -526,7 +526,7 @@
                 </div>
             </div>
             <div class="gruppo-bottoni">
-            <button class="back-to-game-select bottone-grande" data-lang-key="backToGameSelect"></button>
+            <button class="back-from-setup bottone-grande" data-lang-key="backToGameSelect"></button>
             <button id="resetSettingsBtn-1ed" class="bottone-pericolo" data-lang-key="reset"></button>
             <button id="iniziaPartitaBtn-1ed" class="bottone-grande start-game-btn" disabled data-lang-key="start"></button>
         </div>
@@ -590,7 +590,7 @@
                 </div>
             </div>
             <div class="gruppo-bottoni">
-                <button class="back-to-game-select bottone-grande" data-lang-key="backToGameSelect"></button>
+                <button class="back-from-setup bottone-grande" data-lang-key="backToGameSelect"></button>
                 <button id="resetSettingsBtn-2ed" class="bottone-pericolo" data-lang-key="reset"></button>
                 <button id="iniziaPartitaBtn-2ed" class="bottone-grande start-game-btn" disabled data-lang-key="start"></button>
             </div>
@@ -648,7 +648,7 @@
                 </div>
             </div>
             <div class="gruppo-bottoni">
-                <button class="back-to-game-select bottone-grande" data-lang-key="backToGameSelect"></button>
+                <button class="back-from-setup bottone-grande" data-lang-key="backToGameSelect"></button>
                 <button id="resetSettingsBtn-architects" class="bottone-pericolo" data-lang-key="reset"></button>
                 <button id="iniziaPartitaBtn-architects" class="bottone-grande start-game-btn" disabled data-lang-key="start"></button>
             </div>
@@ -711,7 +711,7 @@
                 </div>
             </div>
              <div class="gruppo-bottoni">
-                <button class="back-to-game-select bottone-grande" data-lang-key="backToGameSelect"></button>
+                <button class="back-from-setup bottone-grande" data-lang-key="backToGameSelect"></button>
                 <button id="resetSettingsBtn-duel" class="bottone-pericolo" data-lang-key="reset"></button>
                 <button id="iniziaPartitaBtn-duel" class="bottone-grande start-game-btn" disabled data-lang-key="start"></button>
             </div>
@@ -2352,7 +2352,14 @@
                 btnGroupBottom.className = 'gruppo-bottoni';
                 btnGroupBottom.style.marginTop = '20px'; // Aggiungi un po' di margine per separazione visiva
 
-                
+                // Pulsante per tornare alla Home
+                const backToHomeBtn = document.createElement('button');
+                backToHomeBtn.className = 'bottone-grande';
+                backToHomeBtn.textContent = translations.backToHome[currentLanguage]; // Assicurati che esista questa traduzione
+                backToHomeBtn.addEventListener('click', () => {
+                    mostraSezione('landing');
+                });
+                btnGroupBottom.appendChild(backToHomeBtn);
 
                 // Aggiungi il pulsante "Nuova Partita" SOLO SE NON si sta visualizzando dalla cronologia
                 if (!gameDataToDisplay) {
@@ -3278,8 +3285,15 @@
                 document.querySelectorAll('.back-to-home-top-btn').forEach(btn => {
                     btn.addEventListener('click', () => mostraSezione('landing'));
                 });
-                document.querySelectorAll('.back-to-game-select').forEach(btn => {
-                    btn.addEventListener('click', () => mostraSezione('selezioneGioco'));
+                document.querySelectorAll('.back-from-setup').forEach(btn => {
+                    btn.addEventListener('click', () => {
+                        if (datiPartita && datiPartita.isEditing) {
+                            displayGameHistory(); // Assicurati che la cronologia sia aggiornata
+                            mostraSezione('cronologia');
+                        } else {
+                            mostraSezione('selezioneGioco');
+                        }
+                    });
                 });
             
                 bottoni.selectGame1ed.addEventListener('click', () => { resetStato('1ed'); updateExpansions_1ed(); aggiornaListaGiocatoriUI_1ed(); mostraSezione('setup-1ed'); });
