@@ -2748,6 +2748,7 @@
                         }
                         const clickedGame = getGameHistory().find(g => g.idPartita === game.idPartita);
                         if (clickedGame) {
+                            datiPartita = JSON.parse(JSON.stringify(clickedGame));
                             mostraRisultati(clickedGame);
                         }
                     });
