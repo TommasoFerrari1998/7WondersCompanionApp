@@ -25,8 +25,62 @@
         .logo-container { text-align: center; margin-bottom: 20px; }
         .logo-container img { max-width: 80%; height: auto; }
         #app-subtitle { font-family: 'Cinzel', serif; text-align: center; font-size: 1.8em; color: var(--colore-secondario); margin-top: -15px; margin-bottom: 25px; text-shadow: 1px 1px 3px rgba(0,0,0,0.4); }
-        h2, h3, h4 { border-bottom: 2px solid var(--colore-primario); padding-bottom: 10px; margin-bottom: 20px; }
         
+        h2, h3, h4 { border-bottom: 2px solid var(--colore-primario); padding-bottom: 10px; margin-bottom: 20px; }
+        #app-subtitle { font-family: 'Cinzel', serif; text-align: center; font-size: 1.8em; color: var(--colore-secondario); margin-top: -15px; margin-bottom: 25px; text-shadow: 1px 1px 3px rgba(0,0,0,0.4); }
+        
+        /* Stili e animazione per la dicitura PRO */
+        #pro-text {
+            font-family: 'Roboto', sans-serif;
+            font-weight: 700;
+            color: var(--colore-pericolo); /* Testo rosso */
+            font-size: 0.8em;
+            margin-right: 5px;
+            display: inline-block;
+            position: relative; /* Necessario per posizionare gli pseudo-elementi */
+            z-index: 1; /* Assicura che il testo sia sopra le linee */
+            overflow: hidden; /* Nasconde le parti delle linee che escono */
+            padding: 0 2px; /* Piccolo padding per dare spazio alle linee */
+        }
+
+        /* Linee cinetiche */
+        #pro-text::before,
+        #pro-text::after {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 150%; /* Dimensioni maggiori per l'orbita */
+            height: 150%;
+            border: 1px solid var(--colore-pericolo); /* Colore delle linee cinetiche */
+            border-radius: 50%;
+            opacity: 0;
+            transform: translate(-50%, -50%) scale(0);
+            animation: orbit 3s infinite ease-out; /* Animazione di orbita */
+            box-sizing: border-box; /* Include padding e border nella dimensione */
+        }
+
+        #pro-text::after {
+            animation-delay: 1.5s; /* Sfasatura per la seconda linea */
+        }
+
+        @keyframes orbit {
+            0% {
+                transform: translate(-50%, -50%) scale(0.2);
+                opacity: 0;
+                border-color: rgba(200, 108, 108, 0.5); /* Inizia più trasparente */
+            }
+            50% {
+                transform: translate(-50%, -50%) scale(1);
+                opacity: 1;
+                border-color: var(--colore-pericolo);
+            }
+            100% {
+                transform: translate(-50%, -50%) scale(1.5); /* Esci dal campo visivo */
+                opacity: 0;
+                border-color: rgba(200, 108, 108, 0); /* Diventa completamente trasparente */
+            }
+        }
         section { transition: opacity 0.3s ease-in-out; }
         
         /* Language Switcher */
@@ -321,15 +375,15 @@
 <body>
     <main>
         <div id="language-switcher">
-            <button id="lang-it" class="lang-btn">IT</button>
             <button id="lang-en" class="lang-btn active">EN</button>
+            <button id="lang-it" class="lang-btn">IT</button>
         </div>
 
         <section id="landing-sezione">
             <div class="logo-container">
                 <img src="https://i.imgur.com/p1PgYrh.png" alt="Logo di 7 Wonders Seconda Edizione" onerror="this.onerror=null; this.src='https://placehold.co/400x150/1e1e1e/f0f0f0?text=7+Wonders+Logo';">
             </div>
-            <div id="app-subtitle">Companion App</div>
+            <div id="app-subtitle">Companion App <span id="pro-text">PRO</span></div>
             <div class="gruppo-bottoni">
                 <button id="landingNuovaPartitaBtn" class="bottone-grande" data-lang-key="startNewGame"></button>
                 <button id="landingCronologiaBtn" class="bottone-grande" data-lang-key="gameHistory"></button>
