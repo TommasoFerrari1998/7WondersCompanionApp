@@ -2315,25 +2315,50 @@
                 return (t * t + i * i + c * c) + (Math.min(t, i, c) * 7);
             }
 
+                        /**
+             * Calcola il punteggio scientifico ottimizzato distribuendo i simboli "serie" (jolly).
+             * Questa funzione esplora tutte le combinazioni possibili per massimizzare il punteggio.
+             *
+             * @param {object} simboli - Un oggetto contenente il numero di simboli di ogni tipo.
+             * @param {number} simboli.compasso - Numero di simboli compasso.
+             * @param {number} simboli.tavoletta - Numero di simboli tavoletta.
+             * @param {number} simboli.ingranaggio - Numero di simboli ingranaggio.
+             * @param {number} simboli.serie - Numero di simboli jolly (serie).
+             * @returns {number} Il punteggio scientifico massimo ottenibile.
+             */
             function calcolaPuntiScienzaOttimizzati(simboli) {
                 let { compasso, tavoletta, ingranaggio, serie } = simboli;
-                if (!serie || serie === 0) return calcolaPuntiScienza(simboli);
-                let c = compasso || 0,
-                    t = tavoletta || 0,
-                    i = ingranaggio || 0;
-                for (let j = 0; j < serie; j++) {
-                    const score_c = calcolaPuntiScienza({ compasso: c + 1, tavoletta: t, ingranaggio: i });
-                    const score_t = calcolaPuntiScienza({ compasso: c, tavoletta: t + 1, ingranaggio: i });
-                    const score_i = calcolaPuntiScienza({ compasso: c, tavoletta: t, ingranaggio: i + 1 });
-                    if (score_c >= score_t && score_c >= score_i) {
-                        c++;
-                    } else if (score_t > score_c && score_t >= score_i) {
-                        t++;
-                    } else {
-                        i++;
+
+                // Se non ci sono simboli jolly, calcola il punteggio direttamente
+                if (!serie || serie === 0) {
+                    return calcolaPuntiScienza(simboli);
+                }
+
+                let maxScore = -1; // Inizializza con un punteggio molto basso per trovare il massimo
+
+                // Itera su tutte le possibili distribuzioni dei simboli jolly (serie)
+                // s_c: numero di jolly assegnati ai compassi
+                for (let s_c = 0; s_c <= serie; s_c++) {
+                    // s_t: numero di jolly assegnati alle tavolette (il resto dei jolly disponibili dopo s_c)
+                    for (let s_t = 0; s_t <= serie - s_c; s_t++) {
+                        // s_i: il resto dei jolly va agli ingranaggi
+                        let s_i = serie - s_c - s_t;
+
+                        // Calcola il numero totale di ogni simbolo con questa distribuzione
+                        let new_c = (compasso || 0) + s_c;
+                        let new_t = (tavoletta || 0) + s_t;
+                        let new_i = (ingranaggio || 0) + s_i;
+
+                        // Calcola il punteggio per questa specifica combinazione
+                        const currentScore = calcolaPuntiScienza({ compasso: new_c, tavoletta: new_t, ingranaggio: new_i });
+
+                        // Aggiorna il punteggio massimo se la combinazione attuale è migliore
+                        if (currentScore > maxScore) {
+                            maxScore = currentScore;
+                        }
                     }
                 }
-                return calcolaPuntiScienza({ compasso: c, tavoletta: t, ingranaggio: i });
+                return maxScore;
             }
 
             function mostraRisultati(gameDataToDisplay = null) {
