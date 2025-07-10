@@ -558,6 +558,7 @@
                     <div class="checkbox-item"><label for="esp-1ed-wonderpack">Wonder Pack</label><label class="toggle-switch"><input type="checkbox" id="esp-1ed-wonderpack"><span class="slider"></span></label></div>
                     <div class="checkbox-item"><label for="esp-1ed-siracusa">Siracusa</label><label class="toggle-switch"><input type="checkbox" id="esp-1ed-siracusa"><span class="slider"></span></label></div>
                     <div class="checkbox-item"><label for="esp-1ed-catan">Catan</label><label class="toggle-switch"><input type="checkbox" id="esp-1ed-catan"><span class="slider"></span></label></div>
+                    <div class="checkbox-item"><label for="esp-1ed-cupertino">Cupertino</label><label class="toggle-switch"><input type="checkbox" id="esp-1ed-cupertino"><span class="slider"></span></label></div>
                 </div>
             </div>
              <div class="opzioni-partita">
@@ -869,7 +870,8 @@
                 armada: [], 
                 siracusa: ['Siracusa'],
                 wonderpack: ['Abu Simbel', 'Grande Muraglia Cinese', 'Manneken Pis', 'Stonehenge'],
-                catan: ['Catan']
+                catan: ['Catan'],
+                cupertino: ['Cupertino']
             };
 
             const MERAVIGLIE_2ED = { 
@@ -989,7 +991,8 @@
                 "Curia Iulia": { it: "Curia Iulia", en: "Curia Julia" },
                 "Messe": { it: "Messe", en: "Messe" },
                 "Stonehenge": { it: "Stonehenge", en: "Stonehenge" },
-                "Sagrada Familia": { it: "Sagrada Familia", en: "Sagrada Familia" }
+                "Sagrada Familia": { it: "Sagrada Familia", en: "Sagrada Familia" },
+                "Cupertino": { it: "Cupertino", en: "Cupertino" }
             };
 
             let datiPartita;
@@ -1080,8 +1083,8 @@
                     statistics: { it: 'Statistiche', en: 'Statistics' },
                     supportProject: { it: 'Supporta il progetto', en: 'Support the project' },
                     creditsText: { 
-                        it: 'Sviluppato nel 2025 da Tommaso Ferrari. <br>Email: <a href="mailto:tommy.ferrari98@gmail.com">tommy.ferrari98@gmail.com</a> | Versione 1.0',
-                        en: 'Developed in 2025 by Tommaso Ferrari. <br>Email: <a href="mailto:tommy.ferrari98@gmail.com">tommy.ferrari98@gmail.com</a> | Version 1.0'
+                        it: 'Sviluppato nel 2025 da Tommaso Ferrari. <br>Email: <a href="mailto:tommy.ferrari98@gmail.com">tommy.ferrari98@gmail.com</a> | Versione 1.1',
+                        en: 'Developed in 2025 by Tommaso Ferrari. <br>Email: <a href="mailto:tommy.ferrari98@gmail.com">tommy.ferrari98@gmail.com</a> | Version 1.1'
                     },
                     chooseGameVersion: { it: 'Scegli la Versione del Gioco', en: 'Choose Game Version' },
                     game1stEdition: { it: 'Prima Edizione', en: 'First Edition' },
@@ -1413,7 +1416,8 @@
                         babel: document.getElementById('esp-1ed-babel'),
                         wonderpack: document.getElementById('esp-1ed-wonderpack'),
                         siracusa: document.getElementById('esp-1ed-siracusa'),
-                        catan: document.getElementById('esp-1ed-catan')
+                        catan: document.getElementById('esp-1ed-catan'),
+                        cupertino: document.getElementById('esp-1ed-cupertino')
                     }
                 },
                 bottoni: {
