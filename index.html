@@ -2076,9 +2076,9 @@
                 const locale = currentLanguage === 'it' ? 'it-IT' : 'en-US';
                 datiPartita.data = datiPartita.data || dataPartita.toLocaleString(locale, { day: '2-digit', month: '2-digit', year: '2-digit', hour: '2-digit', minute: '2-digit' });
                 datiPartita.luogo = setupDuel.inputs.luogoPartita.value.trim();
-                datiPartita.duelSupremacyWinner = vincitore; //
-                datiPartita.duelSupremacyType = motivo; //
-                saveGameToHistory(datiPartita); // Save the game with supremacy info
+                datiPartita.duelSupremacyWinner = vincitore;
+                datiPartita.duelSupremacyType = motivo;
+                saveGameToHistory(datiPartita); // Assicurati che questo sia chiamato per salvare i dati della supremazia
 
                 sezioni.risultati.innerHTML = `
                     <div class="header-info">
@@ -2091,19 +2091,19 @@
                 btnGroupBottom.className = 'gruppo-bottoni';
                 
                 // Pulsante per tornare alla Home
-                const backToHomeBtn = document.createElement('button'); //
-                backToHomeBtn.className = 'bottone-grande'; //
-                backToHomeBtn.textContent = translations.backToHome[currentLanguage]; //
-                backToHomeBtn.addEventListener('click', () => { //
-                    mostraSezione('landing'); //
-                }); //
-                btnGroupBottom.appendChild(backToHomeBtn); //
+                const backToHomeBtn = document.createElement('button');
+                backToHomeBtn.className = 'bottone-grande';
+                backToHomeBtn.textContent = translations.backToHome[currentLanguage];
+                backToHomeBtn.addEventListener('click', () => {
+                    mostraSezione('landing');
+                });
+                btnGroupBottom.appendChild(backToHomeBtn);
 
                 const nuovaPartitaBtn = document.createElement('button');
                 nuovaPartitaBtn.className = 'bottone-grande';
                 nuovaPartitaBtn.textContent = translations.newGame[currentLanguage];
                 nuovaPartitaBtn.addEventListener('click', () => {
-                    mostraSezione(`selezioneGioco`); // Go back to game selection
+                    mostraSezione(`selezioneGioco`);
                 });
                 btnGroupBottom.appendChild(nuovaPartitaBtn);
                 sezioni.risultati.appendChild(btnGroupBottom);
