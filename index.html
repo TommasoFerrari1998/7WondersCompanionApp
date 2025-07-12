@@ -1144,6 +1144,7 @@
                     recalculateResults: { it: 'Ricalcola Risultati', en: 'Recalculate Results' },
                     seeResults: { it: 'Vedi Risultati', en: 'See Results' },
                     finalRanking: { it: 'Classifica Finale', en: 'Final Ranking' },
+                    backToScore: { it: 'Torna ai Punteggi', en: 'Back to Scores' },
                     noWonder: { it: 'Nessuna', en: 'None' },
                     freeCity: { it: 'Città Franca', en: 'Free City' },
                     shareResults: { it: 'Condividi Risultati', en: 'Share Results' },
@@ -2465,8 +2466,17 @@
                 });
                 btnGroupBottom.appendChild(backToHomeBtn);
 
-                // Aggiungi il pulsante "Nuova Partita" SOLO SE NON si sta visualizzando dalla cronologia
-                if (!gameDataToDisplay) {
+                // Pulsante per tornare alla sezione punteggio (solo se non si sta visualizzando dalla cronologia)
+                if (!gameDataToDisplay) { //
+                    const backToScoreBtn = document.createElement('button'); //
+                    backToScoreBtn.className = 'bottone-grande'; //
+                    backToScoreBtn.textContent = translations.backToScore[currentLanguage]; //
+                    backToScoreBtn.addEventListener('click', () => { //
+                        mostraSezione('punteggio'); //
+                        mostraSchermataCategoria(); // Restore the scoring screen state
+                    }); //
+                    btnGroupBottom.appendChild(backToScoreBtn); //
+
                     const nuovaPartitaBtn = document.createElement('button');
                     nuovaPartitaBtn.className = 'bottone-grande';
                     nuovaPartitaBtn.textContent = translations.newGame[currentLanguage];
@@ -2475,6 +2485,7 @@
                     });
                     btnGroupBottom.appendChild(nuovaPartitaBtn);
                 }
+
 
                 sezioni.risultati.appendChild(btnGroupBottom);
 
@@ -3060,11 +3071,16 @@
                             if (catKey === 'puntiTesoro' || catKey === 'puntiScienza' || catKey === 'wonderStages') return;
                             
                             let currentScore = 0;
+                            let recordType = 'score'; // Default to score for most categories
                             if (catKey === 'scienza' && (gameVersion === '1ed' || gameVersion === '2ed')) {
                                 currentScore = player.punteggi.puntiScienza || 0;
                             } else if (catKey === 'tesoro' && ['1ed', '2ed', 'duel'].includes(gameVersion)) {
                                 currentScore = player.punteggi.puntiTesoro || 0;
-                            } else {
+                            } else if (catKey === 'gatto' && gameVersion === 'architects') { //
+                                currentScore = player.punteggi[catKey] === 2 ? 1 : 0; // If cat pawn was obtained, count as 1 occurrence
+                                recordType = 'occurrences'; // Treat as occurrences for 'gatto'
+                            }
+                            else {
                                 currentScore = player.punteggi[catKey] || 0;
                             }
 
@@ -3081,20 +3097,36 @@
                                     records[gameVersion][recordKey] = {
                                         score: currentScore,
                                         players: [player.nome],
-                                        langKey: categoryDef.langKey
+                                        langKey: categoryDef.langKey,
+                                        type: recordType
                                     };
                                 } else if (currentScore === records[gameVersion][recordKey].score) {
                                     if (!records[gameVersion][recordKey].players.includes(player.nome)) {
                                         records[gameVersion][recordKey].players.push(player.nome);
                                     }
                                 }
-                            } else {
+                            } else if (recordType === 'occurrences') { // New condition for 'occurrences' type
+                                if (!records[gameVersion][recordKey] || currentScore > (records[gameVersion][recordKey].score || 0)) {
+                                    records[gameVersion][recordKey] = {
+                                        score: currentScore, // This 'score' actually represents occurrences
+                                        players: [player.nome],
+                                        langKey: categoryDef.langKey,
+                                        type: recordType
+                                    };
+                                } else if (currentScore === records[gameVersion][recordKey].score) {
+                                    if (!records[gameVersion][recordKey].players.includes(player.nome)) {
+                                        records[gameVersion][recordKey].players.push(player.nome);
+                                    }
+                                }
+                            }
+                            else {
                                 // Altrimenti, per tutte le altre categorie, cerchiamo il punteggio più alto.
                                 if (!records[gameVersion][recordKey] || currentScore > records[gameVersion][recordKey].score) {
                                     records[gameVersion][recordKey] = {
                                         score: currentScore,
                                         players: [player.nome],
-                                        langKey: categoryDef.langKey
+                                        langKey: categoryDef.langKey,
+                                        type: recordType
                                     };
                                 } else if (currentScore === records[gameVersion][recordKey].score) {
                                     if (!records[gameVersion][recordKey].players.includes(player.nome)) {
@@ -3258,7 +3290,11 @@
                             if (recordData.players.includes(playerName)) {
                                 const [catKey, icon] = recordKey.split('|');
                                 const catName = translations[recordData.langKey] ? translations[recordData.langKey][currentLanguage] : catKey;
-                                recordsHTML += `<div class="stat-item"><span class="stat-label">🏆 Record: ${catName}</span> <span class="stat-value">${icon} ${recordData.score}</span></div>`;
+                                let scoreDisplay = recordData.score;
+                                if (recordData.type === 'occurrences') { //
+                                    scoreDisplay = `${recordData.score}x`; // Display as occurrences for 'gatto'
+                                }
+                                recordsHTML += `<div class="stat-item"><span class="stat-label">🏆 Record: ${catName}</span> <span class="stat-value">${icon} ${scoreDisplay}</span></div>`;
                             }
                         });
                     }
@@ -3271,12 +3307,12 @@
                         `;
                     }
             
+                    const winRateValue = (playerGames.length > 0 ? (wins / playerGames.length) * 100 : 0).toFixed(0); //
+                    
                     playerCard.innerHTML = `
                         <h4>${playerName}</h4>
                         <div class="stat-item"><span class="stat-label">${translations.gamesPlayed[currentLanguage]}:</span> <span class="stat-value">${playerGames.length}</span></div>
-                        ${wonLostHTML}
-                        <div class="stat-item"><span class="stat-label">${translations.winRate[currentLanguage]}:</span> <span class="stat-value">${(playerGames.length > 0 ? (wins / playerGames.length) * 100 : 0).toFixed(0)}%</span></div>
-                        <div class="stat-item"><span class="stat-label">${translations.avgScore[currentLanguage]}:</span> <span class="stat-value">${(playerGames.length > 0 ? totalScore / playerGames.length : 0).toFixed(1)}</span></div>
+                        <div class="stat-item"><span class="stat-label">${translations.wonLost[currentLanguage]}:</span> <span class="stat-value">${wins}/${losses} (${winRateValue}%)</span></div> <div class="stat-item"><span class="stat-label">${translations.avgScore[currentLanguage]}:</span> <span class="stat-value">${(playerGames.length > 0 ? totalScore / playerGames.length : 0).toFixed(1)}</span></div>
                         ${versionSpecificStatsHTML}
                         ${recordsHTML} 
                     `;
