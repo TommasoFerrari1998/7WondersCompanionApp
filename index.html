@@ -1144,7 +1144,6 @@
                     recalculateResults: { it: 'Ricalcola Risultati', en: 'Recalculate Results' },
                     seeResults: { it: 'Vedi Risultati', en: 'See Results' },
                     finalRanking: { it: 'Classifica Finale', en: 'Final Ranking' },
-                    backToScore: { it: 'Indietro', en: 'Back to Scores' },
                     noWonder: { it: 'Nessuna', en: 'None' },
                     freeCity: { it: 'Città Franca', en: 'Free City' },
                     shareResults: { it: 'Condividi Risultati', en: 'Share Results' },
@@ -1355,10 +1354,10 @@
             function saveGameToHistory(gameData) {
                 try {
                     const history = getGameHistory();
-                    if (gameData.gameVersion === 'duel' && gameData.duelSupremacyWinner) { //
-                        gameToSave.duelSupremacyWinner = gameData.duelSupremacyWinner; //
-                        gameToSave.duelSupremacyType = gameData.duelSupremacyType; //
-                    } //
+                    const gameToSave = JSON.parse(JSON.stringify(gameData)); // Deep copy
+                    delete gameToSave.isEditing; // Rimuove lo stato di modifica
+                    
+                    const existingGameIndex = history.findIndex(g => g.idPartita === gameToSave.idPartita);
                     if (existingGameIndex > -1) {
                         history[existingGameIndex] = gameToSave; 
                     } else {
@@ -2076,9 +2075,6 @@
                 const locale = currentLanguage === 'it' ? 'it-IT' : 'en-US';
                 datiPartita.data = datiPartita.data || dataPartita.toLocaleString(locale, { day: '2-digit', month: '2-digit', year: '2-digit', hour: '2-digit', minute: '2-digit' });
                 datiPartita.luogo = setupDuel.inputs.luogoPartita.value.trim();
-                datiPartita.duelSupremacyWinner = vincitore;
-                datiPartita.duelSupremacyType = motivo;
-                saveGameToHistory(datiPartita); // Assicurati che questo sia chiamato per salvare i dati della supremazia
 
                 sezioni.risultati.innerHTML = `
                     <div class="header-info">
@@ -2089,21 +2085,11 @@
                 `;
                  const btnGroupBottom = document.createElement('div');
                 btnGroupBottom.className = 'gruppo-bottoni';
-                
-                // Pulsante per tornare alla Home
-                const backToHomeBtn = document.createElement('button');
-                backToHomeBtn.className = 'bottone-grande';
-                backToHomeBtn.textContent = translations.backToHome[currentLanguage];
-                backToHomeBtn.addEventListener('click', () => {
-                    mostraSezione('landing');
-                });
-                btnGroupBottom.appendChild(backToHomeBtn);
-
                 const nuovaPartitaBtn = document.createElement('button');
                 nuovaPartitaBtn.className = 'bottone-grande';
                 nuovaPartitaBtn.textContent = translations.newGame[currentLanguage];
                 nuovaPartitaBtn.addEventListener('click', () => {
-                    mostraSezione(`selezioneGioco`);
+                    mostraSezione(`setup-duel`);
                 });
                 btnGroupBottom.appendChild(nuovaPartitaBtn);
                 sezioni.risultati.appendChild(btnGroupBottom);
@@ -2479,17 +2465,8 @@
                 });
                 btnGroupBottom.appendChild(backToHomeBtn);
 
-                // Pulsante per tornare alla sezione punteggio (solo se non si sta visualizzando dalla cronologia)
-                if (!gameDataToDisplay) { //
-                    const backToScoreBtn = document.createElement('button'); //
-                    backToScoreBtn.className = 'bottone-grande'; //
-                    backToScoreBtn.textContent = translations.backToScore[currentLanguage]; //
-                    backToScoreBtn.addEventListener('click', () => { //
-                        mostraSezione('punteggio'); //
-                        mostraSchermataCategoria(); // Restore the scoring screen state
-                    }); //
-                    btnGroupBottom.appendChild(backToScoreBtn); //
-
+                // Aggiungi il pulsante "Nuova Partita" SOLO SE NON si sta visualizzando dalla cronologia
+                if (!gameDataToDisplay) {
                     const nuovaPartitaBtn = document.createElement('button');
                     nuovaPartitaBtn.className = 'bottone-grande';
                     nuovaPartitaBtn.textContent = translations.newGame[currentLanguage];
@@ -2498,7 +2475,6 @@
                     });
                     btnGroupBottom.appendChild(nuovaPartitaBtn);
                 }
-
 
                 sezioni.risultati.appendChild(btnGroupBottom);
 
@@ -2815,11 +2791,16 @@
                     
                     let detailsText = '';
 
-                    // NUOVO: Logica per Supremacy di Duel
-                    if (game.gameVersion === 'duel' && game.duelSupremacyWinner) { //
-                        detailsText = `<strong>🏆 ${game.duelSupremacyWinner}</strong> ${translations.winsBy[currentLanguage]} <strong>${game.duelSupremacyType}</strong>!`; //
-                    } else if (game.espansioni && game.espansioni.giocoASquadre) {
-                        const squadreMap = game.giocatori.reduce((acc, g) => {
+                    // NUOVO: Logica avanzata per spareggio e visualizzazione
+                    const getTieBreakerKey = (gameVersion) => {
+                        if (['1ed', '2ed', 'duel'].includes(gameVersion)) return 'tesoro'; // Monete
+                        if (gameVersion === 'architects') return 'wonderStages'; // Stadi meraviglia
+                        return 'totale'; // Fallback
+                    };
+                    const tieBreakerKey = getTieBreakerKey(game.gameVersion);
+
+                    if (game.espansioni && game.espansioni.giocoASquadre) {
+                         const squadreMap = game.giocatori.reduce((acc, g) => {
                             if (!g.isFreeCity) {
                                 if (!acc[g.team]) acc[g.team] = { giocatori: [], totale: 0 };
                                 acc[g.team].giocatori.push(g);
@@ -2837,14 +2818,6 @@
                             detailsText = `<strong>${translations.winners[currentLanguage]}: ${winningTeamNames} ${winningTeam.totale}</strong> (${otherTeams.join(', ')})`;
                         }
                     } else {
-                        // NUOVO: Logica avanzata per spareggio e visualizzazione
-                        const getTieBreakerKey = (gameVersion) => {
-                            if (['1ed', '2ed', 'duel'].includes(gameVersion)) return 'tesoro'; // Monete
-                            if (gameVersion === 'architects') return 'wonderStages'; // Stadi meraviglia
-                            return 'totale'; // Fallback
-                        };
-                        const tieBreakerKey = getTieBreakerKey(game.gameVersion);
-
                         const giocatoriOrdinati = [...game.giocatori].filter(p => !p.isFreeCity).sort((a, b) => {
                             if (b.totale !== a.totale) return b.totale - a.totale;
                             return (b.punteggi[tieBreakerKey] || 0) - (a.punteggi[tieBreakerKey] || 0);
@@ -3087,16 +3060,11 @@
                             if (catKey === 'puntiTesoro' || catKey === 'puntiScienza' || catKey === 'wonderStages') return;
                             
                             let currentScore = 0;
-                            let recordType = 'score'; // Default to score for most categories
                             if (catKey === 'scienza' && (gameVersion === '1ed' || gameVersion === '2ed')) {
                                 currentScore = player.punteggi.puntiScienza || 0;
                             } else if (catKey === 'tesoro' && ['1ed', '2ed', 'duel'].includes(gameVersion)) {
                                 currentScore = player.punteggi.puntiTesoro || 0;
-                            } else if (catKey === 'gatto' && gameVersion === 'architects') { //
-                                currentScore = player.punteggi[catKey] === 2 ? 1 : 0; // If cat pawn was obtained, count as 1 occurrence
-                                recordType = 'occurrences'; // Treat as occurrences for 'gatto'
-                            }
-                            else {
+                            } else {
                                 currentScore = player.punteggi[catKey] || 0;
                             }
 
@@ -3113,36 +3081,20 @@
                                     records[gameVersion][recordKey] = {
                                         score: currentScore,
                                         players: [player.nome],
-                                        langKey: categoryDef.langKey,
-                                        type: recordType
+                                        langKey: categoryDef.langKey
                                     };
                                 } else if (currentScore === records[gameVersion][recordKey].score) {
                                     if (!records[gameVersion][recordKey].players.includes(player.nome)) {
                                         records[gameVersion][recordKey].players.push(player.nome);
                                     }
                                 }
-                            } else if (recordType === 'occurrences') { // New condition for 'occurrences' type
-                                if (!records[gameVersion][recordKey] || currentScore > (records[gameVersion][recordKey].score || 0)) {
-                                    records[gameVersion][recordKey] = {
-                                        score: currentScore, // This 'score' actually represents occurrences
-                                        players: [player.nome],
-                                        langKey: categoryDef.langKey,
-                                        type: recordType
-                                    };
-                                } else if (currentScore === records[gameVersion][recordKey].score) {
-                                    if (!records[gameVersion][recordKey].players.includes(player.nome)) {
-                                        records[gameVersion][recordKey].players.push(player.nome);
-                                    }
-                                }
-                            }
-                            else {
+                            } else {
                                 // Altrimenti, per tutte le altre categorie, cerchiamo il punteggio più alto.
                                 if (!records[gameVersion][recordKey] || currentScore > records[gameVersion][recordKey].score) {
                                     records[gameVersion][recordKey] = {
                                         score: currentScore,
                                         players: [player.nome],
-                                        langKey: categoryDef.langKey,
-                                        type: recordType
+                                        langKey: categoryDef.langKey
                                     };
                                 } else if (currentScore === records[gameVersion][recordKey].score) {
                                     if (!records[gameVersion][recordKey].players.includes(player.nome)) {
@@ -3306,11 +3258,7 @@
                             if (recordData.players.includes(playerName)) {
                                 const [catKey, icon] = recordKey.split('|');
                                 const catName = translations[recordData.langKey] ? translations[recordData.langKey][currentLanguage] : catKey;
-                                let scoreDisplay = recordData.score;
-                                if (recordData.type === 'occurrences') { //
-                                    scoreDisplay = `${recordData.score}x`; // Display as occurrences for 'gatto'
-                                }
-                                recordsHTML += `<div class="stat-item"><span class="stat-label">🏆 Record: ${catName}</span> <span class="stat-value">${icon} ${scoreDisplay}</span></div>`;
+                                recordsHTML += `<div class="stat-item"><span class="stat-label">🏆 Record: ${catName}</span> <span class="stat-value">${icon} ${recordData.score}</span></div>`;
                             }
                         });
                     }
@@ -3323,12 +3271,12 @@
                         `;
                     }
             
-                    const winRateValue = (playerGames.length > 0 ? (wins / playerGames.length) * 100 : 0).toFixed(0); //
-                    
                     playerCard.innerHTML = `
                         <h4>${playerName}</h4>
                         <div class="stat-item"><span class="stat-label">${translations.gamesPlayed[currentLanguage]}:</span> <span class="stat-value">${playerGames.length}</span></div>
-                        <div class="stat-item"><span class="stat-label">${translations.wonLost[currentLanguage]}:</span> <span class="stat-value">${wins}/${losses} (${winRateValue}%)</span></div> <div class="stat-item"><span class="stat-label">${translations.avgScore[currentLanguage]}:</span> <span class="stat-value">${(playerGames.length > 0 ? totalScore / playerGames.length : 0).toFixed(1)}</span></div>
+                        ${wonLostHTML}
+                        <div class="stat-item"><span class="stat-label">${translations.winRate[currentLanguage]}:</span> <span class="stat-value">${(playerGames.length > 0 ? (wins / playerGames.length) * 100 : 0).toFixed(0)}%</span></div>
+                        <div class="stat-item"><span class="stat-label">${translations.avgScore[currentLanguage]}:</span> <span class="stat-value">${(playerGames.length > 0 ? totalScore / playerGames.length : 0).toFixed(1)}</span></div>
                         ${versionSpecificStatsHTML}
                         ${recordsHTML} 
                     `;
