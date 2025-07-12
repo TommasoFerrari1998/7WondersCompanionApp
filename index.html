@@ -2816,10 +2816,10 @@
                     let detailsText = '';
 
                     // NUOVO: Logica per Supremacy di Duel
-                    if (game.gameVersion === 'duel' && game.duelSupremacyWinner) { //
-                        detailsText = `<strong>🏆 ${game.duelSupremacyWinner}</strong> ${translations.winsBy[currentLanguage]} <strong>${game.duelSupremacyType}</strong>!`; //
+                    if (game.gameVersion === 'duel' && game.duelSupremacyWinner) {
+                        detailsText = `<strong>🏆 ${game.duelSupremacyWinner}</strong> ${translations.winsBy[currentLanguage]} <strong>${game.duelSupremacyType}</strong>!`;
                     } else if (game.espansioni && game.espansioni.giocoASquadre) {
-                        const squadreMap = game.giocatori.reduce((acc, g) => {
+                         const squadreMap = game.giocatori.reduce((acc, g) => {
                             if (!g.isFreeCity) {
                                 if (!acc[g.team]) acc[g.team] = { giocatori: [], totale: 0 };
                                 acc[g.team].giocatori.push(g);
@@ -2836,10 +2836,33 @@
                             const otherTeams = squadre.slice(1).map(s => `${s.giocatori.map(p => p.nome).join(' & ')} ${s.totale}`);
                             detailsText = `<strong>${translations.winners[currentLanguage]}: ${winningTeamNames} ${winningTeam.totale}</strong> (${otherTeams.join(', ')})`;
                         }
-                    } else {
-                        // NUOVO: Logica avanzata per spareggio e visualizzazione
+                    } else if (game.gameVersion === 'duel' && !game.duelSupremacyWinner) { // Aggiunto per le partite Duel a punti
+                         const giocatoriOrdinati = [...game.giocatori].filter(p => !p.isFreeCity).sort((a, b) => {
+                            if (b.totale !== a.totale) return b.totale - a.totale;
+                            // Per Duel, lo spareggio può essere sui punti civili o tesoro a seconda delle espansioni
+                            const tieBreakerKey = (game.espansioni && game.espansioni.agora) ? 'camere' : 'civili'; // Esempio, dovresti usare il tuo criterio di spareggio per Duel
+                            return (b.punteggi[tieBreakerKey] || 0) - (a.punteggi[tieBreakerKey] || 0);
+                        });
+
+                        if (giocatoriOrdinati.length > 0) {
+                             const playerStrings = giocatoriOrdinati.map((g, index, arr) => {
+                                let displayString = `${g.nome} ${g.totale}`;
+                                const isTied = (index > 0 && arr[index - 1].totale === g.totale) || (index < arr.length - 1 && arr[index + 1].totale === g.totale);
+                                
+                                if (isTied) {
+                                    const tieBreakerKeyForDuel = (game.espansioni && game.espansioni.agora) ? 'camere' : 'civili'; // Assicurati che questo sia corretto
+                                    const tieValue = g.punteggi[tieBreakerKeyForDuel] || 0;
+                                    displayString += `<sup>&nbsp;(${tieValue})</sup>`;
+                                }
+                                return displayString;
+                            });
+                             detailsText = `<strong>${translations.winner[currentLanguage]}: ${playerStrings[0]}</strong> (${playerStrings.slice(1).join(', ')})`;
+                        }
+                    }
+                    else { // Questo era il blocco 'else' originale per le partite individuali (non Duel)
+                        // Logica avanzata per spareggio e visualizzazione (per 1ed, 2ed, architects)
                         const getTieBreakerKey = (gameVersion) => {
-                            if (['1ed', '2ed', 'duel'].includes(gameVersion)) return 'tesoro'; // Monete
+                            if (gameVersion === '1ed' || gameVersion === '2ed') return 'tesoro'; // Monete
                             if (gameVersion === 'architects') return 'wonderStages'; // Stadi meraviglia
                             return 'totale'; // Fallback
                         };
