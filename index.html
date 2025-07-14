@@ -3075,7 +3075,8 @@
                             if (catKey === 'scienza' && (gameVersion === '1ed' || gameVersion === '2ed')) {
                                 currentScore = player.punteggi.puntiScienza || 0;
                             } else if (catKey === 'tesoro' && ['1ed', '2ed', 'duel'].includes(gameVersion)) {
-                                currentScore = player.punteggi.puntiTesoro || 0;
+                                currentScore = player.punteggi[catKey] || 0; // Mostra il numero di monete, non i punti
+                                recordType = 'coins'; // Nuovo tipo per indicare che si tratta di monete
                             } else if (catKey === 'gatto' && gameVersion === 'architects') { //
                                 currentScore = player.punteggi[catKey] === 2 ? 1 : 0; // If cat pawn was obtained, count as 1 occurrence
                                 recordType = 'occurrences'; // Treat as occurrences for 'gatto'
@@ -3291,8 +3292,10 @@
                                 const [catKey, icon] = recordKey.split('|');
                                 const catName = translations[recordData.langKey] ? translations[recordData.langKey][currentLanguage] : catKey;
                                 let scoreDisplay = recordData.score;
-                                if (recordData.type === 'occurrences') { //
+                                if (recordData.type === 'occurrences') {
                                     scoreDisplay = `${recordData.score}x`; // Display as occurrences for 'gatto'
+                                } else if (recordData.type === 'coins') { // Nuovo blocco per il tipo 'coins'
+                                    scoreDisplay = `${recordData.score}x`; // Mostra il valore con 'x' per indicare le monete
                                 }
                                 recordsHTML += `<div class="stat-item"><span class="stat-label">🏆 Record: ${catName}</span> <span class="stat-value">${icon} ${scoreDisplay}</span></div>`;
                             }
