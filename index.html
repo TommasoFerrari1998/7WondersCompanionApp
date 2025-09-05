@@ -1760,14 +1760,6 @@
             
                 setup1ed.bottoni.iniziaPartita.disabled = duplicato;
             }
-
-            function checkDuplicateWonders(startButton, playersList) {
-                const normalize = (s) => (s ?? '').toString().trim().toLowerCase();
-                const names = playersList.filter(g => g.meraviglia).map(g => normalize(getWonderName(g.meraviglia)));
-                const hasDuplicates = new Set(names).size !== names.length;
-                startButton.disabled = hasDuplicates;
-                return hasDuplicates;
-            }
             
             function aggiungiGiocatore_1ed() {
                 const nome = setup1ed.inputs.nomeGiocatore.value.trim();
@@ -1891,102 +1883,35 @@
                         li.appendChild(teamSelect);
                     }
                     
-                    // Contenitore per il selettore e il campo di testo
-                    const wonderContainer = document.createElement('div');
-                    wonderContainer.className = 'wonder-input-container';
-                    wonderContainer.style.flexGrow = '1';
-                    li.appendChild(wonderContainer);
-            
-                    // Selettore per le meraviglie predefinite
                     const selectEl = document.createElement('select');
-                    selectEl.className = 'wonder-select';
-                    wonderContainer.appendChild(selectEl);
-                    
-                    const isCustomWonder = g.meraviglia && !wondersDisponibili.includes(g.meraviglia);
+                    selectEl.className = 'wonder-select'; 
                     selectEl.innerHTML = `<option value="">${translations.chooseWonder[currentLanguage]}</option>`;
-                    wondersDisponibili.forEach(w => {
-                        const o = document.createElement('option');
-                        o.value = w;
-                        o.textContent = getWonderName(w);
-                        if (g.meraviglia === w) o.selected = true;
+                    wondersDisponibili.forEach(w => { 
+                        const o = document.createElement('option'); 
+                        o.value = w; 
+                        o.textContent = getWonderName(w); 
+                        if (g.meraviglia === w) o.selected = true; 
+                        
+                        // Disabilita la meraviglia se selezionata da un altro giocatore
                         if (selectedWonders.includes(w) && g.meraviglia !== w) {
                             o.disabled = true;
                         }
-                        selectEl.appendChild(o);
+
+                        selectEl.appendChild(o); 
                     });
-                    
-                    // Opzione per meraviglia fanmade
-                    const customOption = document.createElement('option');
-                    customOption.value = 'custom';
-                    customOption.textContent = translations.customWonder[currentLanguage];
-                    if (isCustomWonder) {
-                        customOption.selected = true;
-                    }
-                    selectEl.appendChild(customOption);
-                    
-                    selectEl.addEventListener('change', (e) => {
-                        const wonderValue = e.target.value;
-                        if (wonderValue === 'custom') {
-                            g.meraviglia = '';
-                            selectEl.style.display = 'none';
-                            customWonderInput.style.display = 'flex';
-                            customWonderInput.value = '';
-                            customWonderInput.focus();
-                        } else {
-                            g.meraviglia = wonderValue;
-                            selectEl.style.display = 'flex';
-                            customWonderInput.style.display = 'none';
-                            aggiornaListaGiocatoriUI_2ed();
-                        }
+                    selectEl.addEventListener('change', (e) => { 
+                        g.meraviglia = e.target.value; 
+                        aggiornaListaGiocatoriUI_2ed(); // Ricarica la UI per aggiornare le opzioni disabilitate
                     });
-            
-                    // Campo di input per la meraviglia fanmade
-                    const customWonderInput = document.createElement('input');
-                    customWonderInput.type = 'text';
-                    customWonderInput.className = 'wonder-custom-input';
-                    customWonderInput.placeholder = translations.customWonderPlaceholder[currentLanguage];
-                    if (isCustomWonder) {
-                        customWonderInput.value = g.meraviglia;
-                        selectEl.style.display = 'none';
-                        customWonderInput.style.display = 'flex';
-                    } else {
-                        customWonderInput.style.display = 'none';
-                    }
-                    
-                    customWonderInput.addEventListener('input', (e) => {
-                        g.meraviglia = e.target.value;
-                        checkDuplicateWonders(setup2ed.bottoni.iniziaPartita, datiPartita.giocatori.filter(pl => !pl.isFreeCity));
-                    });
-                    
-                    customWonderInput.addEventListener('blur', () => {
-                         aggiornaListaGiocatoriUI_2ed();
-                    });
-            
-                    wonderContainer.appendChild(customWonderInput); 
+                    li.appendChild(selectEl); 
                     
                     const deleteBtn = document.createElement('button');
                     deleteBtn.className = 'delete-player-btn';
                     deleteBtn.innerHTML = '&#10006;';
                     deleteBtn.title = translations.deletePlayer[currentLanguage];
-                    deleteBtn.addEventListener('click', (e) => {
-                        e.stopPropagation();
-                        const customVisible = typeof customWonderInput !== 'undefined' && customWonderInput && customWonderInput.style.display !== 'none' && customWonderInput.value.trim() !== '';
-                        if (customVisible) {
-                            if (!g._fanmadeReverted) {
-                                g._fanmadeReverted = true;
-                                g.meraviglia = '';
-                                aggiornaListaGiocatoriUI_2ed(); // Sostituisci con il nome corretto della funzione
-                                return;
-                            } else {
-                                datiPartita.giocatori.splice(index, 1);
-                                aggiornaListaGiocatoriUI_2ed(); // Sostituisci con il nome corretto della funzione
-                                return;
-                            }
-                        } else {
-                            datiPartita.giocatori.splice(index, 1);
-                            aggiornaListaGiocatoriUI_2ed(); // Sostituisci con il nome corretto della funzione
-                            return;
-                        }
+                    deleteBtn.addEventListener('click', () => {
+                        datiPartita.giocatori.splice(index, 1);
+                        aggiornaListaGiocatoriUI_2ed();
                     });
                     li.appendChild(deleteBtn);
 
@@ -2102,102 +2027,35 @@
                     });
                     li.appendChild(nomeInput);
 
-                    // Contenitore per il selettore e il campo di testo
-                    const wonderContainer = document.createElement('div');
-                    wonderContainer.className = 'wonder-input-container';
-                    wonderContainer.style.flexGrow = '1';
-                    li.appendChild(wonderContainer);
-            
-                    // Selettore per le meraviglie predefinite
                     const selectEl = document.createElement('select');
-                    selectEl.className = 'wonder-select';
-                    wonderContainer.appendChild(selectEl);
-                    
-                    const isCustomWonder = g.meraviglia && !wondersDisponibili.includes(g.meraviglia);
+                    selectEl.className = 'wonder-select'; 
                     selectEl.innerHTML = `<option value="">${translations.chooseWonder[currentLanguage]}</option>`;
-                    wondersDisponibili.forEach(w => {
-                        const o = document.createElement('option');
-                        o.value = w;
-                        o.textContent = getWonderName(w);
-                        if (g.meraviglia === w) o.selected = true;
+                    wondersDisponibili.forEach(w => { 
+                        const o = document.createElement('option'); 
+                        o.value = w; 
+                        o.textContent = getWonderName(w); 
+                        if (g.meraviglia === w) o.selected = true; 
+                        
+                        // Disabilita la meraviglia se selezionata da un altro giocatore
                         if (selectedWonders.includes(w) && g.meraviglia !== w) {
                             o.disabled = true;
                         }
-                        selectEl.appendChild(o);
+                        
+                        selectEl.appendChild(o); 
                     });
-                    
-                    // Opzione per meraviglia fanmade
-                    const customOption = document.createElement('option');
-                    customOption.value = 'custom';
-                    customOption.textContent = translations.customWonder[currentLanguage];
-                    if (isCustomWonder) {
-                        customOption.selected = true;
-                    }
-                    selectEl.appendChild(customOption);
-                    
-                    selectEl.addEventListener('change', (e) => {
-                        const wonderValue = e.target.value;
-                        if (wonderValue === 'custom') {
-                            g.meraviglia = '';
-                            selectEl.style.display = 'none';
-                            customWonderInput.style.display = 'flex';
-                            customWonderInput.value = '';
-                            customWonderInput.focus();
-                        } else {
-                            g.meraviglia = wonderValue;
-                            selectEl.style.display = 'flex';
-                            customWonderInput.style.display = 'none';
-                            aggiornaListaGiocatoriUI_architects();
-                        }
+                    selectEl.addEventListener('change', (e) => { 
+                        g.meraviglia = e.target.value; 
+                        aggiornaListaGiocatoriUI_architects(); // Ricarica la UI per aggiornare le opzioni disabilitate
                     });
-            
-                    // Campo di input per la meraviglia fanmade
-                    const customWonderInput = document.createElement('input');
-                    customWonderInput.type = 'text';
-                    customWonderInput.className = 'wonder-custom-input';
-                    customWonderInput.placeholder = translations.customWonderPlaceholder[currentLanguage];
-                    if (isCustomWonder) {
-                        customWonderInput.value = g.meraviglia;
-                        selectEl.style.display = 'none';
-                        customWonderInput.style.display = 'flex';
-                    } else {
-                        customWonderInput.style.display = 'none';
-                    }
-                    
-                    customWonderInput.addEventListener('input', (e) => {
-                        g.meraviglia = e.target.value;
-                        checkDuplicateWonders(setupArchitects.bottoni.iniziaPartita, datiPartita.giocatori);
-                    });
-                    
-                    customWonderInput.addEventListener('blur', () => {
-                         aggiornaListaGiocatoriUI_architects();
-                    });
-            
-                    wonderContainer.appendChild(customWonderInput); 
+                    li.appendChild(selectEl); 
                     
                     const deleteBtn = document.createElement('button');
                     deleteBtn.className = 'delete-player-btn';
                     deleteBtn.innerHTML = '&#10006;';
                     deleteBtn.title = translations.deletePlayer[currentLanguage];
-                    deleteBtn.addEventListener('click', (e) => {
-                        e.stopPropagation();
-                        const customVisible = typeof customWonderInput !== 'undefined' && customWonderInput && customWonderInput.style.display !== 'none' && customWonderInput.value.trim() !== '';
-                        if (customVisible) {
-                            if (!g._fanmadeReverted) {
-                                g._fanmadeReverted = true;
-                                g.meraviglia = '';
-                                aggiornaListaGiocatoriUI_architects();
-                                return;
-                            } else {
-                                datiPartita.giocatori.splice(index, 1);
-                                aggiornaListaGiocatoriUI_architects();
-                                return;
-                            }
-                        } else {
-                            datiPartita.giocatori.splice(index, 1);
-                            aggiornaListaGiocatoriUI_architects();
-                            return;
-                        }
+                    deleteBtn.addEventListener('click', () => {
+                        datiPartita.giocatori.splice(index, 1);
+                        aggiornaListaGiocatoriUI_architects();
                     });
                     li.appendChild(deleteBtn);
 
