@@ -81,6 +81,34 @@
                 border-color: rgba(200, 108, 108, 0); /* Diventa completamente trasparente */
             }
         }
+
+        #new-text {
+            font-family: 'Roboto', sans-serif;
+            font-weight: 900;
+            color: var(--colore-pericolo); /* Testo rosso */
+            font-size: 0.9em;
+            margin-left: 5px;
+            display: inline-block;
+            padding: 2px 4px;
+            border-radius: 4px;
+            animation: pulse-glow 1.5s infinite alternate, popIn 0.5s ease-out forwards;
+            box-shadow: 0 0 5px rgba(200, 108, 108, 0.5);
+            line-height: 1; /* Assicura l'allineamento verticale */
+        }
+
+        @keyframes pulse-glow {
+            from {
+                transform: scale(1);
+                box-shadow: 0 0 5px rgba(200, 108, 108, 0.5);
+                text-shadow: 0 0 2px var(--colore-pericolo);
+            }
+            to {
+                transform: scale(1.05);
+                box-shadow: 0 0 10px rgba(200, 108, 108, 0.8), 0 0 15px rgba(200, 108, 108, 0.6);
+                text-shadow: 0 0 5px var(--colore-pericolo);
+            }
+        }
+        
         section { transition: opacity 0.3s ease-in-out; }
         
         /* Language Switcher */
@@ -468,6 +496,12 @@
                     </div>
                     <span>&rarr;</span>
                 </button>
+                <button id="select-game-dice" class="bottone-grande game-selection-btn">
+                     <div>
+                        <div class="game-title">7 Wonders: Dice <span id="new-text">NEW</span></div>
+                     </div>
+                    <span>&rarr;</span>
+                </button>
             </div>
         </section>
 
@@ -799,6 +833,57 @@
             </div>
         </section>
 
+        <section id="setup-dice-sezione" class="hidden">
+            <div class="logo-container">
+                <img src="https://i.postimg.cc/HsGGB1Tf/7dice-common-logo-cmyk-1757941128-V3-Hg-R-large.png" alt="Logo di 7 Wonders Dice" style="max-width: 60%;" onerror="this.onerror=null; this.src='https://placehold.co/300x100/1e1e1e/f0f0f0?text=7+Wonders+Dice';">
+            </div>
+            <h2 data-lang-key="setupGameDice"></h2>
+            <div class="form-group form-group-column">
+                <div class="autocomplete-container">
+                    <input type="text" id="nomeGiocatoreInput-dice" class="player-input" data-lang-placeholder-key="playerNamePlaceholder" autocomplete="off">
+                    <div id="suggestions-dice" class="autocomplete-suggestions"></div>
+                </div>
+                <button id="aggiungiGiocatoreBtn-dice" data-lang-key="add"></button>
+            </div>
+             <div class="player-header">
+                <h3 data-lang-key="playersAndWonders"></h3>
+                 <div class="header-options">
+                    <button id="randomWonderBtn-dice" class="random-wonder-btn" data-lang-key="randomWonders"></button>
+                </div>
+            </div>
+            <ul id="listaGiocatori-dice" class="players-list"></ul>
+              <div class="opzioni-partita">
+                <h4 data-lang-key="expansions"></h4>
+                <div class="checkbox-container">
+                    <div class="checkbox-item"><label for="esp-dice-diceopolis">Diceopolis</label><label class="toggle-switch"><input type="checkbox" id="esp-dice-diceopolis"><span class="slider"></span></label></div>
+                </div>
+            </div>
+            <div class="opzioni-partita">
+                <h4 data-lang-key="location"></h4>
+                <div class="form-group" style="margin-bottom: 0;">
+                     <input type="text" id="luogoPartitaInput-dice" class="location-input" data-lang-placeholder-key="locationPlaceholder">
+                </div>
+            </div>
+            <div class="opzioni-partita">
+                <h4 data-lang-key="dateAndTime"></h4>
+                <div class="checkbox-item">
+                    <label for="date-toggle-dice" data-lang-key="useManualDate"></label>
+                    <label class="toggle-switch">
+                        <input type="checkbox" id="date-toggle-dice">
+                        <span class="slider"></span>
+                    </label>
+                </div>
+                <div class="form-group hidden" id="manual-date-container-dice" style="margin-top: 15px; margin-bottom: 0;">
+                    <input type="datetime-local" id="manual-date-input-dice" class="input-punteggio manual-date-input">
+                </div>
+            </div>
+             <div class="gruppo-bottoni">
+                <button class="back-from-setup bottone-grande" data-lang-key="backToGameSelect"></button>
+                <button id="resetSettingsBtn-dice" class="bottone-pericolo" data-lang-key="reset"></button>
+                <button id="iniziaPartitaBtn-dice" class="bottone-grande start-game-btn" disabled data-lang-key="start"></button>
+            </div>
+        </section>
+
         <section id="punteggio-sezione" class="hidden">
             <h2 id="titolo-categoria-punteggio"></h2>
             <div id="punteggio-inputs-container"></div>
@@ -851,6 +936,7 @@
                 'setup-2ed': document.getElementById('setup-2ed-sezione'), 
                 'setup-architects': document.getElementById('setup-architects-sezione'),
                 'setup-duel': document.getElementById('setup-duel-sezione'),
+                'setup-dice': document.getElementById('setup-dice-sezione'),
                 punteggio: document.getElementById('punteggio-sezione'), 
                 risultati: document.getElementById('risultati-sezione')
             };
@@ -864,6 +950,7 @@
                 selectGame2ed: document.getElementById('select-game-2ed'),
                 selectGameArchitects: document.getElementById('select-game-architects'),
                 selectGameDuel: document.getElementById('select-game-duel'),
+                selectGameDice: document.getElementById('select-game-dice'),
                 prevCat: document.getElementById('prevCatBtn'), nextCat: document.getElementById('nextCatBtn'),
                 backToSetup: document.getElementById('backToSetupBtn'),
                 langIt: document.getElementById('lang-it'),
@@ -926,6 +1013,10 @@
                 sagrada: ['Sagrada Familia']
             };
 
+            const MERAVIGLIE_DICE = {
+                base: ['Halikarnassos', 'Rhódos', 'Olympía', 'Alexandria', 'Babylon', 'Éphesos', 'Gizah'],
+                diceopolis: ['Diceopolis']
+            };
             
             const CATEGORIE_1ED = [
                 { key: 'meraviglia', label: '🏛️ Meraviglia', type: 'number', color: '#7f8c8d', langKey: 'catWonder' },
@@ -986,7 +1077,19 @@
                 { key: 'camere', label: '🏛️ Camere del Senato', type: 'number', color: '#78909C', expansion: 'agora', langKey: 'catSenateChambers' },
             ];
 
-            const CATEGORIE_NEGATIVE_PERMESSE = ['militari', 'debiti', 'conflittiNavali', 'babel', 'grandiProgetti'];
+            const CATEGORIE_DICE = [
+                { key: 'meraviglia', label: '🏛️ Meraviglia', type: 'number', color: '#c0c0c0', langKey: 'catWonder' },
+                { key: 'casermaOvest', label: '⚔️ Caserma Occidentale', type: 'number', color: '#c0392b', langKey: 'catWesternBarracks' },
+                { key: 'casermaEst', label: '⚔️ Caserma Orientale', type: 'number', color: '#c0392b', langKey: 'catEasternBarracks' },
+                { key: 'agora', label: '🔵 Agorà', type: 'number', color: '#2980b9', langKey: 'catAgora' },
+                { key: 'mercato', label: '🟡 Mercato', type: 'number', color: '#f1c40f', langKey: 'catMarket' },
+                { key: 'universita', label: '🟢 Università', type: 'number', color: '#27ae60', langKey: 'catUniversity' },
+                { key: 'corteGilda', label: '🟣 Corte della Gilda', type: 'number', color: '#8e44ad', langKey: 'catGuildCourt' },
+                { key: 'galleriaLeader', label: '👑 Galleria dei Leader', type: 'number', color: '#bdc3c7', langKey: 'catGalleryOfLeaders' },
+                { key: 'riservaOro', label: '💰 Riserva d\'Oro', type: 'number', color: '#ffd700', langKey: 'catGoldReserve', tieBreaker: true, isTieBreakerOnly: true},
+            ];
+
+            const CATEGORIE_NEGATIVE_PERMESSE = ['militari', 'debiti', 'conflittiNavali', 'babel', 'grandiProgetti', 'casermaOvest', 'casermaEst'];
             
             const wonderTranslations = { 
                 "Grande Muraglia Cinese": { it: "Grande Muraglia Cinese", en: "Great Wall of China" },
@@ -1019,7 +1122,8 @@
                 "Messe": { it: "Messe", en: "Messe" },
                 "Stonehenge": { it: "Stonehenge", en: "Stonehenge" },
                 "Sagrada Familia": { it: "Sagrada Familia", en: "Sagrada Familia" },
-                "Cupertino": { it: "Cupertino", en: "Cupertino" }
+                "Cupertino": { it: "Cupertino", en: "Cupertino" },
+                "Diceopolis": { it: "Diceopolis", en: "Diceopolis" }
             };
 
             let datiPartita;
@@ -1110,17 +1214,19 @@
                     statistics: { it: 'Statistiche', en: 'Statistics' },
                     supportProject: { it: 'Supporta il progetto', en: 'Support the project' },
                     creditsText: { 
-                        it: 'Sviluppato nel 2025 da Tommaso Ferrari. <br>Email: <a href="mailto:tommy.ferrari98@gmail.com">tommy.ferrari98@gmail.com</a> | Versione 1.1',
-                        en: 'Developed in 2025 by Tommaso Ferrari. <br>Email: <a href="mailto:tommy.ferrari98@gmail.com">tommy.ferrari98@gmail.com</a> | Version 1.1'
+                        it: 'Sviluppato nel 2025 da Tommaso Ferrari. <br>Email: <a href="mailto:tommy.ferrari98@gmail.com">tommy.ferrari98@gmail.com</a> | Versione 1.2',
+                        en: 'Developed in 2025 by Tommaso Ferrari. <br>Email: <a href="mailto:tommy.ferrari98@gmail.com">tommy.ferrari98@gmail.com</a> | Version 1.2'
                     },
                     chooseGameVersion: { it: 'Scegli la Versione del Gioco', en: 'Choose Game Version' },
                     game1stEdition: { it: 'Prima Edizione', en: 'First Edition' },
                     game2ndEdition: { it: 'Seconda Edizione', en: 'Second Edition' },
+                    gameDice: { it: 'Dice', en: 'Dice' },
                     backToGameSelect: { it: 'Torna alla Scelta', en: 'Back to Selection' },
                     setupGame1ed: { it: 'Imposta Partita', en: 'Set Up Game' },
                     setupGame2ed: { it: 'Imposta Partita', en: 'Set Up Game' },
                     setupGameArchitects: { it: 'Imposta Partita', en: 'Set Up Game' },
                     setupGameDuel: { it: 'Imposta Partita', en: 'Set Up Game' },
+                    setupGameDice: { it: 'Imposta Partita', en: 'Set Up Game' },
                     rulesEditionNote: {
                         it: '<b>Nota:</b> I seguenti chiarimenti si riferiscono specificamente a <b>7 Wonders (Seconda Edizione)</b> e le sue espansioni.',
                         en: '<b>Note:</b> The following clarifications refer specifically to <b>7 Wonders (Second Edition)</b> and its expansions.'
@@ -1166,6 +1272,10 @@
                     treasuryCoinInfo: {
                         it: 'Inserire il numero di monete. Il punteggio finale sarà calcolato dividendo per 3.',
                         en: 'Enter the number of coins. The final score will be calculated by dividing by 3.'
+                    },
+                    goldReserveTiebreakerInfo: {
+                        it: 'Nota: Inserire il numero di monete residue di ciascun giocatore per determinare il vincitore in caso di spareggio.',
+                        en: 'Note: Enter the number of remaining coins for each player to determine the winner in case of a tie.'
                     },
                     instantVictory: { it: 'Vittoria Istantanea', en: 'Instant Victory' },
                     militarySupremacy: { it: 'Supremazia Militare', en: 'Military Supremacy' },
@@ -1234,11 +1344,20 @@
                     expDuelStatue: { it: 'Statua della Libertà', en: 'Statue of Liberty' },
                     expDuelStonehenge: { it: 'Stonehenge', en: 'Stonehenge' },
                     expDuelSagrada: { it: 'Sagrada Familia', en: 'Sagrada Familia' },
+                    catWesternBarracks: { it: 'Caserma Occidentale', en: 'Western Barracks' },
+                    catEasternBarracks: { it: 'Caserma Orientale', en: 'Eastern Barracks' },
+                    catAgora: { it: 'Agorà', en: 'Agora' },
+                    catMarket: { it: 'Mercato', en: 'Market' },
+                    catUniversity: { it: 'Università', en: 'University' },
+                    catGuildCourt: { it: 'Corte della Gilda', en: 'Guild Court' },
+                    catGalleryOfLeaders: { it: 'Galleria dei Leader', en: 'Gallery of Leaders' },
+                    catGoldReserve: { it: 'Riserva d\'Oro', en: 'Gold Reserve' },
                     gameVersionMap: {
                         '1ed': { it: '7 Wonders (Prima Edizione)', en: '7 Wonders (First Edition)' },
                         '2ed': { it: '7 Wonders (Seconda Edizione)', en: '7 Wonders (Second Edition)' },
                         'architects': { it: '7 Wonders: Architects', en: '7 Wonders: Architects' },
-                        'duel': { it: '7 Wonders: Duel', en: '7 Wonders: Duel' }
+                        'duel': { it: '7 Wonders: Duel', en: '7 Wonders: Duel' },
+                        'dice': { it: '7 Wonders: Dice', en: '7 Wonders: Dice' }
                     },
                     rulesBaseGame_title: { it: '7 Wonders (Versione Base)', en: '7 Wonders (Base Game)' },
                     rulesLeaders_title: { it: 'Leaders', en: 'Leaders' },
@@ -2336,7 +2455,147 @@
                 avviaPartitaGenerale();
             }
 
+            // ===================================================
+            // H. LOGICA DICE
+            // ===================================================
 
+            const setupDice = {
+                 inputs: { 
+                    nomeGiocatore: document.getElementById('nomeGiocatoreInput-dice'), 
+                    luogoPartita: document.getElementById('luogoPartitaInput-dice'),
+                    dateToggle: document.getElementById('date-toggle-dice'), 
+                    manualDateInput: document.getElementById('manual-date-input-dice'),
+                    esp: {
+                        diceopolis: document.getElementById('esp-dice-diceopolis')
+                    }
+                 },
+                bottoni: {
+                    aggiungiGiocatore: document.getElementById('aggiungiGiocatoreBtn-dice'),
+                    iniziaPartita: document.getElementById('iniziaPartitaBtn-dice'),
+                    randomWonder: document.getElementById('randomWonderBtn-dice'),
+                },
+                ui: {
+                    listaGiocatori: document.getElementById('listaGiocatori-dice'),
+                    manualDateContainer: document.getElementById('manual-date-container-dice'),
+                }
+            };
+
+            function updateExpansions_dice() {
+                 for (const key in setupDice.inputs.esp) {
+                    datiPartita.espansioni[key] = setupDice.inputs.esp[key].checked;
+                }
+            }
+            
+            function getWondersDisponibili_dice() {
+                let w = [...MERAVIGLIE_DICE.base];
+                if (datiPartita.espansioni.diceopolis) {
+                    w.push(...MERAVIGLIE_DICE.diceopolis);
+                }
+                return w.sort();
+            }
+            
+            function aggiornaListaGiocatoriUI_dice() {
+                updateExpansions_dice();
+                setupDice.ui.listaGiocatori.innerHTML = '';
+                const wondersDisponibili = getWondersDisponibili_dice();
+                
+                const selectedWonders = datiPartita.giocatori.map(p => p.meraviglia).filter(Boolean);
+
+                datiPartita.giocatori.forEach((g, index) => {
+                    const li = document.createElement('li');
+                    li.className = 'giocatore-setup-item';
+                    
+                    const nomeInput = document.createElement('input');
+                    nomeInput.type = 'text';
+                    nomeInput.className = 'nome-giocatore-input';
+                    nomeInput.value = g.nome;
+                    nomeInput.dataset.index = index;
+                    nomeInput.addEventListener('input', (e) => {
+                        datiPartita.giocatori[index].nome = e.target.value;
+                    });
+                    li.appendChild(nomeInput);
+
+                    const selectEl = document.createElement('select');
+                    selectEl.className = 'wonder-select'; 
+                    selectEl.innerHTML = `<option value="">${translations.chooseWonder[currentLanguage]}</option>`;
+                    wondersDisponibili.forEach(w => { 
+                        const o = document.createElement('option'); 
+                        o.value = w; 
+                        o.textContent = getWonderName(w); 
+                        if (g.meraviglia === w) o.selected = true; 
+                        
+                        if (selectedWonders.includes(w) && g.meraviglia !== w) {
+                            o.disabled = true;
+                        }
+                        
+                        selectEl.appendChild(o); 
+                    });
+                    selectEl.addEventListener('change', (e) => { 
+                        g.meraviglia = e.target.value; 
+                        aggiornaListaGiocatoriUI_dice();
+                    });
+                    li.appendChild(selectEl); 
+                    
+                    const deleteBtn = document.createElement('button');
+                    deleteBtn.className = 'delete-player-btn';
+                    deleteBtn.innerHTML = '&#10006;';
+                    deleteBtn.title = translations.deletePlayer[currentLanguage];
+                    deleteBtn.addEventListener('click', () => {
+                        datiPartita.giocatori.splice(index, 1);
+                        aggiornaListaGiocatoriUI_dice();
+                    });
+                    li.appendChild(deleteBtn);
+
+                    setupDice.ui.listaGiocatori.appendChild(li);
+                });
+
+                const num = datiPartita.giocatori.length;
+                setupDice.bottoni.iniziaPartita.disabled = num < 2;
+                setupDice.bottoni.aggiungiGiocatore.disabled = num >= 7;
+            }
+
+            function aggiungiGiocatore_dice() {
+                const nome = setupDice.inputs.nomeGiocatore.value.trim();
+                if (nome && datiPartita.giocatori.length < 7) {
+                    datiPartita.giocatori.push({ nome, meraviglia: '', punteggi: {}, totale: 0 });
+                    setupDice.inputs.nomeGiocatore.value = '';
+                    aggiornaListaGiocatoriUI_dice();
+                    setupDice.inputs.nomeGiocatore.focus();
+                }
+            }
+            
+            function assegnaMeraviglieCasuali_dice() {
+                const numGiocatori = datiPartita.giocatori.length;
+                if (numGiocatori === 0) return;
+                let wonders = getWondersDisponibili_dice();
+                if (wonders.length < numGiocatori) {
+                    alert(translations.notEnoughWonders[currentLanguage]);
+                    return;
+                }
+                for (let i = wonders.length - 1; i > 0; i--) {
+                    const j = Math.floor(Math.random() * (i + 1));
+                    [wonders[i], wonders[j]] = [wonders[j], wonders[i]];
+                }
+                datiPartita.giocatori.forEach((g, i) => {
+                    g.meraviglia = wonders[i];
+                });
+                aggiornaListaGiocatoriUI_dice();
+            }
+
+            function updateExpansions_dice() {
+                    for (const key in setupDice.inputs.esp) {
+                    datiPartita.espansioni[key] = setupDice.inputs.esp[key].checked;
+                 }
+            }
+
+            function avviaPartita_dice() {
+                updateExpansions_dice();
+                datiPartita.categoriePartita = CATEGORIE_DICE.filter(cat => !cat.expansion || datiPartita.espansioni[cat.expansion]);
+                datiPartita.luogo = setupDice.inputs.luogoPartita.value.trim();
+                datiPartita.manualDate = setupDice.inputs.dateToggle.checked ? setupDice.inputs.manualDateInput.value : null;
+                avviaPartitaGenerale();
+            }
+            
             // ===================================================
             // H. LOGICA DI PUNTEGGIO E RISULTATI (CONDIVISA)
             // ===================================================
@@ -2379,6 +2638,13 @@
                     const avviso = document.createElement('div');
                     avviso.id = 'avviso-categoria';
                     avviso.textContent = translations.treasuryCoinInfo[currentLanguage];
+                    ui.inputsContainer.appendChild(avviso);
+                }
+
+                if (categoria.key === 'riservaOro' && datiPartita.gameVersion === 'dice') {
+                    const avviso = document.createElement('div');
+                    avviso.id = 'avviso-categoria';
+                    avviso.textContent = translations.goldReserveTiebreakerInfo[currentLanguage];
                     ui.inputsContainer.appendChild(avviso);
                 }
 
@@ -2597,6 +2863,13 @@
                         const p = g.punteggi;
                         let pTesoro = 0;
                         let pScienza = 0;
+
+                        if (datiPartita.gameVersion === 'dice') {
+                            datiPartita.giocatori.forEach(g => {
+                            // Non c'è scienza o tesoro con calcoli automatici, ma il campo Riserva d'Oro è il tie-breaker
+                            // Il totale è già calcolato
+                            });
+                        }
                         
                         if (datiPartita.gameVersion === 'architects') {
                             p.gatto = (datiPartita.giocatoreGattoIndex === index) ? 2 : 0;
@@ -2615,6 +2888,9 @@
                         let total = 0;
                         datiPartita.categoriePartita.forEach(cat => {
                             const key = cat.key;
+                            if (datiPartita.gameVersion === 'dice' && key === 'riservaOro') {
+                                return; // Salta questa categoria per il calcolo del totale
+                            }
                             if (key === 'tesoro' && (datiPartita.gameVersion === '1ed' || datiPartita.gameVersion === '2ed' || datiPartita.gameVersion === 'duel')) {
                                 total += pTesoro;
                             } else if (key === 'scienza' && (datiPartita.gameVersion === '1ed' || datiPartita.gameVersion === '2ed')) {
@@ -2715,6 +2991,7 @@
                 let tieBreakerKey;
                 if(datiPartita.gameVersion === 'architects') tieBreakerKey = 'wonderStages';
                 else if (datiPartita.gameVersion === 'duel') tieBreakerKey = 'civili';
+                else if (datiPartita.gameVersion === 'dice') tieBreakerKey = 'riservaOro';
                 else tieBreakerKey = 'tesoro';
 
                 const giocatoriOrdinati = [...datiPartita.giocatori].sort((a, b) => {
@@ -2743,6 +3020,7 @@
                         if (tieBreakerKey === 'tesoro') tieBreakerIcon = '💰';
                         else if (tieBreakerKey === 'wonderStages') tieBreakerIcon = '🏗️';
                         else if (tieBreakerKey === 'civili') tieBreakerIcon = '🔵';
+                        else if (tieBreakerKey === 'riservaOro') tieBreakerIcon = '💰';                        
 
                         scoreDisplay = `<span class="punteggio-finale">${g.totale}<span class="tie-breaker">(${(g.punteggi[tieBreakerKey] || 0)}${tieBreakerIcon})</span></span>`;
                     }
@@ -2828,6 +3106,9 @@
                 div.className = 'risultato-breakdown';
                 datiPartita.categoriePartita.forEach((cat, index) => { // <-- Aggiunto index
                     if (cat.key === 'wonderStages') return;
+                    if (datiPartita.gameVersion === 'dice' && cat.key === 'riservaOro') {
+                        return; // Salta questa categoria nella visualizzazione del breakdown
+                    }
 
                     let pCat = 0;
                     if (cat.key === 'scienza' && (datiPartita.gameVersion === '1ed' || datiPartita.gameVersion === '2ed')) {
@@ -2962,7 +3243,7 @@
             // ===============================================
 
             function displayGameHistory() {
-                // MODIFICATO: Reset della pagina corrente quando si applicano i filtri
+                // MODIFICATO PER RISOLVERE IL BUG DEL TIEBREAKER DI DICE
                 if (typeof displayGameHistory.lastFilter !== 'undefined' && 
                     (displayGameHistory.lastFilter.version !== ui.historyGameFilter.value || displayGameHistory.lastFilter.sort !== ui.historySortFilter.value)) {
                     currentPage = 1;
@@ -3011,6 +3292,15 @@
                     document.getElementById('history-pagination').innerHTML = ''; // Nasconde i controlli se non ci sono risultati
                     return;
                 }
+
+                // FUNZIONE HELPER PER IL TIEBREAKER AGGIORNATA
+                const getTieBreakerKey = (gameVersion) => {
+                    if (gameVersion === 'dice') return 'riservaOro'; // NUOVA CONDIZIONE PER DICE
+                    if (['1ed', '2ed'].includes(gameVersion)) return 'tesoro'; // Monete (standard)
+                    if (gameVersion === 'duel') return 'civili'; // Punti civili Duel
+                    if (gameVersion === 'architects') return 'wonderStages'; // Stadi meraviglia
+                    return 'totale'; // Fallback
+                };
             
                 paginatedItems.forEach(game => {
                     const li = document.createElement('li');
@@ -3021,13 +3311,7 @@
                     
                     let detailsText = '';
 
-                    // NUOVO: Logica avanzata per spareggio e visualizzazione
-                    const getTieBreakerKey = (gameVersion) => {
-                        if (['1ed', '2ed', 'duel'].includes(gameVersion)) return 'tesoro'; // Monete
-                        if (gameVersion === 'architects') return 'wonderStages'; // Stadi meraviglia
-                        return 'totale'; // Fallback
-                    };
-                    const tieBreakerKey = getTieBreakerKey(game.gameVersion);
+                    const tieBreakerKey = getTieBreakerKey(game.gameVersion); // USA LA FUNZIONE AGGIORNATA
 
                     if (game.espansioni && game.espansioni.giocoASquadre) {
                          const squadreMap = game.giocatori.reduce((acc, g) => {
@@ -3050,6 +3334,7 @@
                     } else {
                         const giocatoriOrdinati = [...game.giocatori].filter(p => !p.isFreeCity).sort((a, b) => {
                             if (b.totale !== a.totale) return b.totale - a.totale;
+                            // USA LA CHIAVE CORRETTA PER L'ORDINAMENTO
                             return (b.punteggi[tieBreakerKey] || 0) - (a.punteggi[tieBreakerKey] || 0);
                         });
 
@@ -3059,7 +3344,8 @@
                                 const isTied = (index > 0 && arr[index - 1].totale === g.totale) || (index < arr.length - 1 && arr[index + 1].totale === g.totale);
                                 
                                 if (isTied) {
-                                    const tieValue = g.punteggi[tieBreakerKey] || 0;
+                                    // RECUPERA IL VALORE CORRETTO DAL PUNTEGGIO DEL GIOCATORE
+                                    const tieValue = g.punteggi[tieBreakerKey] || 0; 
                                     displayString += `<sup>&nbsp;(${tieValue})</sup>`;
                                 }
                                 return displayString;
@@ -3113,16 +3399,12 @@
                                 '1ed': setup1ed.inputs,
                                 '2ed': setup2ed.inputs,
                                 'architects': setupArchitects.inputs,
-                                'duel': setupDuel.inputs
+                                'duel': setupDuel.inputs,
+                                'dice': setupDice.inputs // AGGIUNTA DICE
                             };
                             const currentSetupInputs = setupInputs[datiPartita.gameVersion];
 
                             if (currentSetupInputs) {
-                                // Popola i giocatori e le meraviglie
-                                // Nota: la funzione aggiornaListaGiocatoriUI_Xed gestirà la creazione degli input
-                                // e la selezione delle meraviglie, ma dobbiamo prima assicurarci che datiPartita.giocatori
-                                // sia già impostato con i valori della partita da modificare.
-                                
                                 // Popola le espansioni
                                 for (const expKey in currentSetupInputs.esp) {
                                     if (currentSetupInputs.esp[expKey]) {
@@ -3156,6 +3438,7 @@
                             else if (datiPartita.gameVersion === '2ed') aggiornaListaGiocatoriUI_2ed();
                             else if (datiPartita.gameVersion === 'architects') aggiornaListaGiocatoriUI_architects();
                             else if (datiPartita.gameVersion === 'duel') aggiornaListaGiocatoriUI_duel();
+                            else if (datiPartita.gameVersion === 'dice') aggiornaListaGiocatoriUI_dice(); // AGGIUNTA DICE
 
                             // Mostra la sezione di setup corretta
                             mostraSezione(`setup-${datiPartita.gameVersion}`);
@@ -3665,6 +3948,11 @@
                 bottoni.selectGame2ed.addEventListener('click', () => { resetStato('2ed'); updateExpansions_2ed(); aggiornaListaGiocatoriUI_2ed(); mostraSezione('setup-2ed'); });
                 bottoni.selectGameArchitects.addEventListener('click', () => { resetStato('architects'); aggiornaListaGiocatoriUI_architects(); mostraSezione('setup-architects');});
                 bottoni.selectGameDuel.addEventListener('click', () => { resetStato('duel'); aggiornaListaGiocatoriUI_duel(); mostraSezione('setup-duel');});
+                bottoni.selectGameDice.addEventListener('click', () => { 
+                    resetStato('dice'); 
+                    aggiornaListaGiocatoriUI_dice(); 
+                    mostraSezione('setup-dice');
+                });
                 
                 // Setup 1a Edizione
                 setup1ed.bottoni.aggiungiGiocatore.addEventListener('click', aggiungiGiocatore_1ed);
@@ -3704,12 +3992,23 @@
                 }));
                 setupDuel.inputs.dateToggle.addEventListener('change', () => setupDuel.ui.manualDateContainer.classList.toggle('hidden', !setupDuel.inputs.dateToggle.checked));
 
+                setupDice.bottoni.aggiungiGiocatore.addEventListener('click', aggiungiGiocatore_dice);
+                setupDice.inputs.nomeGiocatore.addEventListener('keypress', e => { if (e.key === 'Enter') { e.preventDefault(); aggiungiGiocatore_dice(); } });
+                setupDice.bottoni.iniziaPartita.addEventListener('click', () => { if (!setupDice.bottoni.iniziaPartita.disabled) avviaPartita_dice(); });
+                setupDice.bottoni.randomWonder.addEventListener('click', assegnaMeraviglieCasuali_dice);
+                setupDice.inputs.dateToggle.addEventListener('change', () => setupDice.ui.manualDateContainer.classList.toggle('hidden', !setupDice.inputs.dateToggle.checked));
+                [...Object.values(setupDice.inputs.esp), setupDice.inputs.dateToggle].forEach(el => el.addEventListener('change', () => {
+                    setupDice.ui.manualDateContainer.classList.toggle('hidden', !setupDice.inputs.dateToggle.checked);
+                    aggiornaListaGiocatoriUI_dice();
+                }));
+                
                 // Logica per tutti i pulsanti di Reset
                 const resetButtons = {
                     'resetSettingsBtn-1ed': '1ed',
                     'resetSettingsBtn-2ed': '2ed',
                     'resetSettingsBtn-architects': 'architects',
-                    'resetSettingsBtn-duel': 'duel'
+                    'resetSettingsBtn-duel': 'duel',
+                    'resetSettingsBtn-dice': 'dice'
                 };
                 
                 for (const [buttonId, gameVersion] of Object.entries(resetButtons)) {
@@ -3749,6 +4048,7 @@
                 setupAutocomplete('nomeGiocatoreInput-2ed', 'suggestions-2ed', aggiungiGiocatore_2ed);
                 setupAutocomplete('nomeGiocatoreInput-architects', 'suggestions-architects', aggiungiGiocatore_architects);
                 setupAutocomplete('nomeGiocatoreInput-duel', 'suggestions-duel', aggiungiGiocatore_duel);
+                setupAutocomplete('nomeGiocatoreInput-dice', 'suggestions-dice', aggiungiGiocatore_dice);
 
                 document.getElementById('exportDataBtn').addEventListener('click', exportData);
                 document.getElementById('importDataInput').addEventListener('change', importData);
@@ -3784,4 +4084,5 @@
     </script>
 </body>
 </html>
+
 
